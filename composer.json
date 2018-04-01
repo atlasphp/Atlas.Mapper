@@ -1,0 +1,35 @@
+{
+    "name": "atlas/mapper",
+    "type": "library",
+    "description": "A data mapper for the persistence model.",
+    "keywords": [ "sql", "data", "mapper", "mapping", "orm" ],
+    "homepage": "http://github.com/atlasphp/Atlas.Mapper",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Atlas Contributors",
+            "homepage": "https://github.com/atlasphp/Atlas.Mapper/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.0",
+        "atlas/table": "1.x@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Atlas\\Mapper\\": "src/"
+        }
+    },
+    "require-dev": {
+        "atlas/cli": "2.x@dev",
+        "atlas/testing": "1.x@dev",
+        "pds/skeleton": "~1.0",
+        "phpunit/phpunit": "~7.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Atlas\\Mapper\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev"
+}
