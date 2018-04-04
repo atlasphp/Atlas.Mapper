@@ -30,18 +30,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     protected function setUp()
     {
         $connection = (new SqliteFixture())->exec();
-
-        $container = new Container($connection);
-        $container->setMappers([
-            AuthorMapper::CLASS,
-            ReplyMapper::CLASS,
-            SummaryMapper::CLASS,
-            TagMapper::CLASS,
-            ThreadMapper::CLASS,
-            TaggingMapper::CLASS,
-        ]);
-
-        $this->mapperLocator = $container->newMapperLocator();
+        $this->mapperLocator = MapperLocator::new($connection);
     }
 
     public function testNewRecord()

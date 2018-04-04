@@ -1,7 +1,7 @@
 <?php
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Mapper\Container;
+use Atlas\Mapper\MapperLocator;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\Record;
 use Atlas\Mapper\RecordSet;
@@ -27,16 +27,7 @@ class ManyToOneByReferenceTest extends \PHPUnit\Framework\TestCase
     protected function setUp()
     {
         $connection = (new SqliteFixture())->exec();
-
-        $container = new Container($connection);
-        $container->setMappers([
-            CommentMapper::CLASS,
-            PageMapper::CLASS,
-            PostMapper::CLASS,
-            VideoMapper::CLASS,
-        ]);
-
-        $this->mapperLocator = $container->newMapperLocator();
+        $this->mapperLocator = MapperLocator::new($connection);
     }
 
     public function testFetchByReference()

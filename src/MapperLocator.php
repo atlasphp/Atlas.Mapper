@@ -8,34 +8,60 @@
  */
 namespace Atlas\Mapper;
 
-use Atlas\Mapper\Exception;
+use Atlas\Table\TableLocator;
 
 class MapperLocator
 {
-    protected $factories = [];
+    protected $tableLocator;
 
-    protected $instances = [];
+    protected $mappers = [];
 
-    public function __construct(array $factories)
+    public static function new(...$args) : MapperLocator
     {
-        $this->factories = $factories;
+        return new static(TableLocator::new(...$args));
     }
 
-    public function has(string $mapperClass) : bool
-    {
-        return isset($this->factories[$mapperClass]);
+    public function __construct(
+        TableLocator $tableLocator,
+        callable $factory = null
+    ) {
+        $this->tableLocator = $tableLocator;
+        $this->factory = $factory;
+        if ($this->factory === null) {
+            $this->factory = function ($class) {
+                return new $class();
+            };
+        }
     }
 
-    public function get(string $mapperClass) : Mapper
+    public function has(string $class) : bool
     {
-        if (! $this->has($mapperClass)) {
-            throw Exception::mapperNotFound($mapperClass);
+        return class_exists($class) && is_subclass_of($class, Mapper::CLASS);
+    }
+
+    public function get(string $class) : Mapper
+    {
+        if (! $this->has($class)) {
+            throw Exception::mapperNotFound($class);
         }
 
-        if (! isset($this->instances[$mapperClass])) {
-            $this->instances[$mapperClass] = call_user_func($this->factories[$mapperClass]);
+        if (! isset($this->mappers[$class])) {
+            $this->mappers[$class] = $this->newMapper($class);
         }
 
-        return $this->instances[$mapperClass];
+        return $this->mappers[$class];
+    }
+
+    protected function newMapper($class)
+    {
+        $prefix = substr($class, 0, -6);
+        $table = "{$prefix}Table";
+        $relationships = "{$prefix}MapperRelationships";
+        $events = "{$class}Events";
+        return new $class(
+            $this->tableLocator->get($table),
+            new $relationships($this, $class),
+            ($this->factory)($events)
+        );
     }
 }

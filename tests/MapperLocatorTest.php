@@ -18,13 +18,7 @@ class MapperLocatorTest extends \PHPUnit\Framework\TestCase
     protected function setUp()
     {
         $connection = (new SqliteFixture())->exec();
-
-        $container = new Container($connection);
-        $container->setMappers([
-            EmployeeMapper::CLASS,
-        ]);
-
-        $this->mapperLocator = $container->newMapperLocator();
+        $this->mapperLocator = MapperLocator::new($connection);
     }
 
     public function testHas()

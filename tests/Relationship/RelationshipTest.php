@@ -1,7 +1,6 @@
 <?php
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Mapper\Container;
 use Atlas\Mapper\MapperLocator;
 use Atlas\Pdo\Connection;
 use Atlas\Testing\DataSource\Author\AuthorMapper;
@@ -20,18 +19,7 @@ abstract class RelationshipTest extends \PHPUnit\Framework\TestCase
     protected function setUp()
     {
         $connection = (new SqliteFixture())->exec();
-
-        $container = new Container($connection);
-        $container->setMappers([
-            AuthorMapper::CLASS,
-            ReplyMapper::CLASS,
-            SummaryMapper::CLASS,
-            TagMapper::CLASS,
-            ThreadMapper::CLASS,
-            TaggingMapper::CLASS,
-        ]);
-
-        $this->mapperLocator = $container->newMapperLocator();
+        $this->mapperLocator = MapperLocator::new($connection);
     }
 
     public function testValuesDontMatch()

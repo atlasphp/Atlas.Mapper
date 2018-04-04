@@ -1,7 +1,6 @@
 <?php
 namespace Atlas\Mapper;
 
-use Atlas\Mapper\Container;
 use Atlas\Pdo\Connection;
 use Atlas\Pdo\ConnectionLocator;
 use Atlas\Query\QueryFactory;
@@ -23,14 +22,7 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
     protected function setUp()
     {
         $connection = (new SqliteFixture())->exec();
-
-        $container = new Container($connection);
-        $container->setMappers([
-            EmployeeMapper::CLASS,
-        ]);
-
-        $this->select = $container
-            ->newMapperLocator()
+        $this->select = MapperLocator::new($connection)
             ->get(EmployeeMapper::CLASS)
             ->select();
     }

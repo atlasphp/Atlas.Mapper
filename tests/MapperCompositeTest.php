@@ -19,17 +19,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
     protected function setUp()
     {
         $connection = (new SqliteFixture())->exec();
-
-        $container = new Container($connection);
-        $container->setMappers([
-            CourseMapper::CLASS,
-            DegreeMapper::CLASS,
-            EnrollmentMapper::CLASS,
-            GpaMapper::CLASS,
-            StudentMapper::CLASS,
-        ]);
-
-        $this->mapperLocator = $container->newMapperLocator();
+        $this->mapperLocator = MapperLocator::new($connection);
     }
 
     public function testFetchRecord()
