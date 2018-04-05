@@ -127,4 +127,10 @@ class Exception extends \Exception
             . "not defined in {$nativeMapperClass}.";
         return new Exception($message);
     }
+
+    public static function mapperAlreadySet()
+    {
+        $message = "Mapper already set.";
+        return new Exception($message);
+    }
 }

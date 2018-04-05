@@ -32,6 +32,7 @@ abstract class Mapper
         $this->table = $table;
         $this->relationships = $relationships;
         $this->mapperEvents = $mapperEvents;
+
         $this->recordSetClass = substr(static::class, 0, -6) . 'RecordSet';
 
         $primaryKey = $this->table::PRIMARY_KEY;
@@ -82,7 +83,7 @@ abstract class Mapper
 
         // find identity-mapped rows
         foreach ($primaryVals as $primaryVal) {
-            $serial = $this->identityMap->getSerial($primaryVal); // this is an ARRAY and cannot be used as a key
+            $serial = $this->identityMap->getSerial($primaryVal);
             $memory = $this->identityMap->getRow($serial);
             if ($memory === null) {
                 $rows[$serial] = null;
@@ -125,12 +126,10 @@ abstract class Mapper
         return $this->newRecordSet($records);
     }
 
-    public function select(array $where = []) : MapperSelect
+    public function select(array $whereEquals = []) : MapperSelect
     {
-        $select = new MapperSelect(
-            $this->table->select($where),
-            $this
-        );
+        $select = $this->table->select($whereEquals);
+        $select->setMapper($this);
         $this->mapperEvents->modifySelect($this, $select);
         return $select;
     }

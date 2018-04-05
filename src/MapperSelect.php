@@ -8,33 +8,29 @@
  */
 namespace Atlas\Mapper;
 
-use Atlas\Pdo\Connection;
-use Atlas\Query\Bind;
-use Atlas\Table\Table;
 use Atlas\Table\TableSelect;
 
-class MapperSelect
+class MapperSelect extends TableSelect
 {
     protected $mapper;
 
     protected $with = [];
 
-    public function __construct(
-        TableSelect $tableSelect,
-        Mapper $mapper
-    ) {
-        $this->tableSelect = $tableSelect;
-        $this->mapper = $mapper;
-    }
-
-    public function __call($method, $params)
+    /*
+    I am not happy about using setter injection, but it's the only way to make
+    the underlying TableSelect and Select methods recognizable to IDEs
+    without adding @method docblocks for all of their methods. I'd rather
+    override the constructor, but then it cannot honor the
+    TableEvents::modifySelect() method, or any other overrides at the
+    Table::select() level.
+    */
+    public function setMapper(Mapper $mapper)
     {
-        $result = $this->tableSelect->$method(...$params);
-        if ($result === $this->tableSelect) {
-            return $this;
+        if (isset($this->mapper)) {
+            throw Exception::mapperAlreadySet();
         }
 
-        return $result;
+        $this->mapper = $mapper;
     }
 
     public function joinWith(string $join, string $relatedName) : self

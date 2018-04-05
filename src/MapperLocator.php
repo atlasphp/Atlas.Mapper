@@ -8,6 +8,7 @@
  */
 namespace Atlas\Mapper;
 
+use Atlas\Pdo\ConnectionLocator;
 use Atlas\Table\TableLocator;
 
 class MapperLocator
@@ -16,9 +17,16 @@ class MapperLocator
 
     protected $mappers = [];
 
+    protected $factory;
+
     public static function new(...$args) : MapperLocator
     {
-        return new static(TableLocator::new(...$args));
+        return new MapperLocator(
+            new TableLocator(
+                ConnectionLocator::new(...$args),
+                new \Atlas\Mapper\QueryFactory()
+            )
+        );
     }
 
     public function __construct(
