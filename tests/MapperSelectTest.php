@@ -61,8 +61,8 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
 
     public function testWith_noSuchRelationship()
     {
-        $this->expectException(
-            'Atlas\Mapper\Exception',
+        $this->expectException(Exception::CLASS);
+        $this->expectExceptionMessage(
             "Relationship 'no_such_related' does not exist."
         );
         $this->select->with(['no_such_related']);

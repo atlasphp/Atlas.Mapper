@@ -163,8 +163,8 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
 
     public function testCalcPrimaryComposite_missingKey()
     {
-        $this->expectException(
-            \Atlas\Mapper\Exception::CLASS,
+        $this->expectException(Exception::CLASS);
+        $this->expectExceptionMessage(
             "Expected scalar value for primary key 'student_ln', value is missing instead."
         );
         $this->mapperLocator->get(StudentMapper::CLASS)->fetchRecord(['student_fn' => 'Anna']);
@@ -172,8 +172,8 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
 
     public function testCalcPrimaryComposite_nonScalar()
     {
-        $this->expectException(
-            \Atlas\Mapper\Exception::CLASS,
+        $this->expectException(Exception::CLASS);
+        $this->expectExceptionMessage(
             "Expected scalar value for primary key 'student_fn', got array instead."
         );
         $this->mapperLocator->get(StudentMapper::CLASS)->fetchRecord(

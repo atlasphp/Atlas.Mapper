@@ -51,9 +51,9 @@ class RecordTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($this->zim, $this->record->zim);
 
         // missing
-        $this->expectException(
-            'Atlas\Mapper\Exception',
-            'Atlas\Mapper\Record::$noSuchField does not exist'
+        $this->expectException(Exception::CLASS);
+        $this->expectExceptionMessage(
+            'Atlas\Mapper\Fake\FakeRecord::$noSuchField does not exist'
         );
         $this->record->noSuchField;
     }
@@ -71,9 +71,9 @@ class RecordTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($newZim, $this->record->zim);
 
         // missing
-        $this->expectException(
-            'Atlas\Mapper\Exception',
-            'Atlas\Mapper\Record::$noSuchField does not exist'
+        $this->expectException(Exception::CLASS);
+        $this->expectExceptionMessage(
+            'Atlas\Mapper\Fake\FakeRecord::$noSuchField does not exist'
         );
         $this->record->noSuchField = 'missing';
     }
@@ -87,9 +87,9 @@ class RecordTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(isset($this->record->zim));
 
         // missing
-        $this->expectException(
-            'Atlas\Mapper\Exception',
-            'Atlas\Mapper\Record::$noSuchField does not exist'
+        $this->expectException(Exception::CLASS);
+        $this->expectExceptionMessage(
+            'Atlas\Mapper\Fake\FakeRecord::$noSuchField does not exist'
         );
         isset($this->record->noSuchField);
     }
@@ -106,9 +106,9 @@ class RecordTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($this->record->zim);
 
         // missing
-        $this->expectException(
-            'Atlas\Mapper\Exception',
-            'Atlas\Mapper\Record::$noSuchField does not exist'
+        $this->expectException(Exception::CLASS);
+        $this->expectExceptionMessage(
+            'Atlas\Mapper\Fake\FakeRecord::$noSuchField does not exist'
         );
         unset($this->record->noSuchField);
     }

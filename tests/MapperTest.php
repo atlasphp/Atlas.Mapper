@@ -76,6 +76,12 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($actual->getRow(), $again->getRow());
     }
 
+    public function testFetchRecord_missing()
+    {
+        $actual = $this->mapperLocator->get(ThreadMapper::CLASS)->fetchRecord(88);
+        $this->assertNull($actual);
+    }
+
     public function testFetchRecordBy()
     {
         $actual = $this->mapperLocator->get(ThreadMapper::CLASS)->fetchRecordBy(
@@ -144,7 +150,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testFetchRecords()
     {
         $actual = $this->mapperLocator->get(ThreadMapper::CLASS)->fetchRecords(
-            [1, 2, 3],
+            [1, 2, 3, 88],
             [
                 'author',
                 'summary',
@@ -356,8 +362,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         // set to null, should fail update
         $author->name = null;
-        $this->expectException(
-            \PDOException::CLASS,
+        $this->expectException(\PDOException::CLASS);
+        $this->expectExceptionMessage(
             'SQLSTATE[23000]: Integrity constraint violation'
         );
         $this->mapperLocator->get(AuthorMapper::CLASS)->update($author);
@@ -378,8 +384,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         // $this->assertSame('2', $actual->author_id);
 
         // not a scalar
-        $this->expectException(
-            \Atlas\Mapper\Exception::CLASS,
+        $this->expectException(Exception::CLASS);
+        $this->expectExceptionMessage(
             "Expected scalar value for primary key 'author_id', got array instead."
         );
         $this->mapperLocator->get(AuthorMapper::CLASS)->fetchRecord([1, 2, 3]);
@@ -427,8 +433,8 @@ ORDER BY
 
     public function testMissingWith()
     {
-        $this->expectException(
-            Exception::CLASS,
+        $this->expectException(Exception::CLASS);
+        $this->expectExceptionMessage(
             "Relationship 'no-such-relationship' does not exist."
         );
 

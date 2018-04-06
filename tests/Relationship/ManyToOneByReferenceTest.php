@@ -83,8 +83,8 @@ class ManyToOneByReferenceTest extends \PHPUnit\Framework\TestCase
             'body' => 'New comment on page',
         ]);
 
-        $this->expectException(
-            Exception::CLASS,
+        $this->expectException(Exception::CLASS);
+        $this->expectExceptionMessage(
             "Reference relationship for 'NO_SUCH_TYPE' not defined in Atlas\Testing\DataSource\Comment\CommentMapper."
         );
         $this->mapperLocator->get(PageMapper::CLASS)->persist($page);
@@ -98,8 +98,8 @@ class ManyToOneByReferenceTest extends \PHPUnit\Framework\TestCase
             'body' => 'New comment on page',
         ]);
 
-        $this->expectException(
-            Exception::CLASS,
+        $this->expectException(Exception::CLASS);
+        $this->expectExceptionMessage(
             "Reference relationship for '' not defined in Atlas\Testing\DataSource\Comment\CommentMapper."
         );
         $this->mapperLocator->get(PageMapper::CLASS)->persist($page);

@@ -32,7 +32,8 @@ class MapperLocatorTest extends \PHPUnit\Framework\TestCase
         $expect = EmployeeMapper::CLASS;
         $this->assertInstanceOf($expect, $this->mapperLocator->get(EmployeeMapper::CLASS));
 
-        $this->expectException(Exception::CLASS, "NoSuchMapper not found in mapper locator");
+        $this->expectException(Exception::CLASS);
+        $this->expectExceptionMessage("NoSuchMapper not found in mapper locator");
         $this->mapperLocator->get('NoSuchMapper');
     }
 }

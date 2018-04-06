@@ -30,7 +30,7 @@ class IdentitySimple extends IdentityMap
     protected function getArray($primaryVal) : array
     {
         if (! is_scalar($primaryVal)) {
-            throw Exception::invalidType('scalar', gettype($primaryVal));
+            throw Exception::primaryValueNotScalar($this->primaryKey, $primaryVal);
         }
 
         return [$primaryVal];

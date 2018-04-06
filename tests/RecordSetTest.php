@@ -52,13 +52,13 @@ class RecordSetTest extends \PHPUnit\Framework\TestCase
 
     public function testOffsetSet_nonObject()
     {
-        $this->expectException('Atlas\Mapper\Exception');
+        $this->expectException(Exception::CLASS);
         $this->recordSet[] = 'Foo';
     }
 
     public function testOffsetSet_nonRecordObject()
     {
-        $this->expectException('Atlas\Mapper\Exception');
+        $this->expectException(Exception::CLASS);
         $this->recordSet[] = new StdClass();
     }
 
