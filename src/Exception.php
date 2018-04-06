@@ -12,21 +12,6 @@ namespace Atlas\Mapper;
 
 class Exception extends \Exception
 {
-    public static function classDoesNotExist($class) : Exception
-    {
-        return new Exception("{$class} does not exist.");
-    }
-
-    public static function priorTransaction() : Exception
-    {
-        return new Exception("Cannot re-execute a prior transaction.");
-    }
-
-    public static function priorWork() : Exception
-    {
-        return new Exception("Cannot re-invoke prior work.");
-    }
-
     public static function propertyDoesNotExist($class, string $property) : Exception
     {
         if (is_object($class)) {
@@ -49,11 +34,6 @@ class Exception extends \Exception
         }
 
         return new Exception("Expected type $expect; got $actual instead.");
-    }
-
-    public static function rowNotMapped() : Exception
-    {
-        return new Exception("Row does not exist in IdentityMap.");
     }
 
     public static function rowAlreadyMapped() : Exception

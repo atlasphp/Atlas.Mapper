@@ -22,9 +22,8 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
     protected function setUp()
     {
         $connection = (new SqliteFixture())->exec();
-        $this->select = MapperLocator::new($connection)
-            ->get(EmployeeMapper::CLASS)
-            ->select();
+        $this->mapper = MapperLocator::new($connection)->get(EmployeeMapper::CLASS);
+        $this->select = $this->mapper->select();
     }
 
     public function testGetStatement()
@@ -40,7 +39,13 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
         $this->assertSameSql($expect, $actual);
     }
 
-    public function testFetchRecordGetStatement()
+    public function testFetchRecord_missing()
+    {
+        $actual = $this->select->where('id = 88')->fetchRecord();
+        $this->assertNull($actual);
+    }
+
+    public function testFetchRecord_getStatement()
     {
         $expect = '
             SELECT
@@ -66,5 +71,12 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
             "Relationship 'no_such_related' does not exist."
         );
         $this->select->with(['no_such_related']);
+    }
+
+    public function testMapperAlreadySet()
+    {
+        $this->expectException(Exception::CLASS);
+        $this->expectExceptionMessage('Mapper already set.');
+        $this->select->setMapper($this->mapper);
     }
 }
