@@ -16,14 +16,6 @@ class MapperSelect extends TableSelect
 
     protected $with = [];
 
-    /*
-    I am not happy about using setter injection, but it's the only way to make
-    the underlying TableSelect and Select methods recognizable to IDEs
-    without adding @method docblocks for all of their methods. I'd rather
-    override the constructor, but then it cannot honor the
-    TableEvents::modifySelect() method, or any other overrides at the
-    Table::select() level.
-    */
     public function setMapper(Mapper $mapper)
     {
         if (isset($this->mapper)) {

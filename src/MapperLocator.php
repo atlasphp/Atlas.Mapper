@@ -24,7 +24,7 @@ class MapperLocator
         return new MapperLocator(
             new TableLocator(
                 ConnectionLocator::new(...$args),
-                new \Atlas\Mapper\QueryFactory()
+                new MapperQueryFactory()
             )
         );
     }
