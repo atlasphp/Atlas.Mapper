@@ -90,13 +90,6 @@ class Exception extends \Exception
         return new Exception($message);
     }
 
-    public static function unexpectedOption($value, array $options)
-    {
-        $message = "Expected one of '" . implode("','", $options)
-            . "'; got '{$value}' instead.";
-        return new Exception($message);
-    }
-
     public static function invalidReferenceMethod(string $method)
     {
         $message = "Invalid method on reference relationships: {$method}().";
