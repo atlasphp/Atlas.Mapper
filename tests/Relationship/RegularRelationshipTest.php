@@ -2,7 +2,7 @@
 namespace Atlas\Mapper\Relationship;
 
 use Atlas\Mapper\Exception;
-use Atlas\Mapper\Fake\FakeRelationship;
+use Atlas\Mapper\Fake\FakeRegularRelationship;
 use Atlas\Testing\DataSource\Author\AuthorMapper;
 use Atlas\Testing\DataSource\Thread\ThreadMapper;
 
@@ -12,7 +12,7 @@ class RegularRelationshipTest extends RelationshipTest
     {
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage("Class 'NoSuchClass' does not exist.");
-        $fake = new FakeRelationship(
+        $fake = new FakeRegularRelationship(
             'fake',
             $this->mapperLocator,
             ThreadMapper::CLASS,
@@ -22,7 +22,7 @@ class RegularRelationshipTest extends RelationshipTest
 
     public function testValuesDontMatch()
     {
-        $fake = new FakeRelationship(
+        $fake = new FakeRegularRelationship(
             'fake',
             $this->mapperLocator,
             ThreadMapper::CLASS,
@@ -33,7 +33,7 @@ class RegularRelationshipTest extends RelationshipTest
 
     public function testFetchForeignRecords_empty()
     {
-        $fake = new FakeRelationship(
+        $fake = new FakeRegularRelationship(
             'fake',
             $this->mapperLocator,
             ThreadMapper::CLASS,

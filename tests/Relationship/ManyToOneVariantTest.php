@@ -18,17 +18,9 @@ use Atlas\Testing\DataSource\SqliteFixture;
 use Atlas\Testing\DataSource\Video\VideoMapper;
 use Atlas\Testing\DataSource\Video\VideoRecord;
 
-class ManyToOneVariantTest extends \PHPUnit\Framework\TestCase
+class ManyToOneVariantTest extends RelationshipTest
 {
     use Assertions;
-
-    protected $mapperLocator;
-
-    protected function setUp()
-    {
-        $connection = (new SqliteFixture())->exec();
-        $this->mapperLocator = MapperLocator::new($connection);
-    }
 
     public function testFetchVariant()
     {
@@ -115,5 +107,102 @@ class ManyToOneVariantTest extends \PHPUnit\Framework\TestCase
         $nativeRecords = [];
         $relationship->stitchIntoRecords($nativeRecords);
         $this->assertSame([], $nativeRecords);
+    }
+
+    public function testJoinSelect()
+    {
+        $select = $this->mapperLocator->get(CommentMapper::CLASS)->select();
+        $this->expectException(Exception::CLASS);
+        $this->expectExceptionMessage('Cannot JOIN on variant relationships.');
+        $select->joinWith('LEFT', 'commentable');
+    }
+
+    public function testWhere()
+    {
+        $relationship = new ManyToOneVariant(
+            'foo',
+            $this->mapperLocator,
+            COmmentMapper::CLASS,
+            'related_type'
+        );
+
+        // should apply as a default to all types
+        $relationship->where('foo = 1');
+
+        // default condition
+        $relationship
+            ->type('page', PageMapper::CLASS, ['related_id' => 'page_id']);
+
+        // additional condition
+        $relationship
+            ->type('post', PostMapper::CLASS, ['related_id' => 'post_id'])
+            ->where('bar = 2');
+
+        // different additional condition
+        $relationship
+            ->type('video', PostMapper::CLASS, ['related_id' => 'video_id'])
+            ->where('baz = 3');
+
+        // brittle assertions
+        $variants = $this->getProperty($relationship, 'variants');
+
+        $actual = $this->getProperty($variants['page'], 'where');
+        $expect = [
+            ['foo = 1'],
+        ];
+        $this->assertSame($expect, $actual);
+
+        $actual = $this->getProperty($variants['post'], 'where');
+        $expect = [
+            ['foo = 1'],
+            ['bar = 2'],
+        ];
+        $this->assertSame($expect, $actual);
+
+        $actual = $this->getProperty($variants['video'], 'where');
+        $expect = [
+            ['foo = 1'],
+            ['baz = 3'],
+        ];
+        $this->assertSame($expect, $actual);
+    }
+
+    public function testIgnoreCase()
+    {
+        $relationship = new ManyToOneVariant(
+            'foo',
+            $this->mapperLocator,
+            CommentMapper::CLASS,
+            'related_type'
+        );
+
+        // should apply as a default to all types
+        $relationship->ignoreCase(true);
+
+        // flag should apply
+        $relationship
+            ->type('page', PageMapper::CLASS, ['related_id' => 'page_id']);
+
+        // different flag
+        $relationship
+            ->type('post', PostMapper::CLASS, ['related_id' => 'post_id'])
+            ->ignoreCase(false);
+
+        // brittle assertions
+        $variants = $this->getProperty($relationship, 'variants');
+
+        $actual = $this->getProperty($variants['page'], 'ignoreCase');
+        $this->assertTrue($actual);
+
+        $actual = $this->getProperty($variants['post'], 'ignoreCase');
+        $this->assertFalse($actual);
+    }
+
+    protected function getProperty($object, $name)
+    {
+        $rclass = new \ReflectionClass(get_class($object));
+        $rprop = $rclass->getProperty($name);
+        $rprop->setAccessible(true);
+        return $rprop->getValue($object);
     }
 }

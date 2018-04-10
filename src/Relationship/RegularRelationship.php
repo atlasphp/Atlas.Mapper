@@ -92,7 +92,7 @@ abstract class RegularRelationship extends Relationship
         }
     }
 
-    public function getForeignMapper() : Mapper
+    protected function getForeignMapper() : Mapper
     {
         return $this->mapperLocator->get($this->foreignMapperClass);
     }
@@ -175,5 +175,4 @@ abstract class RegularRelationship extends Relationship
         // are they equal?
         return $nativeVal == $foreignVal;
     }
-
 }

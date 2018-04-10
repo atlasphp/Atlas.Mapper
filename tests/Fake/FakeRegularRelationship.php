@@ -5,7 +5,7 @@ use Atlas\Mapper\Record;
 use Atlas\Mapper\Relationship\RegularRelationship;
 use SplObjectStorage;
 
-class FakeRelationship extends RegularRelationship
+class FakeRegularRelationship extends RegularRelationship
 {
     public function __call($func, $args)
     {

@@ -24,29 +24,29 @@ class ManyToOneVariant extends Relationship
 
     protected $nativeMapperClass;
 
-    protected $discriminatorCol;
+    protected $typeCol;
 
-    protected $relationships = [];
+    protected $variants = [];
 
     public function __construct(
         string $name,
         MapperLocator $mapperLocator,
         string $nativeMapperClass,
-        string $discriminatorCol
+        string $typeCol
     ) {
         $this->name = $name;
         $this->mapperLocator = $mapperLocator;
         $this->nativeMapperClass = $nativeMapperClass;
-        $this->discriminatorCol = $discriminatorCol;
+        $this->typeCol = $typeCol;
     }
 
     public function type(
-        string $discriminatorVal,
+        string $typeVal,
         string $foreignMapperClass,
         array $on
     ) : self
     {
-        $relationship = new ManyToOne(
+        $variant = new ManyToOne(
             $this->name,
             $this->mapperLocator,
             $this->nativeMapperClass,
@@ -54,32 +54,35 @@ class ManyToOneVariant extends Relationship
             $on
         );
 
-        $relationship->where = $this->where;
-        $relationship->ignoreCase = $this->ignoreCase;
+        $variant->where = $this->where;
+        $variant->ignoreCase = $this->ignoreCase;
 
-        $this->relationships[$discriminatorVal] = $relationship;
+        $this->variants[$typeVal] = $variant;
         return $this;
     }
 
     public function where(string $cond, ...$bind) : Relationship
     {
-        if (empty($this->relationships)) {
+        if (empty($this->variants)) {
             return parent::where($cond, ...$bind);
         }
 
-        $relationship = end($this->relationships);
-        $relationship->where($cond, ...$bind);
+        $variant = end($this->variants);
+        $variant->where($cond, ...$bind);
         return $this;
     }
 
+    /**
+     * @todo make this apply to the type values as well
+     */
     public function ignoreCase(bool $ignoreCase = true) : Relationship
     {
-        if (empty($this->relationships)) {
+        if (empty($this->variants)) {
             return parent::ignoreCase($ignoreCase);
         }
 
-        $relationship = end($this->relationships);
-        $relationship->ignoreCase($ignoreCase);
+        $variant = end($this->variants);
+        $variant->ignoreCase($ignoreCase);
         return $this;
     }
 
@@ -88,13 +91,13 @@ class ManyToOneVariant extends Relationship
         throw Exception::cannotJoinOnVariantRelationships();
     }
 
-    protected function getRelationship($discriminatorVal)
+    protected function getVariant($typeVal)
     {
-        if (isset($this->relationships[$discriminatorVal])) {
-            return $this->relationships[$discriminatorVal];
+        if (isset($this->variants[$typeVal])) {
+            return $this->variants[$typeVal];
         }
 
-        throw Exception::noSuchType($this->nativeMapperClass, $discriminatorVal);
+        throw Exception::noSuchType($this->nativeMapperClass, $typeVal);
     }
 
     public function stitchIntoRecords(
@@ -108,30 +111,30 @@ class ManyToOneVariant extends Relationship
 
         $nativeSubsets = [];
         foreach ($nativeRecords as $nativeRecord) {
-            $nativeSubsets[$nativeRecord->{$this->discriminatorCol}][] = $nativeRecord;
+            $nativeSubsets[$nativeRecord->{$this->typeCol}][] = $nativeRecord;
         }
 
-        foreach ($nativeSubsets as $discriminatorVal => $nativeSubset) {
-            $relationship = $this->getRelationship($discriminatorVal);
-            $relationship->stitchIntoRecords($nativeSubset, $custom);
+        foreach ($nativeSubsets as $typeVal => $nativeSubset) {
+            $variant = $this->getVariant($typeVal);
+            $variant->stitchIntoRecords($nativeSubset, $custom);
         }
     }
 
     public function fixNativeRecordKeys(Record $nativeRecord) : void
     {
-        $this->fixNativeDiscriminatorVal($nativeRecord);
-        $relationship = $this->getRelationship($nativeRecord->{$this->discriminatorCol});
-        $relationship->fixNativeRecordKeys($nativeRecord);
+        $this->fixNativeTypeVal($nativeRecord);
+        $variant = $this->getVariant($nativeRecord->{$this->typeCol});
+        $variant->fixNativeRecordKeys($nativeRecord);
     }
 
     public function persistForeign(Record $nativeRecord, SplObjectStorage $tracker) : void
     {
-        $this->fixNativeDiscriminatorVal($nativeRecord);
-        $relationship = $this->getRelationship($nativeRecord->{$this->discriminatorCol});
-        $relationship->persistForeign($nativeRecord, $tracker);
+        $this->fixNativeTypeVal($nativeRecord);
+        $variant = $this->getVariant($nativeRecord->{$this->typeCol});
+        $variant->persistForeign($nativeRecord, $tracker);
     }
 
-    protected function fixNativeDiscriminatorVal(Record $nativeRecord) : void
+    protected function fixNativeTypeVal(Record $nativeRecord) : void
     {
         $foreignRecord = $nativeRecord->{$this->name};
         if (! $foreignRecord instanceof Record) {
@@ -139,9 +142,9 @@ class ManyToOneVariant extends Relationship
         }
 
         $foreignRecordMapperClass = $foreignRecord->getMapperClass();
-        foreach ($this->relationships as $discriminatorVal => $relationship) {
-            if ($foreignRecordMapperClass == $relationship->foreignMapperClass) {
-                $nativeRecord->{$this->discriminatorCol} = $discriminatorVal;
+        foreach ($this->variants as $typeVal => $variant) {
+            if ($foreignRecordMapperClass == $variant->foreignMapperClass) {
+                $nativeRecord->{$this->typeCol} = $typeVal;
                 return;
             }
         }
