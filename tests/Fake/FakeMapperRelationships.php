@@ -1,10 +1,13 @@
 <?php
 namespace Atlas\Mapper\Fake;
 
+use Atlas\Mapper\MapperRelationships;
+
 class FakeMapperRelationships extends MapperRelationships
 {
-    protected function getNativeMapperClass()
+    protected function define()
     {
-        return 'Atlas\Testing\DataSource\EmployeeMapper';
+        // intentionally blow up
+        $this->oneToOne('id', 'Foo');
     }
 }

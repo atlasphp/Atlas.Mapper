@@ -193,8 +193,8 @@ abstract class Mapper
         $this->relationships->persistBeforeNative($record, $tracker);
         $this->relationships->fixNativeRecordKeys($record);
 
-        $method = $record->getStatus();
-        if ($method !== null) {
+        $method = $record->getAction();
+        if ($method !== '') {
             $this->$method($record);
         }
 
@@ -209,7 +209,6 @@ abstract class Mapper
         $row = $this->table->newRow($fields);
         $record = $this->newRecordFromRow($row);
         $record->getRelated()->set($fields);
-        $record->setStatus($record::INSERT);
         return $record;
     }
 

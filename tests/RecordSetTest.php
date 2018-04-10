@@ -20,6 +20,7 @@ class RecordSetTest extends \PHPUnit\Framework\TestCase
             'foo' => 'bar',
             'baz' => 'dib',
         ]);
+        $this->row->init($this->row::SELECTED);
 
         $this->related = new Related([
             'zim' => $this->getMockBuilder(Record::CLASS)->disableOriginalConstructor()->getMock(),
@@ -143,13 +144,13 @@ class RecordSetTest extends \PHPUnit\Framework\TestCase
     public function testSetDelete()
     {
         foreach ($this->recordSet as $record) {
-            $this->assertFalse($record->getStatus() == $record::DELETE);
+            $this->assertFalse($record->getAction() == FakeRow::DELETE);
         }
 
         $this->recordSet->setDelete();
 
         foreach ($this->recordSet as $record) {
-            $this->assertTrue($record->getStatus() == $record::DELETE);
+            $this->assertTrue($record->getAction() == FakeRow::DELETE);
         }
     }
 }

@@ -158,26 +158,4 @@ class RecordTest extends \PHPUnit\Framework\TestCase
         $expect = '{"id":"1","foo":"bar","baz":"dib","zim":[],"irk":[]}';
         $this->assertSame($expect, $actual);
     }
-
-    public function testGetPersistMethod()
-    {
-        $this->assertNull($this->record->getStatus());
-
-        $this->record->setStatus(Record::INSERT);
-        $this->assertSame('insert', $this->record->getStatus());
-
-        // mark for deletion
-        $this->record->setDelete();
-        $this->assertSame('delete', $this->record->getStatus());
-
-        // unmark for deletion
-        $this->record->setDelete(false);
-        $this->assertSame('insert', $this->record->getStatus());
-
-        $this->record->setStatus(Record::UPDATE);
-        $this->assertSame('update', $this->record->getStatus());
-
-        $this->record->setStatus(Record::DELETE);
-        $this->assertSame('delete', $this->record->getStatus());
-    }
 }

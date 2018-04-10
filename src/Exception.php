@@ -51,24 +51,6 @@ class Exception extends \Exception
         return new Exception("Relationship '$foreignName' does not exist.");
     }
 
-    public static function unexpectedRowCountAffected($count)
-    {
-        return new Exception("Expected 1 row affected, actual {$count}.");
-    }
-
-    public static function immutableOnceDeleted($class, $property)
-    {
-        if (is_object($class)) {
-            $class = get_class($class);
-        }
-        return new Exception("{$class}::\${$property} is immutable once deleted.");
-    }
-
-    public static function invalidStatus($status)
-    {
-        return new Exception("Expected valid row status, got '$status' instead.");
-    }
-
     public static function primaryValueNotScalar($col, $val)
     {
         $message = "Expected scalar value for primary key '{$col}', "
@@ -80,12 +62,6 @@ class Exception extends \Exception
     {
         $message = "Expected scalar value for primary key '$col', "
             . "value is missing instead.";
-        return new Exception($message);
-    }
-
-    public static function numericCol($col)
-    {
-        $message = "Expected non-numeric column name, got '$col' instead.";
         return new Exception($message);
     }
 

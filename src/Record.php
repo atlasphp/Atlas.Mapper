@@ -16,19 +16,9 @@ use JsonSerializable;
 
 abstract class Record implements JsonSerializable
 {
-    const DELETE = 'delete';
-
-    const INSERT = 'insert';
-
-    const UPDATE = 'update';
-
-    private $status = null;
-
     private $row;
 
     private $related;
-
-    private $delete = false;
 
     public function __construct(Row $row, Related $related)
     {
@@ -46,12 +36,6 @@ abstract class Record implements JsonSerializable
     {
         $prop = $this->assertHas($field);
         $this->$prop->$field = $value;
-        if (
-            $this->status !== self::INSERT
-            && $this->status !== self::DELETE
-        ) {
-            $this->status = self::UPDATE;
-        }
     }
 
     public function __isset(string $field) : bool
@@ -111,17 +95,12 @@ abstract class Record implements JsonSerializable
 
     public function setDelete($delete = true) : void
     {
-        $this->delete = (bool) $delete;
+        $this->row->setDelete($delete);
     }
 
-    public function getStatus() : ?string
+    public function getAction() : string
     {
-        return $this->delete ? Record::DELETE : $this->status;
-    }
-
-    public function setStatus(string $status) : void
-    {
-        $this->status = $status;
+        return $this->row->getAction();
     }
 
     private function assertHas($field) : string
