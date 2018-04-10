@@ -146,8 +146,7 @@ abstract class Mapper
         $row = $record->getRow();
         $pdoStatement = $this->table->insertRowPerform($row, $insert);
 
-        $serial = $this->identityMap->getSerial($row);
-        $this->identityMap->setRow($row, $serial);
+        $this->identityMap->setRow($row);
 
         $this->relationships->fixForeignRecordKeys($record);
         $this->mapperEvents->afterInsert($this, $record, $insert, $pdoStatement);
@@ -242,8 +241,7 @@ abstract class Mapper
 
     protected function newRecordFromSelectedRow(Row $row) : Record
     {
-        $serial = $this->identityMap->getSerial($row);
-        $row = $this->identityMap->setOrGetRow($row, $serial);
+        $row = $this->identityMap->setOrGetRow($row);
         return $this->newRecordFromRow($row);
     }
 

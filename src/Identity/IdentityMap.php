@@ -22,12 +22,13 @@ abstract class IdentityMap
 
     protected $rowToSerial;
 
-    public function setRow(Row $row, string $serial) : void
+    public function setRow(Row $row) : void
     {
         if ($this->hasRow($row)) {
             throw Exception::rowAlreadyMapped();
         }
 
+        $serial = $this->getSerial($row);
         $this->serialToRow[$serial] = $row;
         $this->rowToSerial[$row] = $serial;
     }
@@ -46,11 +47,13 @@ abstract class IdentityMap
         return $this->serialToRow[$serial];
     }
 
-    public function setOrGetRow(Row $row, string $serial) : Row
+    public function setOrGetRow(Row $row) : Row
     {
+        $serial = $this->getSerial($row);
         $memory = $this->getRow($serial);
+
         if ($memory === null) {
-            $this->setRow($row, $serial);
+            $this->setRow($row);
             return $row;
         }
 
