@@ -13,7 +13,7 @@ namespace Atlas\Mapper\Relationship;
 use Atlas\Mapper\Record;
 use SplObjectStorage;
 
-class OneToOne extends Relationship
+class OneToOne extends RegularRelationship
 {
     protected function stitchIntoRecord(
         Record $nativeRecord,
@@ -34,15 +34,18 @@ class OneToOne extends Relationship
             return;
         }
 
-        $this->initialize();
-
-        foreach ($this->getOn() as $nativeField => $foreignField) {
+        foreach ($this->on as $nativeField => $foreignField) {
             $foreignRecord->$foreignField = $nativeRecord->$nativeField;
         }
     }
 
     public function persistForeign(Record $nativeRecord, SplObjectStorage $tracker) : void
     {
-        $this->persistForeignRecord($nativeRecord, $tracker);
+        $foreignRecord = $nativeRecord->{$this->name};
+        if (! $foreignRecord instanceof Record) {
+            return;
+        }
+
+        $this->getForeignMapper()->persist($foreignRecord, $tracker);
     }
 }

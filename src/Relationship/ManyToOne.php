@@ -15,9 +15,15 @@ use SplObjectStorage;
 
 class ManyToOne extends OneToOne
 {
-    protected function initializeOn() : void
+    protected function setOn(array $on) : void
     {
-        foreach ($this->foreignMapper->getTable()::PRIMARY_KEY as $col) {
+        if (! empty($on)) {
+            $this->on = $on;
+            return;
+        }
+
+        $foreignTableClass = substr($this->foreignMapperClass, 0, -6) . 'Table';
+        foreach ($foreignTableClass::PRIMARY_KEY as $col) {
             $this->on[$col] = $col;
         }
     }
@@ -29,15 +35,8 @@ class ManyToOne extends OneToOne
             return;
         }
 
-        $this->initialize();
-
-        foreach ($this->getOn() as $nativeField => $foreignField) {
+        foreach ($this->on as $nativeField => $foreignField) {
             $nativeRecord->$nativeField = $foreignRecord->$foreignField;
         }
-    }
-
-    public function persistForeign(Record $nativeRecord, SplObjectStorage $tracker) : void
-    {
-        $this->persistForeignRecord($nativeRecord, $tracker);
     }
 }

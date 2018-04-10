@@ -14,7 +14,7 @@ use Atlas\Mapper\Exception;
 use Atlas\Mapper\MapperLocator;
 use Atlas\Mapper\Record;
 use Atlas\Mapper\Relationship\ManyToOne;
-use Atlas\Mapper\Relationship\ManyToOneByReference;
+use Atlas\Mapper\Relationship\ManyToOneVariant;
 use Atlas\Mapper\Relationship\OneToMany;
 use Atlas\Mapper\Relationship\OneToOne;
 use Atlas\Mapper\Relationship\Relationship;
@@ -96,14 +96,14 @@ abstract class MapperRelationships
         );
     }
 
-    protected function manyToOneByReference(
+    protected function manyToOneVariant(
         string $name,
         string $referenceCol
-    ) : ManyToOneByReference
+    ) : ManyToOneVariant
     {
         return $this->set(
             $name,
-            ManyToOneByReference::CLASS,
+            ManyToOneVariant::CLASS,
             $referenceCol,
             'persistBeforeNative'
         );

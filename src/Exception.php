@@ -90,15 +90,15 @@ class Exception extends \Exception
         return new Exception($message);
     }
 
-    public static function invalidReferenceMethod(string $method)
+    public static function cannotJoinOnVariantRelationships()
     {
-        $message = "Invalid method on reference relationships: {$method}().";
+        $message = "Cannot JOIN on variant relationships.";
         return new Exception($message);
     }
 
-    public static function noSuchReference($nativeMapperClass, $referenceVal)
+    public static function noSuchType($nativeMapperClass, $discriminatorVal)
     {
-        $message = "Reference relationship for '{$referenceVal}' "
+        $message = "Variant relationship type '{$discriminatorVal}' "
             . "not defined in {$nativeMapperClass}.";
         return new Exception($message);
     }

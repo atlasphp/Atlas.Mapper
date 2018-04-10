@@ -18,7 +18,7 @@ use Atlas\Testing\DataSource\SqliteFixture;
 use Atlas\Testing\DataSource\Video\VideoMapper;
 use Atlas\Testing\DataSource\Video\VideoRecord;
 
-class ManyToOneByReferenceTest extends \PHPUnit\Framework\TestCase
+class ManyToOneVariantTest extends \PHPUnit\Framework\TestCase
 {
     use Assertions;
 
@@ -30,7 +30,7 @@ class ManyToOneByReferenceTest extends \PHPUnit\Framework\TestCase
         $this->mapperLocator = MapperLocator::new($connection);
     }
 
-    public function testFetchByReference()
+    public function testFetchVariant()
     {
         $comments = $this->mapperLocator->get(CommentMapper::CLASS)
             ->select()
@@ -44,7 +44,7 @@ class ManyToOneByReferenceTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(VideoRecord::CLASS, $comments[2]->commentable);
     }
 
-    public function testInsertByReference()
+    public function testInsertVariant()
     {
         $page = $this->mapperLocator->get(PageMapper::CLASS)->fetchRecord(1, ['comments']);
         $comment = $page->comments->appendNew([
@@ -59,7 +59,7 @@ class ManyToOneByReferenceTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($page->page_id, $comment->related_id);
     }
 
-    public function testPersistByReference()
+    public function testPersistVariant()
     {
         $page = $this->mapperLocator->get(PageMapper::CLASS)->fetchRecord(1, ['comments']);
         $comment = $page->comments->appendNew([
@@ -75,7 +75,7 @@ class ManyToOneByReferenceTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($page->page_id, $comment->related_id);
     }
 
-    public function testPersistByReference_noSuchReferenceValue()
+    public function testPersistVariant_noSuchType()
     {
         $page = $this->mapperLocator->get(PageMapper::CLASS)->fetchRecord(1, ['comments']);
         $comment = $page->comments->appendNew([
@@ -85,12 +85,12 @@ class ManyToOneByReferenceTest extends \PHPUnit\Framework\TestCase
 
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage(
-            "Reference relationship for 'NO_SUCH_TYPE' not defined in Atlas\Testing\DataSource\Comment\CommentMapper."
+            "Variant relationship type 'NO_SUCH_TYPE' not defined in Atlas\Testing\DataSource\Comment\CommentMapper."
         );
         $this->mapperLocator->get(PageMapper::CLASS)->persist($page);
     }
 
-    public function testPersistByReference_noSuchReferenceMapper()
+    public function testPersistVariant_emptyType()
     {
         $page = $this->mapperLocator->get(PageMapper::CLASS)->fetchRecord(1, ['comments']);
         $comment = $page->comments->appendNew([
@@ -100,31 +100,9 @@ class ManyToOneByReferenceTest extends \PHPUnit\Framework\TestCase
 
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage(
-            "Reference relationship for '' not defined in Atlas\Testing\DataSource\Comment\CommentMapper."
+            "Variant relationship type '' not defined in Atlas\Testing\DataSource\Comment\CommentMapper."
         );
         $this->mapperLocator->get(PageMapper::CLASS)->persist($page);
-    }
-
-    public function testWhere()
-    {
-        $relationship = $this->mapperLocator
-            ->get(CommentMapper::CLASS)
-            ->getRelationships()
-            ->get('commentable');
-
-        $this->expectException(Exception::CLASS);
-        $relationship->where('foo = ', 'bar');
-    }
-
-    public function testIgnoreCase()
-    {
-        $relationship = $this->mapperLocator
-            ->get(CommentMapper::CLASS)
-            ->getRelationships()
-            ->get('commentable');
-
-        $this->expectException(Exception::CLASS);
-        $relationship->ignoreCase();
     }
 
     public function testStitchIntoRecords_noNativeRecords()

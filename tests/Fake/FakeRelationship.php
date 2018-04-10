@@ -2,10 +2,10 @@
 namespace Atlas\Mapper\Fake;
 
 use Atlas\Mapper\Record;
-use Atlas\Mapper\Relationship\Relationship;
+use Atlas\Mapper\Relationship\RegularRelationship;
 use SplObjectStorage;
 
-class FakeRelationship extends Relationship
+class FakeRelationship extends RegularRelationship
 {
     public function __construct()
     {
