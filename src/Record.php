@@ -46,6 +46,12 @@ abstract class Record implements JsonSerializable
     {
         $prop = $this->assertHas($field);
         $this->$prop->$field = $value;
+        if (
+            $this->status !== self::INSERT
+            && $this->status !== self::DELETE
+        ) {
+            $this->status = self::UPDATE;
+        }
     }
 
     public function __isset(string $field) : bool

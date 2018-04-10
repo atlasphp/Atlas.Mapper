@@ -1,5 +1,3 @@
-- Test that fetch/yield actually work through MapperSelect
-
 - Figure how to add relationships to {FOO}Fields
 
     - Parse MapperRelationships ?
