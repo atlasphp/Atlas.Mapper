@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\Relationship;
 
+use Atlas\Mapper\Exception;
 use Atlas\Mapper\Mapper;
 use Atlas\Mapper\MapperLocator;
 use Atlas\Mapper\MapperSelect;

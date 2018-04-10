@@ -12,6 +12,11 @@ namespace Atlas\Mapper;
 
 class Exception extends \Exception
 {
+    public static function classDoesNotExist($class) : Exception
+    {
+        return new Exception("Class '{$class}' does not exist.");
+    }
+
     public static function propertyDoesNotExist($class, string $property) : Exception
     {
         if (is_object($class)) {

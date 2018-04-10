@@ -7,10 +7,6 @@ use SplObjectStorage;
 
 class FakeRelationship extends RegularRelationship
 {
-    public function __construct()
-    {
-    }
-
     public function __call($func, $args)
     {
         return $this->$func(...$args);
