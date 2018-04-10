@@ -91,11 +91,6 @@ abstract class RegularRelationship extends Relationship
         }
     }
 
-    public function getNativeMapper() : Mapper
-    {
-        return $this->mapperLocator->get($this->nativeMapperClass);
-    }
-
     public function getForeignMapper() : Mapper
     {
         return $this->mapperLocator->get($this->foreignMapperClass);
