@@ -12,16 +12,16 @@ namespace Atlas\Mapper;
 
 class Exception extends \Exception
 {
-    public static function classDoesNotExist($class) : Exception
+    public static function classDoesNotExist(string $class) : Exception
     {
         return new Exception("Class '{$class}' does not exist.");
     }
 
-    public static function propertyDoesNotExist($class, string $property) : Exception
+    public static function propertyDoesNotExist(
+        string $class,
+        string $property
+    ) : Exception
     {
-        if (is_object($class)) {
-            $class = get_class($class);
-        }
         return new Exception("{$class}::\${$property} does not exist.");
     }
 
@@ -46,26 +46,28 @@ class Exception extends \Exception
         return new Exception("Row already exists in IdentityMap.");
     }
 
-    public static function relationshipDoesNotExist(string $foreignName) : Exception
+    public static function relationshipDoesNotExist(
+        string $foreignName
+    ) : Exception
     {
         return new Exception("Relationship '$foreignName' does not exist.");
     }
 
-    public static function primaryValueNotScalar($col, $val)
+    public static function primaryValueNotScalar(string $col, $val)
     {
         $message = "Expected scalar value for primary key '{$col}', "
             . "got " . gettype($val) . " instead.";
         return new Exception($message);
     }
 
-    public static function primaryValueMissing($col)
+    public static function primaryValueMissing(string $col)
     {
         $message = "Expected scalar value for primary key '$col', "
             . "value is missing instead.";
         return new Exception($message);
     }
 
-    public static function relatedNameConflict($name)
+    public static function relatedNameConflict(string $name)
     {
         $message = "Relationship '$name' conflicts with existing column name.";
         return new Exception($message);
@@ -77,9 +79,9 @@ class Exception extends \Exception
         return new Exception($message);
     }
 
-    public static function noSuchType($nativeMapperClass, $discriminatorVal)
+    public static function noSuchType(string $nativeMapperClass, $typeVal)
     {
-        $message = "Variant relationship type '{$discriminatorVal}' "
+        $message = "Variant relationship type '{$typeVal}' "
             . "not defined in {$nativeMapperClass}.";
         return new Exception($message);
     }

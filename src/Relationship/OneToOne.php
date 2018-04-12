@@ -39,7 +39,10 @@ class OneToOne extends RegularRelationship
         }
     }
 
-    public function persistForeign(Record $nativeRecord, SplObjectStorage $tracker) : void
+    public function persistForeign(
+        Record $nativeRecord,
+        SplObjectStorage $tracker
+    ) : void
     {
         $foreignRecord = $nativeRecord->{$this->name};
         if (! $foreignRecord instanceof Record) {

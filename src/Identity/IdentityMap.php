@@ -86,10 +86,6 @@ abstract class IdentityMap
      * will result in a different serial than `['bar' => 2, 'foo' => 1]`, even
      * though the key-value pairs themselves are the same.
      *
-     * @param array $primary Primary-key column-value pairs.
-     *
-     * @return string The serialized identity value.
-     *
      */
     public function getSerial($spec) : string
     {

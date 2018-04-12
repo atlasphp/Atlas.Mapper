@@ -96,7 +96,7 @@ class Related
     protected function assertHas($name) : void
     {
         if (! $this->has($name)) {
-            throw Exception::propertyDoesNotExist($this, $name);
+            throw Exception::propertyDoesNotExist(static::CLASS, $name);
         }
     }
 }

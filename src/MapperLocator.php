@@ -62,7 +62,7 @@ class MapperLocator
         return $this->mappers[$class];
     }
 
-    protected function newMapper($class)
+    protected function newMapper($class) : Mapper
     {
         $prefix = substr($class, 0, -6);
         $table = "{$prefix}Table";

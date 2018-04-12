@@ -45,7 +45,10 @@ class OneToMany extends RegularRelationship
         }
     }
 
-    public function persistForeign(Record $nativeRecord, SplObjectStorage $tracker) : void
+    public function persistForeign(
+        Record $nativeRecord,
+        SplObjectStorage $tracker
+    ) : void
     {
         $foreignRecordSet = $nativeRecord->{$this->name};
         if (! $foreignRecordSet instanceof RecordSet) {

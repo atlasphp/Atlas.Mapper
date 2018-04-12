@@ -113,6 +113,6 @@ abstract class Record implements JsonSerializable
             return 'related';
         }
 
-        throw Exception::propertyDoesNotExist($this, $field);
+        throw Exception::propertyDoesNotExist(static::CLASS, $field);
     }
 }

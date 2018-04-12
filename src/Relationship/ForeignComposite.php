@@ -15,6 +15,7 @@ use Atlas\Mapper\MapperSelect;
 class ForeignComposite
 {
     protected $foreignTableName;
+
     protected $on;
 
     public function __construct(string $foreignTableName, array $on)

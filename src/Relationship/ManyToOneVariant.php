@@ -72,9 +72,6 @@ class ManyToOneVariant extends Relationship
         return $this;
     }
 
-    /**
-     * @todo make this apply to the type values as well
-     */
     public function ignoreCase(bool $ignoreCase = true) : Relationship
     {
         if (empty($this->variants)) {

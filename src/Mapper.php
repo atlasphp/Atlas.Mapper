@@ -68,7 +68,10 @@ abstract class Mapper
         return $this->turnRowIntoRecord($row, $with);
     }
 
-    public function fetchRecordBy(array $whereEquals, array $with = []) : ?Record
+    public function fetchRecordBy(
+        array $whereEquals,
+        array $with = []
+    ) : ?Record
     {
         $row = $this->table->select($whereEquals)->fetchRow();
         if ($row === null) {
@@ -116,13 +119,19 @@ abstract class Mapper
         return $this->turnRowsIntoRecords($rows, $with);
     }
 
-    public function fetchRecordSet(array $primaryVals, array $with = []) : RecordSet
+    public function fetchRecordSet(
+        array $primaryVals,
+        array $with = []
+    ) : RecordSet
     {
         $records = $this->fetchRecords($primaryVals, $with);
         return $this->newRecordSet($records);
     }
 
-    public function fetchRecordSetBy(array $whereEquals, array $with = []) : RecordSet
+    public function fetchRecordSetBy(
+        array $whereEquals,
+        array $with = []
+    ) : RecordSet
     {
         $records = $this->fetchRecordsBy($whereEquals, $with);
         return $this->newRecordSet($records);
@@ -149,7 +158,12 @@ abstract class Mapper
         $this->identityMap->setRow($row);
 
         $this->relationships->fixForeignRecordKeys($record);
-        $this->mapperEvents->afterInsert($this, $record, $insert, $pdoStatement);
+        $this->mapperEvents->afterInsert(
+            $this,
+            $record,
+            $insert,
+            $pdoStatement
+        );
         return true;
     }
 
@@ -159,12 +173,20 @@ abstract class Mapper
         $this->relationships->fixNativeRecordKeys($record);
         $update = $this->table->updateRowPrepare($record->getRow());
         $this->mapperEvents->modifyUpdate($this, $record, $update);
-        $pdoStatement = $this->table->updateRowPerform($record->getRow(), $update);
+        $pdoStatement = $this->table->updateRowPerform(
+            $record->getRow(),
+            $update
+        );
         $this->relationships->fixForeignRecordKeys($record);
         if ($pdoStatement === null) {
             return false;
         }
-        $this->mapperEvents->afterUpdate($this, $record, $update, $pdoStatement);
+        $this->mapperEvents->afterUpdate(
+            $this,
+            $record,
+            $update,
+            $pdoStatement
+        );
         return true;
     }
 
@@ -173,12 +195,23 @@ abstract class Mapper
         $this->mapperEvents->beforeDelete($this, $record);
         $delete = $this->table->deleteRowPrepare($record->getRow());
         $this->mapperEvents->modifyDelete($this, $record, $delete);
-        $pdoStatement = $this->table->deleteRowPerform($record->getRow(), $delete);
-        $this->mapperEvents->afterDelete($this, $record, $delete, $pdoStatement);
+        $pdoStatement = $this->table->deleteRowPerform(
+            $record->getRow(),
+            $delete
+        );
+        $this->mapperEvents->afterDelete(
+            $this,
+            $record,
+            $delete,
+            $pdoStatement
+        );
         return true;
     }
 
-    public function persist(Record $record, SplObjectStorage $tracker = null) : bool
+    public function persist(
+        Record $record,
+        SplObjectStorage $tracker = null
+    ) : bool
     {
         if ($tracker === null) {
             $tracker = new SplObjectStorage();
@@ -253,8 +286,10 @@ abstract class Mapper
         );
     }
 
-    /* override to enable single table inheritance */
-    /* record class must be in same namespace as mapper */
+    /**
+     * Override to enable single table inheritance.
+     * Record class must be in same namespace as mapper.
+     */
     protected function getRecordClass(Row $row) : string
     {
         return substr(static::class, 0, -6) . 'Record';

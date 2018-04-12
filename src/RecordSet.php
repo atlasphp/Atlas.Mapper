@@ -17,7 +17,11 @@ use Countable;
 use IteratorAggregate;
 use JsonSerializable;
 
-abstract class RecordSet implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
+abstract class RecordSet implements
+    ArrayAccess,
+    Countable,
+    IteratorAggregate,
+    JsonSerializable
 {
     private $records = [];
 
