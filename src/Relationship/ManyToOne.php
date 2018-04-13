@@ -13,7 +13,7 @@ namespace Atlas\Mapper\Relationship;
 use Atlas\Mapper\Record;
 use SplObjectStorage;
 
-class ManyToOne extends OneToOne
+class ManyToOne extends RegularRelationship
 {
     protected function setOn(array $on) : void
     {
@@ -28,7 +28,19 @@ class ManyToOne extends OneToOne
         }
     }
 
-    public function fixNativeRecordKeys(Record $nativeRecord) : void
+    protected function stitchIntoRecord(
+        Record $nativeRecord,
+        array $foreignRecords
+    ) : void {
+        $nativeRecord->{$this->name} = false;
+        foreach ($foreignRecords as $foreignRecord) {
+            if ($this->recordsMatch($nativeRecord, $foreignRecord)) {
+                $nativeRecord->{$this->name} = $foreignRecord;
+            }
+        }
+    }
+
+    public function fixNativeRecord(Record $nativeRecord) : void
     {
         $foreignRecord = $nativeRecord->{$this->name};
         if (! $foreignRecord instanceof Record) {
@@ -38,5 +50,30 @@ class ManyToOne extends OneToOne
         foreach ($this->on as $nativeField => $foreignField) {
             $nativeRecord->$nativeField = $foreignRecord->$foreignField;
         }
+    }
+
+    public function fixForeignRecord(Record $nativeRecord) : void
+    {
+        $foreignRecord = $nativeRecord->{$this->name};
+        if (! $foreignRecord instanceof Record) {
+            return;
+        }
+
+        foreach ($this->on as $nativeField => $foreignField) {
+            $foreignRecord->$foreignField = $nativeRecord->$nativeField;
+        }
+    }
+
+    public function persistForeign(
+        Record $nativeRecord,
+        SplObjectStorage $tracker
+    ) : void
+    {
+        $foreignRecord = $nativeRecord->{$this->name};
+        if (! $foreignRecord instanceof Record) {
+            return;
+        }
+
+        $this->getForeignMapper()->persist($foreignRecord, $tracker);
     }
 }

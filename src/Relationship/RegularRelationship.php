@@ -34,6 +34,8 @@ abstract class RegularRelationship extends Relationship
 
     protected $foreignStrategy;
 
+    protected $onDelete;
+
     public function __construct(
         string $name,
         MapperLocator $mapperLocator,

@@ -148,7 +148,7 @@ abstract class Mapper
     public function insert(Record $record) : bool
     {
         $this->mapperEvents->beforeInsert($this, $record);
-        $this->relationships->fixNativeRecordKeys($record);
+        $this->relationships->fixNativeRecord($record);
         $insert = $this->table->insertRowPrepare($record->getRow());
         $this->mapperEvents->modifyInsert($this, $record, $insert);
 
@@ -157,7 +157,7 @@ abstract class Mapper
 
         $this->identityMap->setRow($row);
 
-        $this->relationships->fixForeignRecordKeys($record);
+        $this->relationships->fixForeignRecord($record);
         $this->mapperEvents->afterInsert(
             $this,
             $record,
@@ -170,14 +170,14 @@ abstract class Mapper
     public function update(Record $record) : bool
     {
         $this->mapperEvents->beforeUpdate($this, $record);
-        $this->relationships->fixNativeRecordKeys($record);
+        $this->relationships->fixNativeRecord($record);
         $update = $this->table->updateRowPrepare($record->getRow());
         $this->mapperEvents->modifyUpdate($this, $record, $update);
         $pdoStatement = $this->table->updateRowPerform(
             $record->getRow(),
             $update
         );
-        $this->relationships->fixForeignRecordKeys($record);
+        $this->relationships->fixForeignRecord($record);
         if ($pdoStatement === null) {
             return false;
         }
@@ -224,14 +224,14 @@ abstract class Mapper
         $tracker->attach($record);
 
         $this->relationships->persistBeforeNative($record, $tracker);
-        $this->relationships->fixNativeRecordKeys($record);
+        $this->relationships->fixNativeRecord($record);
 
         $method = $record->getAction();
         if ($method !== '') {
             $this->$method($record);
         }
 
-        $this->relationships->fixForeignRecordKeys($record);
+        $this->relationships->fixForeignRecord($record);
         $this->relationships->persistAfterNative($record, $tracker);
 
         return true;

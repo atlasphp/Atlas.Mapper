@@ -117,11 +117,11 @@ class ManyToOneVariant extends Relationship
         }
     }
 
-    public function fixNativeRecordKeys(Record $nativeRecord) : void
+    public function fixNativeRecord(Record $nativeRecord) : void
     {
         $this->fixNativeTypeVal($nativeRecord);
         $variant = $this->getVariant($nativeRecord->{$this->typeCol});
-        $variant->fixNativeRecordKeys($nativeRecord);
+        $variant->fixNativeRecord($nativeRecord);
     }
 
     public function persistForeign(Record $nativeRecord, SplObjectStorage $tracker) : void

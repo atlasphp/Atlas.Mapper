@@ -45,12 +45,12 @@ abstract class Relationship
         callable $custom = null
     ) : void;
 
-    public function fixNativeRecordKeys(Record $nativeRecord) : void
+    public function fixNativeRecord(Record $nativeRecord) : void
     {
         // by default do nothing
     }
 
-    public function fixForeignRecordKeys(Record $nativeRecord) : void
+    public function fixForeignRecord(Record $nativeRecord) : void
     {
         // by default do nothing
     }

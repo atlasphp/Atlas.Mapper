@@ -183,17 +183,17 @@ abstract class MapperRelationships
         return $with;
     }
 
-    public function fixNativeRecordKeys(Record $nativeRecord) : void
+    public function fixNativeRecord(Record $nativeRecord) : void
     {
         foreach ($this->relationships as $relationship) {
-            $relationship->fixNativeRecordKeys($nativeRecord);
+            $relationship->fixNativeRecord($nativeRecord);
         }
     }
 
-    public function fixForeignRecordKeys(Record $nativeRecord) : void
+    public function fixForeignRecord(Record $nativeRecord) : void
     {
         foreach ($this->relationships as $relationship) {
-            $relationship->fixForeignRecordKeys($nativeRecord);
+            $relationship->fixForeignRecord($nativeRecord);
         }
     }
 

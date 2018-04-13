@@ -14,7 +14,7 @@ use Atlas\Mapper\Record;
 use Atlas\Mapper\RecordSet;
 use SplObjectStorage;
 
-class OneToMany extends RegularRelationship
+class OneToMany extends DeletableRelationship
 {
     protected function stitchIntoRecord(
         Record $nativeRecord,
@@ -31,7 +31,7 @@ class OneToMany extends RegularRelationship
         $nativeRecord->{$this->name} = $this->getForeignMapper()->newRecordSet($matches);
     }
 
-    public function fixForeignRecordKeys(Record $nativeRecord) : void
+    public function fixForeignRecord(Record $nativeRecord) : void
     {
         $foreignRecordSet = $nativeRecord->{$this->name};
         if (! $foreignRecordSet instanceof RecordSet) {
@@ -42,6 +42,7 @@ class OneToMany extends RegularRelationship
             foreach ($this->on as $nativeField => $foreignField) {
                 $foreignRecord->$foreignField = $nativeRecord->$nativeField;
             }
+            $this->fixForeignRecordDeleted($nativeRecord, $foreignRecord);
         }
     }
 
