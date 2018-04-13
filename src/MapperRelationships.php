@@ -224,8 +224,12 @@ abstract class MapperRelationships
 
     protected function assertRelatedName(string $name) : void
     {
+        if (isset($this->relationships[$name])) {
+            throw Exception::relatedNameConflict($name, 'relationship');
+        }
+
         if (in_array($name, $this->nativeTableColumns)) {
-            throw Exception::relatedNameConflict($name);
+            throw Exception::relatedNameConflict($name, 'column');
         }
     }
 }
