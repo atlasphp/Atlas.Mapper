@@ -52,7 +52,7 @@ abstract class Record implements JsonSerializable
 
     public function getMapperClass() : string
     {
-        return substr(get_class($this), 0, -6) . 'Mapper';
+        return substr(static::CLASS, 0, -6) . 'Mapper';
     }
 
     public function getRow() : Row
