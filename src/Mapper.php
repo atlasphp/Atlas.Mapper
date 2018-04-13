@@ -245,6 +245,15 @@ abstract class Mapper
         return $record;
     }
 
+    public function newRecords(array $fieldSets) : array
+    {
+        $records = [];
+        foreach ($fieldSets as $fields) {
+            $records[] = $this->newRecord($fields);
+        }
+        return $records;
+    }
+
     public function newRecordSet(array $records = []) : RecordSet
     {
         $recordSetClass = $this->recordSetClass;
