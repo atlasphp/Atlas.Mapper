@@ -152,6 +152,19 @@ abstract class RecordSet implements
         return $this->cloneSet($records);
     }
 
+    public function detachDeleted() : RecordSet
+    {
+        $records = [];
+        foreach ($this->records as $i => $record) {
+            $row = $record->getRow();
+            if ($row->getStatus() === $row::DELETED) {
+                unset($this->records[$i]);
+                $records[$i] = $record;
+            }
+        }
+        return $this->cloneSet($records);
+    }
+
     protected function compareBy(Record $record, array $whereEquals) : bool
     {
         foreach ($whereEquals as $field => $value) {
