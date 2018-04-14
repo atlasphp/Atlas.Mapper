@@ -147,16 +147,13 @@ abstract class Mapper
 
     public function insert(Record $record) : bool
     {
+        $row = $record->getRow();
         $this->mapperEvents->beforeInsert($this, $record);
         $this->relationships->fixNativeRecord($record);
-        $insert = $this->table->insertRowPrepare($record->getRow());
+        $insert = $this->table->insertRowPrepare($row);
         $this->mapperEvents->modifyInsert($this, $record, $insert);
-
-        $row = $record->getRow();
         $pdoStatement = $this->table->insertRowPerform($row, $insert);
-
         $this->identityMap->setRow($row);
-
         $this->relationships->fixForeignRecord($record);
         $this->mapperEvents->afterInsert(
             $this,
@@ -169,14 +166,12 @@ abstract class Mapper
 
     public function update(Record $record) : bool
     {
+        $row = $record->getRow();
         $this->mapperEvents->beforeUpdate($this, $record);
         $this->relationships->fixNativeRecord($record);
-        $update = $this->table->updateRowPrepare($record->getRow());
+        $update = $this->table->updateRowPrepare($row);
         $this->mapperEvents->modifyUpdate($this, $record, $update);
-        $pdoStatement = $this->table->updateRowPerform(
-            $record->getRow(),
-            $update
-        );
+        $pdoStatement = $this->table->updateRowPerform($row, $update);
         $this->relationships->fixForeignRecord($record);
         if ($pdoStatement === null) {
             return false;
@@ -192,13 +187,14 @@ abstract class Mapper
 
     public function delete(Record $record) : bool
     {
+        $row = $record->getRow();
+        if ($row->getStatus() === $row::DELETED) {
+            return false;
+        }
         $this->mapperEvents->beforeDelete($this, $record);
-        $delete = $this->table->deleteRowPrepare($record->getRow());
+        $delete = $this->table->deleteRowPrepare($row);
         $this->mapperEvents->modifyDelete($this, $record, $delete);
-        $pdoStatement = $this->table->deleteRowPerform(
-            $record->getRow(),
-            $delete
-        );
+        $pdoStatement = $this->table->deleteRowPerform($row, $delete);
         $this->mapperEvents->afterDelete(
             $this,
             $record,
