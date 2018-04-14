@@ -119,7 +119,7 @@ abstract class RecordSet implements
                 $records[$i] = $record;
             }
         }
-        return $this->newSubset($records);
+        return $this->cloneSet($records);
     }
 
     public function detachOneBy(array $whereEquals) : ?Record
@@ -142,14 +142,14 @@ abstract class RecordSet implements
                 $records[$i] = $record;
             }
         }
-        return $this->newSubset($records);
+        return $this->cloneSet($records);
     }
 
     public function detachAll() : RecordSet
     {
         $records = $this->records;
         $this->records = [];
-        return $this->newSubset($records);
+        return $this->cloneSet($records);
     }
 
     protected function compareBy(Record $record, array $whereEquals) : bool
@@ -174,9 +174,10 @@ abstract class RecordSet implements
         return $this->getArrayCopy();
     }
 
-    protected function newSubset(array $records) : RecordSet
+    private function cloneSet(array $records) : RecordSet
     {
-        $class = static::CLASS;
-        return new $class($records, $this->newRecord);
+        $clone = clone($this);
+        $clone->records = $records;
+        return $clone;
     }
 }
