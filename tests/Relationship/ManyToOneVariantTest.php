@@ -61,8 +61,7 @@ class ManyToOneVariantTest extends RelationshipTest
 
         $this->assertNull($comment->related_type);
         $this->assertNull($comment->related_id);
-        $success = $this->mapperLocator->get(PageMapper::CLASS)->persist($page);
-        $this->assertTrue($success);
+        $this->mapperLocator->get(PageMapper::CLASS)->persist($page);
         $this->assertEquals('page', $comment->related_type);
         $this->assertEquals($page->page_id, $comment->related_id);
     }

@@ -145,7 +145,7 @@ abstract class Mapper
         return $select;
     }
 
-    public function insert(Record $record) : bool
+    public function insert(Record $record) : void
     {
         $row = $record->getRow();
         $this->mapperEvents->beforeInsert($this, $record);
@@ -161,10 +161,9 @@ abstract class Mapper
             $insert,
             $pdoStatement
         );
-        return true;
     }
 
-    public function update(Record $record) : bool
+    public function update(Record $record) : void
     {
         $row = $record->getRow();
         $this->mapperEvents->beforeUpdate($this, $record);
@@ -174,7 +173,7 @@ abstract class Mapper
         $pdoStatement = $this->table->updateRowPerform($row, $update);
         $this->relationships->fixForeignRecord($record);
         if ($pdoStatement === null) {
-            return false;
+            return;
         }
         $this->mapperEvents->afterUpdate(
             $this,
@@ -182,15 +181,11 @@ abstract class Mapper
             $update,
             $pdoStatement
         );
-        return true;
     }
 
-    public function delete(Record $record) : bool
+    public function delete(Record $record) : void
     {
         $row = $record->getRow();
-        if ($row->getStatus() === $row::DELETED) {
-            return false;
-        }
         $this->mapperEvents->beforeDelete($this, $record);
         $delete = $this->table->deleteRowPrepare($row);
         $this->mapperEvents->modifyDelete($this, $record, $delete);
@@ -201,20 +196,19 @@ abstract class Mapper
             $delete,
             $pdoStatement
         );
-        return true;
     }
 
     public function persist(
         Record $record,
         SplObjectStorage $tracker = null
-    ) : bool
+    ) : void
     {
         if ($tracker === null) {
             $tracker = new SplObjectStorage();
         }
 
         if ($tracker->contains($record)) {
-            return false;
+            return;
         }
 
         $tracker->attach($record);
@@ -229,8 +223,6 @@ abstract class Mapper
 
         $this->relationships->fixForeignRecord($record);
         $this->relationships->persistAfterNative($record, $tracker);
-
-        return true;
     }
 
     public function newRecord(array $fields = []) : Record

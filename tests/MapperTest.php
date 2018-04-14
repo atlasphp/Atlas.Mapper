@@ -277,9 +277,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $author = $this->mapperLocator->get(AuthorMapper::CLASS)->newRecord();
         $author->name = 'Mona';
 
-        // does the insert *look* successful?
-        $success = $this->mapperLocator->get(AuthorMapper::CLASS)->insert($author);
-        $this->assertTrue($success);
+        // attempt the insert
+        $this->mapperLocator->get(AuthorMapper::CLASS)->insert($author);
 
         // did the autoincrement ID get retained?
         $this->assertEquals(13, $author->author_id);
@@ -311,9 +310,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         );
         $author->name = 'Annabelle';
 
-        // did the update *look* successful?
-        $success = $this->mapperLocator->get(AuthorMapper::CLASS)->update($author);
-        $this->assertTrue($success);
+        // attempt the update
+        $this->mapperLocator->get(AuthorMapper::CLASS)->update($author);
 
         // is it still in the identity map?
         $again = $this->mapperLocator->get(AuthorMapper::CLASS)->fetchRecordBy(
@@ -330,9 +328,6 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 "SELECT * FROM authors WHERE name = 'Annabelle'"
             );
         $this->assertSame($expect, $actual);
-
-        // try to update again, should be a no-op because there are no changes
-        $this->assertFalse($this->mapperLocator->get(AuthorMapper::CLASS)->update($author));
     }
 
     public function testDelete()
@@ -342,9 +337,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             ['name' => 'Anna']
         );
 
-        // did the delete *look* successful?
-        $success = $this->mapperLocator->get(AuthorMapper::CLASS)->delete($author);
-        $this->assertTrue($success);
+        // attmept the delete
+        $this->mapperLocator->get(AuthorMapper::CLASS)->delete($author);
 
         // was it *actually* deleted?
         $actual = $this->mapperLocator->get(AuthorMapper::CLASS)->fetchRecordBy(
