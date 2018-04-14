@@ -111,7 +111,7 @@ abstract class RecordSet implements
         return null;
     }
 
-    public function getAllBy(array $whereEquals) : array
+    public function getAllBy(array $whereEquals) : RecordSet
     {
         $records = [];
         foreach ($this->records as $i => $record) {
@@ -119,7 +119,7 @@ abstract class RecordSet implements
                 $records[$i] = $record;
             }
         }
-        return $records;
+        return $this->newSubset($records);
     }
 
     public function detachOneBy(array $whereEquals) : ?Record
@@ -133,7 +133,7 @@ abstract class RecordSet implements
         return null;
     }
 
-    public function detachAllBy(array $whereEquals) : array
+    public function detachAllBy(array $whereEquals) : RecordSet
     {
         $records = [];
         foreach ($this->records as $i => $record) {
@@ -142,14 +142,14 @@ abstract class RecordSet implements
                 $records[$i] = $record;
             }
         }
-        return $records;
+        return $this->newSubset($records);
     }
 
-    public function detachAll() : array
+    public function detachAll() : RecordSet
     {
         $records = $this->records;
         $this->records = [];
-        return $records;
+        return $this->newSubset($records);
     }
 
     protected function compareBy(Record $record, array $whereEquals) : bool
@@ -172,5 +172,11 @@ abstract class RecordSet implements
     public function jsonSerialize() : array
     {
         return $this->getArrayCopy();
+    }
+
+    protected function newSubset(array $records) : RecordSet
+    {
+        $class = static::CLASS;
+        return new $class($records, $this->newRecord);
     }
 }

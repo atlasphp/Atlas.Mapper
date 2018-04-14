@@ -16,3 +16,6 @@
   the events, and update it again if needed. (E.g. bidirectional one-to-one.)
   Do not trigger MapperEvents, though I don't see how to avoid triggering
   TableEvents. (Perhaps a new method, Table::updateRowWithoutEvents().)
+
+- Add a "required" on one-to-one  and many-to-one? Existing 1:1 and M:1 are
+  really to-zero-or-one, and "required" is to-exactly-one. Maybe "always".

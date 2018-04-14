@@ -83,7 +83,7 @@ class RecordSetTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($record, $this->recordSet[1]);
     }
 
-    public function testGetAndRemove()
+    public function testGetAndDetach()
     {
         $this->recordSet->appendNew(['id' => 2, 'foo' => 'bar1']);
         $this->recordSet->appendNew(['id' => 3, 'foo' => 'bar2']);
