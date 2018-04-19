@@ -251,6 +251,7 @@ abstract class Mapper
         foreach ($recordSet as $record) {
             $this->persistRecord($record, $tracker);
         }
+        $recordSet->detachDeleted();
     }
 
     public function newRecord(array $fields = []) : Record
