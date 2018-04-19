@@ -199,7 +199,7 @@ abstract class Mapper
     }
 
     public function persist(
-        $recordOrRecordSet,
+        Record $record,
         SplObjectStorage $tracker = null
     ) : void
     {
@@ -207,24 +207,6 @@ abstract class Mapper
             $tracker = new SplObjectStorage();
         }
 
-        if ($recordOrRecordSet instanceof Record) {
-            $this->persistRecord($recordOrRecordSet, $tracker);
-            return;
-        }
-
-        if ($recordOrRecordSet instanceof RecordSet) {
-            $this->persistRecordSet($recordOrRecordSet, $tracker);
-            return;
-        }
-
-        throw Exception::invalidType('Record or RecordSet', $recordOrRecordSet);
-    }
-
-    protected function persistRecord(
-        Record $record,
-        SplObjectStorage $tracker
-    ) : void
-    {
         if ($tracker->contains($record)) {
             return;
         }
@@ -241,17 +223,6 @@ abstract class Mapper
 
         $this->relationships->fixForeignRecord($record);
         $this->relationships->persistAfterNative($record, $tracker);
-    }
-
-    protected function persistRecordSet(
-        RecordSet $recordSet,
-        SplObjectStorage $tracker
-    ) : void
-    {
-        foreach ($recordSet as $record) {
-            $this->persistRecord($record, $tracker);
-        }
-        $recordSet->detachDeleted();
     }
 
     public function newRecord(array $fields = []) : Record
