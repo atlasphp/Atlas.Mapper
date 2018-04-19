@@ -1,5 +1,5 @@
 # CHANGELOG
 
-## 1.x
+## 1.0.0-alpha1
 
-No releases yet.
+Initial release.
