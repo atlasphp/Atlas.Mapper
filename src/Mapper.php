@@ -26,6 +26,8 @@ abstract class Mapper
 
     protected $recordSetClass;
 
+    protected $identityMap;
+
     public function __construct(
         Table $table,
         MapperRelationships $relationships,

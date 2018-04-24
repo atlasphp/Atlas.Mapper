@@ -14,6 +14,7 @@ use Atlas\Mapper\Record;
 
 abstract class DeletableRelationship extends RegularRelationship
 {
+    const CASCADE = 'CASCADE';
     const INIT_DELETED = 'INIT_DELETED';
     const SET_DELETE = 'SET_DELETE';
     const SET_NULL = 'SET_NULL';
