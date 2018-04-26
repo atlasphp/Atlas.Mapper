@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Atlas\Mapper;
 
 use Atlas\Mapper\Exception;
+use SplObjectStorage;
 
 class Related
 {
@@ -66,16 +67,25 @@ class Related
         return array_key_exists($name, $this->fields);
     }
 
-    public function getArrayCopy() : array
+    public function getArrayCopy(SplObjectStorage $tracker = null) : array
     {
-        $array = [];
-        foreach ($this->fields as $name => $foreign) {
-            $array[$name] = $foreign;
-            if ($foreign) {
-                $array[$name] = $foreign->getArrayCopy();
-            }
+        if ($tracker === null) {
+            $tracker = new SplObjectStorage();
         }
-        return $array;
+
+        if (! $tracker->contains($this)) {
+            $tracker[$this] = [];
+            $array = [];
+            foreach ($this->fields as $name => $foreign) {
+                $array[$name] = $foreign;
+                if ($foreign) {
+                    $array[$name] = $foreign->getArrayCopy($tracker);
+                }
+            }
+            $tracker[$this] = $array;
+        }
+
+        return $tracker[$this];
     }
 
     protected function modify(string $name, $value) : void

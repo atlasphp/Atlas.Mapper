@@ -17,6 +17,7 @@ use Atlas\Mapper\Relationship\ManyToOne;
 use Atlas\Mapper\Relationship\ManyToOneVariant;
 use Atlas\Mapper\Relationship\OneToMany;
 use Atlas\Mapper\Relationship\OneToOne;
+use Atlas\Mapper\Relationship\OneToOneBidi;
 use Atlas\Mapper\Relationship\Relationship;
 use SplObjectStorage;
 
@@ -60,6 +61,21 @@ abstract class MapperRelationships
         return $this->set(
             $name,
             OneToOne::CLASS,
+            $foreignMapperClass,
+            'persistAfterNative',
+            $on
+        );
+    }
+
+    protected function oneToOneBidi(
+        string $name,
+        string $foreignMapperClass,
+        array $on = []
+    ) : OneToOneBidi
+    {
+        return $this->set(
+            $name,
+            OneToOneBidi::CLASS,
             $foreignMapperClass,
             'persistAfterNative',
             $on

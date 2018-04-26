@@ -13,6 +13,7 @@ namespace Atlas\Mapper;
 use Atlas\Mapper\Exception;
 use Atlas\Table\Row;
 use JsonSerializable;
+use SplObjectStorage;
 
 abstract class Record implements JsonSerializable
 {
@@ -82,10 +83,19 @@ abstract class Record implements JsonSerializable
             || $this->related->has($field);
     }
 
-    public function getArrayCopy() : array
+    public function getArrayCopy(SplObjectStorage $tracker = null) : array
     {
-        return $this->row->getArrayCopy()
-             + $this->related->getArrayCopy();
+        if ($tracker === null) {
+            $tracker = new SplObjectStorage();
+        }
+
+        if (! $tracker->contains($this)) {
+            $tracker[$this]
+                = $this->row->getArrayCopy($tracker)
+                + $this->related->getArrayCopy($tracker);
+        }
+
+        return $tracker[$this];
     }
 
     public function jsonSerialize() : array

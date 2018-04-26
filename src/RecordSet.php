@@ -16,6 +16,7 @@ use Atlas\Mapper\Exception;
 use Countable;
 use IteratorAggregate;
 use JsonSerializable;
+use SplObjectStorage;
 
 abstract class RecordSet implements
     ArrayAccess,
@@ -85,13 +86,22 @@ abstract class RecordSet implements
         return ! $this->records;
     }
 
-    public function getArrayCopy() : array
+    public function getArrayCopy(SplObjectStorage $tracker = null) : array
     {
-        $array = [];
-        foreach ($this as $key => $record) {
-            $array[$key] = $record->getArrayCopy();
+        if ($tracker === null) {
+            $tracker = new SplObjectStorage();
         }
-        return $array;
+
+        if (! $tracker->contains($this)) {
+            $tracker[$this] = [];
+            $array = [];
+            foreach ($this as $key => $record) {
+                $array[] = $record->getArrayCopy($tracker);
+            }
+            $tracker[$this] = $array;
+        }
+
+        return $tracker[$this];
     }
 
     public function appendNew(array $fields = []) : Record
