@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=7.1.0",
-        "atlas/table": "dev-refactory"
+        "atlas/table": "1.x@dev"
     },
     "autoload": {
         "psr-4": {
