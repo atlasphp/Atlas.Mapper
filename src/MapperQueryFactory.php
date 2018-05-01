@@ -10,14 +10,14 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper;
 
-use Atlas\Pdo\Connection;
-use Atlas\Query\Select;
+use Atlas\Query\QueryFactory;
 use Atlas\Table\TableQueryFactory;
 
 class MapperQueryFactory extends TableQueryFactory
 {
-    public function newSelect(Connection $connection) : Select
+    public function newQueryFactory(string $tableClass) : QueryFactory
     {
-        return new MapperSelect($connection, $this->newBind());
+        $selectClass = substr($tableClass, 0, -5) . 'MapperSelect';
+        return new QueryFactory($selectClass);
     }
 }

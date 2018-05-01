@@ -12,7 +12,7 @@ namespace Atlas\Mapper;
 
 use Atlas\Table\TableSelect;
 
-class MapperSelect extends TableSelect
+abstract class MapperSelect extends TableSelect
 {
     protected $mapper;
 
