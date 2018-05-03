@@ -6,16 +6,16 @@ use Atlas\Mapper\RecordSet;
 use Atlas\Pdo\Connection;
 use Atlas\Pdo\Profiler;
 use Atlas\Testing\Assertions;
-use Atlas\Testing\DataSource\Author\AuthorMapper;
-use Atlas\Testing\DataSource\Reply\ReplyMapper;
+use Atlas\Testing\DataSource\Author\Author;
+use Atlas\Testing\DataSource\Reply\Reply;
 use Atlas\Testing\DataSource\Reply\ReplyRecord;
 use Atlas\Testing\DataSource\Reply\ReplyRecordSet;
-use Atlas\Testing\DataSource\SqliteFixture;
-use Atlas\Testing\DataSource\Summary\SummaryMapper;
+use Atlas\Testing\DataSourceFixture;
+use Atlas\Testing\DataSource\Summary\Summary;
 use Atlas\Testing\DataSource\Summary\SummaryTable;
-use Atlas\Testing\DataSource\Tag\TagMapper;
-use Atlas\Testing\DataSource\Tagging\TaggingMapper;
-use Atlas\Testing\DataSource\Thread\ThreadMapper;
+use Atlas\Testing\DataSource\Tag\Tag;
+use Atlas\Testing\DataSource\Tagging\Tagging;
+use Atlas\Testing\DataSource\Thread\Thread;
 use Atlas\Testing\DataSource\Thread\ThreadRecord;
 use Atlas\Testing\DataSource\Thread\ThreadRecordSet;
 
@@ -29,28 +29,28 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        $connection = (new SqliteFixture())->exec();
+        $connection = (new DataSourceFixture())->exec();
         $this->mapperLocator = MapperLocator::new($connection);
     }
 
     public function testNewRecord()
     {
-        $actual = $this->mapperLocator->get(ThreadMapper::CLASS)->newRecord();
+        $actual = $this->mapperLocator->get(Thread::CLASS)->newRecord();
         $this->assertInstanceOf(ThreadRecord::CLASS, $actual);
 
-        $actual = $this->mapperLocator->get(ReplyMapper::CLASS)->newRecord();
+        $actual = $this->mapperLocator->get(Reply::CLASS)->newRecord();
         $this->assertInstanceOf(ReplyRecord::CLASS, $actual);
     }
 
     public function testNewRecordSet()
     {
-        $actual = $this->mapperLocator->get(ThreadMapper::CLASS)->newRecordSet();
+        $actual = $this->mapperLocator->get(Thread::CLASS)->newRecordSet();
         $this->assertInstanceOf(ThreadRecordSet::CLASS, $actual);
     }
 
     public function testFetchRecord()
     {
-        $actual = $this->mapperLocator->get(ThreadMapper::CLASS)->fetchRecord(
+        $actual = $this->mapperLocator->get(Thread::CLASS)->fetchRecord(
             1,
             [
                 'author',
@@ -72,19 +72,19 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($this->expectRecord, $actual->getArrayCopy());
 
         // did the rows identity-map?
-        $again = $this->mapperLocator->get(ThreadMapper::CLASS)->fetchRecord(1);
+        $again = $this->mapperLocator->get(Thread::CLASS)->fetchRecord(1);
         $this->assertSame($actual->getRow(), $again->getRow());
     }
 
     public function testFetchRecord_missing()
     {
-        $actual = $this->mapperLocator->get(ThreadMapper::CLASS)->fetchRecord(88);
+        $actual = $this->mapperLocator->get(Thread::CLASS)->fetchRecord(88);
         $this->assertNull($actual);
     }
 
     public function testFetchRecordBy()
     {
-        $actual = $this->mapperLocator->get(ThreadMapper::CLASS)->fetchRecordBy(
+        $actual = $this->mapperLocator->get(Thread::CLASS)->fetchRecordBy(
             ['thread_id' => 1],
             [
                 'author',
@@ -101,13 +101,13 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($this->expectRecord, $actual->getArrayCopy());
 
         // did the rows identity-map?
-        $again = $this->mapperLocator->get(ThreadMapper::CLASS)->fetchRecord(1);
+        $again = $this->mapperLocator->get(Thread::CLASS)->fetchRecord(1);
         $this->assertSame($actual->getRow(), $again->getRow());
     }
 
     public function testFetchRecordSet()
     {
-        $actual = $this->mapperLocator->get(ThreadMapper::CLASS)->fetchRecordSet(
+        $actual = $this->mapperLocator->get(Thread::CLASS)->fetchRecordSet(
             [1, 2, 3],
             [
                 'author',
@@ -128,7 +128,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
     public function testFetchRecordSetBy()
     {
-        $actual = $this->mapperLocator->get(ThreadMapper::CLASS)->fetchRecordSetBy(
+        $actual = $this->mapperLocator->get(Thread::CLASS)->fetchRecordSetBy(
             ['thread_id' => [1, 2, 3]],
             [
                 'author',
@@ -149,7 +149,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
     public function testFetchRecords()
     {
-        $actual = $this->mapperLocator->get(ThreadMapper::CLASS)->fetchRecords(
+        $actual = $this->mapperLocator->get(Thread::CLASS)->fetchRecords(
             [1, 2, 3, 88],
             [
                 'author',
@@ -171,7 +171,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
     public function testFetchRecordsBy()
     {
-        $actual = $this->mapperLocator->get(ThreadMapper::CLASS)->fetchRecordsBy(
+        $actual = $this->mapperLocator->get(Thread::CLASS)->fetchRecordsBy(
             ['thread_id' => [1, 2, 3]],
             [
                 'author',
@@ -193,7 +193,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
     public function testSelect_fetchRecord()
     {
-        $actual = $this->mapperLocator->get(ThreadMapper::CLASS)->select()
+        $actual = $this->mapperLocator->get(Thread::CLASS)->select()
             ->where('thread_id < ', 2)
             ->with([
                 'author',
@@ -212,7 +212,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
     public function testSelect_fetchRecordNestedArrayWith()
     {
-        $actual = $this->mapperLocator->get(ThreadMapper::CLASS)->select()
+        $actual = $this->mapperLocator->get(Thread::CLASS)->select()
             ->where('thread_id < ', 2)
             ->with([
                 'author',
@@ -231,7 +231,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
     public function testSelect_fetchRecordCallableArrayWith()
     {
-        $actual = $this->mapperLocator->get(ThreadMapper::CLASS)->select()
+        $actual = $this->mapperLocator->get(Thread::CLASS)->select()
             ->where('thread_id < ', 2)
             ->with([
                 'author',
@@ -251,7 +251,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
     public function testSelect_fetchRecordSet()
     {
-        $actual = $this->mapperLocator->get(ThreadMapper::CLASS)->select()
+        $actual = $this->mapperLocator->get(Thread::CLASS)->select()
             ->where('thread_id < ', 4)
             ->with([
                 'author',
@@ -274,17 +274,17 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testInsert()
     {
         // create a new record
-        $author = $this->mapperLocator->get(AuthorMapper::CLASS)->newRecord();
+        $author = $this->mapperLocator->get(Author::CLASS)->newRecord();
         $author->name = 'Mona';
 
         // attempt the insert
-        $this->mapperLocator->get(AuthorMapper::CLASS)->insert($author);
+        $this->mapperLocator->get(Author::CLASS)->insert($author);
 
         // did the autoincrement ID get retained?
         $this->assertEquals(13, $author->author_id);
 
         // did it save in the identity map?
-        $again = $this->mapperLocator->get(AuthorMapper::CLASS)->fetchRecord(13);
+        $again = $this->mapperLocator->get(Author::CLASS)->fetchRecord(13);
         $this->assertSame($author->getRow(), $again->getRow());
 
         // was it *actually* inserted?
@@ -293,7 +293,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             'name' => 'Mona',
         ];
         $actual = $this->mapperLocator
-            ->get(AuthorMapper::CLASS)
+            ->get(Author::CLASS)
             ->getTable()
             ->getReadConnection()
             ->fetchOne(
@@ -305,23 +305,23 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testUpdate()
     {
         // fetch a record, then modify and update it
-        $author = $this->mapperLocator->get(AuthorMapper::CLASS)->fetchRecordBy(
+        $author = $this->mapperLocator->get(Author::CLASS)->fetchRecordBy(
             ['name' => 'Anna']
         );
         $author->name = 'Annabelle';
 
         // attempt the update
-        $this->mapperLocator->get(AuthorMapper::CLASS)->update($author);
+        $this->mapperLocator->get(Author::CLASS)->update($author);
 
         // is it still in the identity map?
-        $again = $this->mapperLocator->get(AuthorMapper::CLASS)->fetchRecordBy(
+        $again = $this->mapperLocator->get(Author::CLASS)->fetchRecordBy(
             ['name' => 'Annabelle']
         );
         $this->assertSame($author->getRow(), $again->getRow());
 
         // was it *actually* updated?
         $expect = $author->getRow()->getArrayCopy();
-        $actual = $this->mapperLocator->get(AuthorMapper::CLASS)
+        $actual = $this->mapperLocator->get(Author::CLASS)
             ->getTable()
             ->getReadConnection()
             ->fetchOne(
@@ -333,15 +333,15 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testDelete()
     {
         // fetch a record
-        $author = $this->mapperLocator->get(AuthorMapper::CLASS)->fetchRecordBy(
+        $author = $this->mapperLocator->get(Author::CLASS)->fetchRecordBy(
             ['name' => 'Anna']
         );
 
         // attmept the delete
-        $this->mapperLocator->get(AuthorMapper::CLASS)->delete($author);
+        $this->mapperLocator->get(Author::CLASS)->delete($author);
 
         // was it *actually* deleted?
-        $actual = $this->mapperLocator->get(AuthorMapper::CLASS)->fetchRecordBy(
+        $actual = $this->mapperLocator->get(Author::CLASS)->fetchRecordBy(
             ['name' => 'Anna']
         );
         $this->assertNull($actual);
@@ -350,7 +350,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     public function testUpdateFailure()
     {
         // fetch a record
-        $author = $this->mapperLocator->get(AuthorMapper::CLASS)->fetchRecordBy(
+        $author = $this->mapperLocator->get(Author::CLASS)->fetchRecordBy(
             ['name' => 'Anna']
         );
 
@@ -360,17 +360,17 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->expectExceptionMessage(
             'SQLSTATE[23000]: Integrity constraint violation'
         );
-        $this->mapperLocator->get(AuthorMapper::CLASS)->update($author);
+        $this->mapperLocator->get(Author::CLASS)->update($author);
     }
 
     public function testCalcPrimary()
     {
         // plain old primary value
-        $actual = $this->mapperLocator->get(AuthorMapper::CLASS)->fetchRecord(1);
+        $actual = $this->mapperLocator->get(Author::CLASS)->fetchRecord(1);
         $this->assertSame('1', $actual->author_id);
 
         // // primary embedded in array
-        // $actual = $this->mapperLocator->get(AuthorMapper::CLASS)->fetchRecord([
+        // $actual = $this->mapperLocator->get(Author::CLASS)->fetchRecord([
         //     'author_id' => 2,
         //     'foo' => 'bar',
         //     'baz' => 'dib'
@@ -382,12 +382,12 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->expectExceptionMessage(
             "Expected scalar value for primary key 'author_id', got array instead."
         );
-        $this->mapperLocator->get(AuthorMapper::CLASS)->fetchRecord([1, 2, 3]);
+        $this->mapperLocator->get(Author::CLASS)->fetchRecord([1, 2, 3]);
     }
 
     public function testLeftJoinWith()
     {
-        $select = $this->mapperLocator->get(ThreadMapper::CLASS)->select()
+        $select = $this->mapperLocator->get(Thread::CLASS)->select()
             ->distinct()
             ->joinWith('LEFT', 'replies')
             ->orderBy('replies.reply_id DESC');
@@ -407,7 +407,7 @@ ORDER BY
 
     public function testInnerJoinWith()
     {
-        $select = $this->mapperLocator->get(ThreadMapper::CLASS)->select()
+        $select = $this->mapperLocator->get(Thread::CLASS)->select()
             ->distinct()
             ->joinWith('INNER', 'replies')
             ->orderBy('replies.reply_id DESC');
@@ -432,7 +432,7 @@ ORDER BY
             "Relationship 'no-such-relationship' does not exist."
         );
 
-        $this->mapperLocator->get(ThreadMapper::CLASS)->fetchRecord(
+        $this->mapperLocator->get(Thread::CLASS)->fetchRecord(
             1,
             [
                 'no-such-relationship', // manyToOne
@@ -442,22 +442,22 @@ ORDER BY
 
     public function testPersist_allNew()
     {
-        $author = $this->mapperLocator->get(AuthorMapper::CLASS)->newRecord([
+        $author = $this->mapperLocator->get(Author::CLASS)->newRecord([
             'name' => 'New Name',
         ]);
 
-        $tag = $this->mapperLocator->get(TagMapper::CLASS)->newRecord([
+        $tag = $this->mapperLocator->get(Tag::CLASS)->newRecord([
             'name' => 'New Tag',
         ]);
 
-        $summary = $this->mapperLocator->get(SummaryMapper::CLASS)->newRecord([
+        $summary = $this->mapperLocator->get(Summary::CLASS)->newRecord([
             'reply_count' => 0,
             'view_count' => 0,
         ]);
 
-        $taggings = $this->mapperLocator->get(TaggingMapper::CLASS)->newRecordSet();
+        $taggings = $this->mapperLocator->get(Tagging::CLASS)->newRecordSet();
 
-        $thread = $this->mapperLocator->get(ThreadMapper::CLASS)->newRecord([
+        $thread = $this->mapperLocator->get(Thread::CLASS)->newRecord([
             'subject' => 'New Subject',
             'body' => 'New Body',
             'author' => $author,
@@ -471,7 +471,7 @@ ORDER BY
         ]);
 
         // persist the thread and all its relateds
-        $this->mapperLocator->get(ThreadMapper::CLASS)->persist($thread);
+        $this->mapperLocator->get(Thread::CLASS)->persist($thread);
 
         $this->assertTrue($author->author_id > 0);
         $this->assertTrue($tag->tag_id > 0);
@@ -483,32 +483,32 @@ ORDER BY
 
     public function testPersist_updateManyToOne()
     {
-        $thread = $this->mapperLocator->get(ThreadMapper::CLASS)->fetchRecord(1, ['author']);
+        $thread = $this->mapperLocator->get(Thread::CLASS)->fetchRecord(1, ['author']);
         $this->assertEquals(1, $thread->author_id);
 
-        $author = $this->mapperLocator->get(AuthorMapper::CLASS)->fetchRecord(2);
+        $author = $this->mapperLocator->get(Author::CLASS)->fetchRecord(2);
         $thread->author = $author;
 
-        $this->mapperLocator->get(ThreadMapper::CLASS)->persist($thread);
+        $this->mapperLocator->get(Thread::CLASS)->persist($thread);
         $this->assertEquals(2, $thread->author_id);
     }
 
     public function testPersist_updateOneToMany()
     {
-        $author = $this->mapperLocator->get(AuthorMapper::CLASS)->fetchRecord(1, ['threads']);
+        $author = $this->mapperLocator->get(Author::CLASS)->fetchRecord(1, ['threads']);
         foreach ($author->threads as $thread) {
             $this->assertEquals(1, $thread->author_id);
         }
         $count = count($author->threads);
 
-        $thread = $this->mapperLocator->get(ThreadMapper::CLASS)
+        $thread = $this->mapperLocator->get(Thread::CLASS)
             ->select()
             ->where('author_id != 1')
             ->fetchRecord();
 
         $author->threads[] = $thread;
 
-        $this->mapperLocator->get(AuthorMapper::CLASS)->persist($author);
+        $this->mapperLocator->get(Author::CLASS)->persist($author);
         $this->assertEquals($count + 1, count($author->threads));
         foreach ($author->threads as $thread) {
             $this->assertEquals(1, $thread->author_id);
@@ -517,17 +517,17 @@ ORDER BY
 
     public function testPersist_updateOneToOne()
     {
-        $thread = $this->mapperLocator->get(ThreadMapper::CLASS)->fetchRecord(1, ['summary']);
+        $thread = $this->mapperLocator->get(Thread::CLASS)->fetchRecord(1, ['summary']);
         $this->assertEquals(1, $thread->summary->summary_id); // primary key
         $this->assertEquals(1, $thread->summary->thread_id); // foreign key
 
-        $summary = $this->mapperLocator->get(SummaryMapper::CLASS)
+        $summary = $this->mapperLocator->get(Summary::CLASS)
             ->select()
             ->where('thread_id != 1')
             ->fetchRecord();
 
         $thread->summary = $summary;
-        $this->mapperLocator->get(ThreadMapper::CLASS)->persist($thread);
+        $this->mapperLocator->get(Thread::CLASS)->persist($thread);
         $this->assertEquals(1, $thread->summary->thread_id); // foreign key
     }
 

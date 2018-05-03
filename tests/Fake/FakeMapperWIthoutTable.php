@@ -1,7 +1,7 @@
 <?php
 namespace Atlas\Mapper\Fake;
 
-use Atlas\Mapper\Mapper;
+use Atlas\Mapper\;
 
 class FakeMapperWithoutTable extends Mapper
 {

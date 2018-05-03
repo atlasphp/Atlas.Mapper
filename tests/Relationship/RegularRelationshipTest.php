@@ -3,8 +3,8 @@ namespace Atlas\Mapper\Relationship;
 
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\Fake\FakeRegularRelationship;
-use Atlas\Testing\DataSource\Author\AuthorMapper;
-use Atlas\Testing\DataSource\Thread\ThreadMapper;
+use Atlas\Testing\DataSource\Author\Author;
+use Atlas\Testing\DataSource\Thread\Thread;
 
 class RegularRelationshipTest extends RelationshipTest
 {
@@ -15,7 +15,7 @@ class RegularRelationshipTest extends RelationshipTest
         $fake = new FakeRegularRelationship(
             'fake',
             $this->mapperLocator,
-            ThreadMapper::CLASS,
+            Thread::CLASS,
             'NoSuchClass'
         );
     }
@@ -25,8 +25,8 @@ class RegularRelationshipTest extends RelationshipTest
         $fake = new FakeRegularRelationship(
             'fake',
             $this->mapperLocator,
-            ThreadMapper::CLASS,
-            AuthorMapper::CLASS
+            Thread::CLASS,
+            Author::CLASS
         );
         $this->assertFalse($fake->valuesMatch('1', 'a'));
     }
@@ -36,8 +36,8 @@ class RegularRelationshipTest extends RelationshipTest
         $fake = new FakeRegularRelationship(
             'fake',
             $this->mapperLocator,
-            ThreadMapper::CLASS,
-            AuthorMapper::CLASS
+            Thread::CLASS,
+            Author::CLASS
         );
         $this->assertSame([], $fake->fetchForeignRecords([], null));
     }

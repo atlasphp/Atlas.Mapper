@@ -64,9 +64,8 @@ class MapperLocator
 
     protected function newMapper($class) : Mapper
     {
-        $prefix = substr($class, 0, -6);
-        $table = "{$prefix}Table";
-        $relationships = "{$prefix}MapperRelationships";
+        $table = "{$class}Table";
+        $relationships = "{$class}Relationships";
         $events = "{$class}Events";
         return new $class(
             $this->tableLocator->get($table),

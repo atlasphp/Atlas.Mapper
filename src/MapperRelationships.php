@@ -44,7 +44,7 @@ abstract class MapperRelationships
         $this->mapperLocator = $mapperLocator;
         $this->nativeMapperClass = $nativeMapperClass;
 
-        $nativeTableClass = substr($this->nativeMapperClass, 0, -6) . 'Table';
+        $nativeTableClass = $this->nativeMapperClass . 'Table';
         $this->nativeTableColumns = $nativeTableClass::COLUMN_NAMES;
 
         $this->define();

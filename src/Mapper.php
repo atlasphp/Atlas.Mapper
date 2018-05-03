@@ -37,7 +37,7 @@ abstract class Mapper
         $this->relationships = $relationships;
         $this->mapperEvents = $mapperEvents;
 
-        $this->recordSetClass = substr(static::class, 0, -6) . 'RecordSet';
+        $this->recordSetClass = static::class . 'RecordSet';
 
         $primaryKey = $this->table::PRIMARY_KEY;
         if (count($primaryKey) == 1) {
@@ -291,6 +291,6 @@ abstract class Mapper
      */
     protected function getRecordClass(Row $row) : string
     {
-        return substr(static::class, 0, -6) . 'Record';
+        return static::class . 'Record';
     }
 }

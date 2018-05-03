@@ -1,8 +1,8 @@
 <?php
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Testing\DataSource\Summary\SummaryMapper;
-use Atlas\Testing\DataSource\Thread\ThreadMapper;
+use Atlas\Testing\DataSource\Summary\Summary;
+use Atlas\Testing\DataSource\Thread\Thread;
 
 class OneToOneTest extends RelationshipTest
 {
@@ -11,8 +11,8 @@ class OneToOneTest extends RelationshipTest
         $rel = new OneToOne(
             'summary',
             $this->mapperLocator,
-            ThreadMapper::CLASS,
-            SummaryMapper::CLASS
+            Thread::CLASS,
+            Summary::CLASS
         );
 
         $threads = [];

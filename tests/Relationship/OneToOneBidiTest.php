@@ -1,15 +1,15 @@
 <?php
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Testing\DataSource\Bidibar\BidibarMapper;
-use Atlas\Testing\DataSource\Bidifoo\BidifooMapper;
+use Atlas\Testing\DataSource\Bidibar\Bidibar;
+use Atlas\Testing\DataSource\Bidifoo\Bidifoo;
 
 class OneToOneBidiTest extends RelationshipTest
 {
     public function testBidi()
     {
-        $bidifooMapper = $this->mapperLocator->get(BidifooMapper::CLASS);
-        $bidibarMapper = $this->mapperLocator->get(BidibarMapper::CLASS);
+        $bidifooMapper = $this->mapperLocator->get(Bidifoo::CLASS);
+        $bidibarMapper = $this->mapperLocator->get(Bidibar::CLASS);
 
         // create each side of the one-to-one
         $bidifoo = $bidifooMapper->newRecord(['name' => 'foo']);

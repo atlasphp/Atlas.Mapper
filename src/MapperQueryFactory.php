@@ -17,7 +17,7 @@ class MapperQueryFactory extends TableQueryFactory
 {
     public function newQueryFactory(string $tableClass) : QueryFactory
     {
-        $selectClass = substr($tableClass, 0, -5) . 'MapperSelect';
+        $selectClass = substr($tableClass, 0, -5) . 'Select';
         return new QueryFactory($selectClass);
     }
 }

@@ -22,7 +22,7 @@ class ManyToOne extends RegularRelationship
             return;
         }
 
-        $foreignTableClass = substr($this->foreignMapperClass, 0, -6) . 'Table';
+        $foreignTableClass = $this->foreignMapperClass . 'Table';
         foreach ($foreignTableClass::PRIMARY_KEY as $col) {
             $this->on[$col] = $col;
         }

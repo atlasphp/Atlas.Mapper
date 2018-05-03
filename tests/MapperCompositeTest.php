@@ -1,14 +1,13 @@
 <?php
 namespace Atlas\Mapper;
 
-use Atlas\Pdo\Connection;
 use Atlas\Testing\Assertions;
-use Atlas\Testing\CompositeDataSource\Course\CourseMapper;
-use Atlas\Testing\CompositeDataSource\Degree\DegreeMapper;
-use Atlas\Testing\CompositeDataSource\Enrollment\EnrollmentMapper;
-use Atlas\Testing\CompositeDataSource\Gpa\GpaMapper;
-use Atlas\Testing\CompositeDataSource\SqliteFixture;
-use Atlas\Testing\CompositeDataSource\Student\StudentMapper;
+use Atlas\Testing\CompositeDataSource\Course\Course;
+use Atlas\Testing\CompositeDataSource\Degree\Degree;
+use Atlas\Testing\CompositeDataSource\Enrollment\Enrollment;
+use Atlas\Testing\CompositeDataSource\Gpa\Gpa;
+use Atlas\Testing\CompositeDataSource\Student\Student;
+use Atlas\Testing\CompositeDataSourceFixture;
 
 class MapperCompositeTest extends \PHPUnit\Framework\TestCase
 {
@@ -18,13 +17,13 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        $connection = (new SqliteFixture())->exec();
+        $connection = (new CompositeDataSourceFixture())->exec();
         $this->mapperLocator = MapperLocator::new($connection);
     }
 
     public function testFetchRecord()
     {
-        $actual = $this->mapperLocator->get(StudentMapper::CLASS)->fetchRecord(
+        $actual = $this->mapperLocator->get(Student::CLASS)->fetchRecord(
             ['student_fn' => 'Anna', 'student_ln' => 'Alpha'],
             [
                 'degree',
@@ -40,7 +39,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
 
     public function testFetchRecordBy()
     {
-        $actual = $this->mapperLocator->get(StudentMapper::CLASS)->fetchRecordBy(
+        $actual = $this->mapperLocator->get(Student::CLASS)->fetchRecordBy(
             ['student_fn' => 'Anna'],
             [
                 'degree',
@@ -56,7 +55,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
 
     public function testFetchRecordSet()
     {
-        $actual = $this->mapperLocator->get(StudentMapper::CLASS)->fetchRecordSet(
+        $actual = $this->mapperLocator->get(Student::CLASS)->fetchRecordSet(
             [
                 ['student_fn' => 'Anna', 'student_ln' => 'Alpha'],
                 ['student_fn' => 'Betty', 'student_ln' => 'Beta'],
@@ -80,7 +79,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
     public function testFetchRecordSetBy()
     {
         // note that we canno to
-        $actual = $this->mapperLocator->get(StudentMapper::CLASS)->fetchRecordSetBy(
+        $actual = $this->mapperLocator->get(Student::CLASS)->fetchRecordSetBy(
             ['student_fn' => ['Anna', 'Betty', 'Clara']],
             [
                 'degree',
@@ -99,7 +98,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
 
     public function testSelect_fetchRecord()
     {
-        $actual = $this->mapperLocator->get(StudentMapper::CLASS)
+        $actual = $this->mapperLocator->get(Student::CLASS)
             ->select()
             ->where('student_fn = ', 'Anna')
             ->with([
@@ -116,7 +115,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
 
     public function testSelect_fetchRecordSet()
     {
-        $actual = $this->mapperLocator->get(StudentMapper::CLASS)
+        $actual = $this->mapperLocator->get(Student::CLASS)
             ->select()
             ->where('student_fn < ', 'D')
             ->with([
@@ -137,7 +136,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
 
     public function testSingleRelatedInRecordSet()
     {
-        $degree = $this->mapperLocator->get(DegreeMapper::CLASS)->fetchRecordBy(
+        $degree = $this->mapperLocator->get(Degree::CLASS)->fetchRecordBy(
             [
                 'degree_type' => 'BS',
                 'degree_subject' => 'MATH',
@@ -145,7 +144,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
         );
         $expect = $degree->getRow();
 
-        $students = $this->mapperLocator->get(StudentMapper::CLASS)->fetchRecordSetBy(
+        $students = $this->mapperLocator->get(Student::CLASS)->fetchRecordSetBy(
             [
                 'degree_type' => 'BS',
                 'degree_subject' => 'MATH',
@@ -167,7 +166,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
         $this->expectExceptionMessage(
             "Expected scalar value for primary key 'student_ln', value is missing instead."
         );
-        $this->mapperLocator->get(StudentMapper::CLASS)->fetchRecord(['student_fn' => 'Anna']);
+        $this->mapperLocator->get(Student::CLASS)->fetchRecord(['student_fn' => 'Anna']);
     }
 
     public function testCalcPrimaryComposite_nonScalar()
@@ -176,14 +175,14 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
         $this->expectExceptionMessage(
             "Expected scalar value for primary key 'student_fn', got array instead."
         );
-        $this->mapperLocator->get(StudentMapper::CLASS)->fetchRecord(
+        $this->mapperLocator->get(Student::CLASS)->fetchRecord(
             ['student_fn' => ['Anna', 'Betty', 'Clara']]
         );
     }
 
     public function testCalcPrimaryComposite()
     {
-        $actual = $this->mapperLocator->get(StudentMapper::CLASS)->fetchRecord(
+        $actual = $this->mapperLocator->get(Student::CLASS)->fetchRecord(
             [
                 'foo' => 'bar',
                 'student_fn' => 'Anna',
@@ -198,7 +197,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
 
     public function testRelationshipWhere()
     {
-        $student = $this->mapperLocator->get(StudentMapper::CLASS)->fetchRecord(
+        $student = $this->mapperLocator->get(Student::CLASS)->fetchRecord(
             [
                 'student_fn' => 'Anna',
                 'student_ln' => 'Alpha',

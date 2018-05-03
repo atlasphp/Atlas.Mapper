@@ -52,10 +52,10 @@ abstract class RegularRelationship extends Relationship
         $this->nativeMapperClass = $nativeMapperClass;
         $this->foreignMapperClass = $foreignMapperClass;
 
-        $foreignTable = substr($this->foreignMapperClass, 0, -6) . 'Table';
+        $foreignTable = $this->foreignMapperClass . 'Table';
         $this->foreignTableName = $foreignTable::NAME;
 
-        $nativeTable = substr($this->nativeMapperClass, 0, -6) . 'Table';
+        $nativeTable = $this->nativeMapperClass . 'Table';
         $this->nativeTableName = $nativeTable::NAME;
 
         $this->setOn($on);
@@ -73,7 +73,7 @@ abstract class RegularRelationship extends Relationship
             return;
         }
 
-        $nativeTableClass = substr($this->nativeMapperClass, 0, -6) . 'Table';
+        $nativeTableClass = $this->nativeMapperClass . 'Table';
         foreach ($nativeTableClass::PRIMARY_KEY as $col) {
             $this->on[$col] = $col;
         }

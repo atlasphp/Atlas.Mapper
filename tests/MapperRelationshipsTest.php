@@ -1,20 +1,20 @@
 <?php
 namespace Atlas\Mapper;
 
-use Atlas\Testing\DataSource\Employee\EmployeeMapper;
-use Atlas\Testing\DataSource\SqliteFixture;
 use Atlas\Mapper\Fake\FakeMapperRelationships;
+use Atlas\Testing\DataSource\Employee\Employee;
+use Atlas\Testing\DataSourceFixture;
 
 class MapperRelationshipsTest extends \PHPUnit\Framework\TestCase
 {
     public function test()
     {
-        $connection = (new SqliteFixture())->exec();
+        $connection = (new DataSourceFixture())->exec();
         $mapperLocator = MapperLocator::new($connection);
 
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage("Relationship 'id' conflicts with existing column name.");
 
-        new FakeMapperRelationships($mapperLocator, EmployeeMapper::CLASS);
+        new FakeMapperRelationships($mapperLocator, Employee::CLASS);
     }
 }

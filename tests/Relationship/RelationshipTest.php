@@ -2,7 +2,7 @@
 namespace Atlas\Mapper\Relationship;
 
 use Atlas\Mapper\MapperLocator;
-use Atlas\Testing\DataSource\SqliteFixture;
+use Atlas\Testing\DataSourceFixture;
 
 abstract class RelationshipTest extends \PHPUnit\Framework\TestCase
 {
@@ -10,7 +10,7 @@ abstract class RelationshipTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        $connection = (new SqliteFixture())->exec();
+        $connection = (new DataSourceFixture())->exec();
         $this->mapperLocator = MapperLocator::new($connection);
     }
 }

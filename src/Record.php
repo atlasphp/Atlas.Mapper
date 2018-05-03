@@ -53,7 +53,7 @@ abstract class Record implements JsonSerializable
 
     public function getMapperClass() : string
     {
-        return substr(static::CLASS, 0, -6) . 'Mapper';
+        return substr(static::CLASS, 0, -6);
     }
 
     public function getRow() : Row

@@ -1,15 +1,9 @@
 <?php
 namespace Atlas\Mapper;
 
-use Atlas\Pdo\Connection;
-use Atlas\Pdo\ConnectionLocator;
-use Atlas\Query\QueryFactory;
-use Atlas\Table\IdentityMap;
-use Atlas\Table\TableEvents;
-use Atlas\Table\TableSelect;
 use Atlas\Testing\Assertions;
-use Atlas\Testing\DataSource\Employee\EmployeeMapper;
-use Atlas\Testing\DataSource\SqliteFixture;
+use Atlas\Testing\DataSource\Employee\Employee;
+use Atlas\Testing\DataSourceFixture;
 use Iterator;
 use PDO;
 
@@ -21,8 +15,8 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        $connection = (new SqliteFixture())->exec();
-        $this->mapper = MapperLocator::new($connection)->get(EmployeeMapper::CLASS);
+        $connection = (new DataSourceFixture())->exec();
+        $this->mapper = MapperLocator::new($connection)->get(Employee::CLASS);
         $this->select = $this->mapper->select();
     }
 

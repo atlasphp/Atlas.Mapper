@@ -82,7 +82,7 @@ class Exception extends \Exception
     public static function noSuchType(string $nativeMapperClass, $typeVal)
     {
         $message = "Variant relationship type '{$typeVal}' "
-            . "not defined in {$nativeMapperClass}.";
+            . "not defined in {$nativeMapperClass}Relationships.";
         return new Exception($message);
     }
 
