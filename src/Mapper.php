@@ -285,10 +285,6 @@ abstract class Mapper
         );
     }
 
-    /**
-     * Override to enable single table inheritance.
-     * Record class must be in same namespace as mapper.
-     */
     protected function getRecordClass(Row $row) : string
     {
         return static::class . 'Record';
