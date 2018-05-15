@@ -53,13 +53,13 @@ abstract class MapperRelationships
     abstract protected function define();
 
     protected function oneToOne(
-        string $name,
+        string $relatedName,
         string $foreignMapperClass,
         array $on = []
     ) : OneToOne
     {
         return $this->set(
-            $name,
+            $relatedName,
             OneToOne::CLASS,
             $foreignMapperClass,
             'persistAfterNative',
@@ -68,13 +68,13 @@ abstract class MapperRelationships
     }
 
     protected function oneToOneBidi(
-        string $name,
+        string $relatedName,
         string $foreignMapperClass,
         array $on = []
     ) : OneToOneBidi
     {
         return $this->set(
-            $name,
+            $relatedName,
             OneToOneBidi::CLASS,
             $foreignMapperClass,
             'persistAfterNative',
@@ -83,13 +83,13 @@ abstract class MapperRelationships
     }
 
     protected function oneToMany(
-        string $name,
+        string $relatedName,
         string $foreignMapperClass,
         array $on = []
     ) : OneToMany
     {
         return $this->set(
-            $name,
+            $relatedName,
             OneToMany::CLASS,
             $foreignMapperClass,
             'persistAfterNative',
@@ -98,13 +98,13 @@ abstract class MapperRelationships
     }
 
     protected function manyToOne(
-        string $name,
+        string $relatedName,
         string $foreignMapperClass,
         array $on = []
     ) : ManyToOne
     {
         return $this->set(
-            $name,
+            $relatedName,
             ManyToOne::CLASS,
             $foreignMapperClass,
             'persistBeforeNative',
@@ -113,12 +113,12 @@ abstract class MapperRelationships
     }
 
     protected function manyToOneVariant(
-        string $name,
+        string $relatedName,
         string $referenceCol
     ) : ManyToOneVariant
     {
         return $this->set(
-            $name,
+            $relatedName,
             ManyToOneVariant::CLASS,
             $referenceCol,
             'persistBeforeNative'
@@ -127,9 +127,9 @@ abstract class MapperRelationships
         return $relationship;
     }
 
-    public function get(string $name) : Relationship
+    public function get(string $relatedName) : Relationship
     {
-        return $this->relationships[$name];
+        return $this->relationships[$relatedName];
     }
 
     public function getFields() : array
@@ -142,11 +142,11 @@ abstract class MapperRelationships
         array $with = []
     ) : void
     {
-        foreach ($this->fixWith($with) as $name => $custom) {
-            if (! isset($this->relationships[$name])) {
-                throw Exception::relationshipDoesNotExist($name);
+        foreach ($this->fixWith($with) as $relatedName => $custom) {
+            if (! isset($this->relationships[$relatedName])) {
+                throw Exception::relationshipDoesNotExist($relatedName);
             }
-            $this->relationships[$name]->stitchIntoRecords(
+            $this->relationships[$relatedName]->stitchIntoRecords(
                 $nativeRecords,
                 $custom
             );
@@ -154,19 +154,19 @@ abstract class MapperRelationships
     }
 
     protected function set(
-        string $name,
+        string $relatedName,
         string $relationshipClass,
         string $foreignSpec,
         string $persistencePriority,
         array $on = []
     ) : Relationship
     {
-        $this->assertRelatedName($name);
+        $this->assertRelatedName($relatedName);
 
-        $this->fields[$name] = null;
+        $this->fields[$relatedName] = null;
 
         $args = [
-            $name,
+            $relatedName,
             $this->mapperLocator,
             $this->nativeMapperClass,
             $foreignSpec,
@@ -178,7 +178,7 @@ abstract class MapperRelationships
 
         $relationship = new $relationshipClass(...$args);
         $this->{$persistencePriority}[] = $relationship;
-        $this->relationships[$name] = $relationship;
+        $this->relationships[$relatedName] = $relationship;
         return $relationship;
     }
 
@@ -238,14 +238,14 @@ abstract class MapperRelationships
         return new Related($this->fields);
     }
 
-    protected function assertRelatedName(string $name) : void
+    protected function assertRelatedName(string $relatedName) : void
     {
-        if (isset($this->relationships[$name])) {
-            throw Exception::relatedNameConflict($name, 'relationship');
+        if (isset($this->relationships[$relatedName])) {
+            throw Exception::relatedNameConflict($relatedName, 'relationship');
         }
 
-        if (in_array($name, $this->nativeTableColumns)) {
-            throw Exception::relatedNameConflict($name, 'column');
+        if (in_array($relatedName, $this->nativeTableColumns)) {
+            throw Exception::relatedNameConflict($relatedName, 'column');
         }
     }
 }
