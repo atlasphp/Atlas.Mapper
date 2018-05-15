@@ -61,14 +61,14 @@ class ManyToOneVariant extends Relationship
         return $this;
     }
 
-    public function where(string $cond, ...$bind) : Relationship
+    public function where(string $condition, ...$bindInline) : Relationship
     {
         if (empty($this->variants)) {
-            return parent::where($cond, ...$bind);
+            return parent::where($condition, ...$bindInline);
         }
 
         $variant = end($this->variants);
-        $variant->where($cond, ...$bind);
+        $variant->where($condition, ...$bindInline);
         return $this;
     }
 

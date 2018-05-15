@@ -26,13 +26,13 @@ abstract class RecordSet implements
 {
     private $records = [];
 
-    private $newRecord;
+    private $newRecordFactory;
 
     public function __construct(
         array $records = [],
-        callable $newRecord
+        callable $newRecordFactory
     ) {
-        $this->newRecord = $newRecord;
+        $this->newRecordFactory = $newRecordFactory;
         foreach ($records as $key => $record) {
             $this->offsetSet($key, $record);
         }
@@ -83,7 +83,7 @@ abstract class RecordSet implements
 
     public function isEmpty() : bool
     {
-        return ! $this->records;
+        return empty($this->records);
     }
 
     public function getArrayCopy(SplObjectStorage $tracker = null) : array
@@ -106,7 +106,7 @@ abstract class RecordSet implements
 
     public function appendNew(array $fields = []) : Record
     {
-        $record = call_user_func($this->newRecord, $fields);
+        $record = call_user_func($this->newRecordFactory, $fields);
         $this->records[] = $record;
         return $record;
     }

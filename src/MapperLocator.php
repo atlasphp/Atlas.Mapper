@@ -44,32 +44,32 @@ class MapperLocator
         }
     }
 
-    public function has(string $class) : bool
+    public function has(string $mapperClass) : bool
     {
-        return class_exists($class) && is_subclass_of($class, Mapper::CLASS);
+        return class_exists($mapperClass) && is_subclass_of($mapperClass, Mapper::CLASS);
     }
 
-    public function get(string $class) : Mapper
+    public function get(string $mapperClass) : Mapper
     {
-        if (! $this->has($class)) {
-            throw Exception::mapperNotFound($class);
+        if (! $this->has($mapperClass)) {
+            throw Exception::mapperNotFound($mapperClass);
         }
 
-        if (! isset($this->mappers[$class])) {
-            $this->mappers[$class] = $this->newMapper($class);
+        if (! isset($this->mappers[$mapperClass])) {
+            $this->mappers[$mapperClass] = $this->newMapper($mapperClass);
         }
 
-        return $this->mappers[$class];
+        return $this->mappers[$mapperClass];
     }
 
-    protected function newMapper($class) : Mapper
+    protected function newMapper($mapperClass) : Mapper
     {
-        $table = "{$class}Table";
-        $relationships = "{$class}Relationships";
-        $events = "{$class}Events";
-        return new $class(
+        $table = "{$mapperClass}Table";
+        $relationships = "{$mapperClass}Relationships";
+        $events = "{$mapperClass}Events";
+        return new $mapperClass(
             $this->tableLocator->get($table),
-            new $relationships($this, $class),
+            new $relationships($this, $mapperClass),
             ($this->factory)($events)
         );
     }

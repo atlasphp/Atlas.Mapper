@@ -19,33 +19,33 @@ class Related
 
     public function __construct(array $fields = [])
     {
-        foreach ($fields as $name => $value) {
-            $this->modify($name, $value);
+        foreach ($fields as $field => $value) {
+            $this->modify($field, $value);
         }
     }
 
-    public function __get(string $name)
+    public function __get(string $field)
     {
-        $this->assertHas($name);
-        return $this->fields[$name];
+        $this->assertHas($field);
+        return $this->fields[$field];
     }
 
-    public function __set(string $name, $value) : void
+    public function __set(string $field, $value) : void
     {
-        $this->assertHas($name);
-        $this->modify($name, $value);
+        $this->assertHas($field);
+        $this->modify($field, $value);
     }
 
-    public function __isset(string $name) : bool
+    public function __isset(string $field) : bool
     {
-        $this->assertHas($name);
-        return isset($this->fields[$name]);
+        $this->assertHas($field);
+        return isset($this->fields[$field]);
     }
 
-    public function __unset(string $name) : void
+    public function __unset(string $field) : void
     {
-        $this->assertHas($name);
-        $this->fields[$name] = null;
+        $this->assertHas($field);
+        $this->fields[$field] = null;
     }
 
     public function getFields() : array
@@ -53,18 +53,18 @@ class Related
         return $this->fields;
     }
 
-    public function set(array $namesValues = []) : void
+    public function set(array $fieldsValues = []) : void
     {
-        foreach ($namesValues as $name => $value) {
-            if ($this->has($name)) {
-                $this->modify($name, $value);
+        foreach ($fieldsValues as $field => $value) {
+            if ($this->has($field)) {
+                $this->modify($field, $value);
             }
         }
     }
 
-    public function has($name) : bool
+    public function has(string $field) : bool
     {
-        return array_key_exists($name, $this->fields);
+        return array_key_exists($field, $this->fields);
     }
 
     public function getArrayCopy(SplObjectStorage $tracker = null) : array
@@ -76,10 +76,10 @@ class Related
         if (! $tracker->contains($this)) {
             $tracker[$this] = [];
             $array = [];
-            foreach ($this->fields as $name => $foreign) {
-                $array[$name] = $foreign;
+            foreach ($this->fields as $field => $foreign) {
+                $array[$field] = $foreign;
                 if ($foreign) {
-                    $array[$name] = $foreign->getArrayCopy($tracker);
+                    $array[$field] = $foreign->getArrayCopy($tracker);
                 }
             }
             $tracker[$this] = $array;
@@ -88,25 +88,25 @@ class Related
         return $tracker[$this];
     }
 
-    protected function modify(string $name, $value) : void
+    protected function modify(string $field, $value) : void
     {
         $valid = $value === null
-              || $value === false
-              || $value instanceof Record
-              || $value instanceof RecordSet;
+            || $value === false
+            || $value instanceof Record
+            || $value instanceof RecordSet;
 
         if (! $valid) {
             $expect = 'null, false, Record, or RecordSet';
             throw Exception::invalidType($expect, $value);
         }
 
-        $this->fields[$name] = $value;
+        $this->fields[$field] = $value;
     }
 
-    protected function assertHas($name) : void
+    protected function assertHas(string $field) : void
     {
-        if (! $this->has($name)) {
-            throw Exception::propertyDoesNotExist(static::CLASS, $name);
+        if (! $this->has($field)) {
+            throw Exception::propertyDoesNotExist(static::CLASS, $field);
         }
     }
 }

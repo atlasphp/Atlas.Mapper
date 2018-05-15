@@ -23,7 +23,7 @@ abstract class Relationship
 
     protected $where = [];
 
-    public function where(string $cond, ...$bind) : Relationship
+    public function where(string $condition, ...$bindInline) : Relationship
     {
         $this->where[] = func_get_args();
         return $this;
