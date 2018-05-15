@@ -25,7 +25,7 @@ abstract class IdentityMap
     public function setRow(Row $row) : void
     {
         if ($this->hasRow($row)) {
-            throw Exception::rowAlreadyMapped();
+            throw Exception::rowAlreadyMapped($row);
         }
 
         $serial = $this->getSerial($row);

@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper;
 
+use Atlas\Table\Row;
+
 class Exception extends \Exception
 {
     public static function classDoesNotExist(string $class) : Exception
@@ -41,7 +43,7 @@ class Exception extends \Exception
         return new Exception("Expected type $expect; got $actual instead.");
     }
 
-    public static function rowAlreadyMapped() : Exception
+    public static function rowAlreadyMapped(Row $row) : Exception
     {
         return new Exception("Row already exists in IdentityMap.");
     }
