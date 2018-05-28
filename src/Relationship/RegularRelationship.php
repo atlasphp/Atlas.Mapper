@@ -112,8 +112,10 @@ abstract class RegularRelationship extends Relationship
         callable $sub = null
     ) : void
     {
-        $foreignTable = $this->foreignTableName;
-        $spec = "{$foreignTable} AS {$foreignAlias}";
+        $spec = $this->foreignTableName;
+        if ($spec !== $foreignAlias) {
+            $spec .= " AS {$foreignAlias}";
+        }
 
         $cond = [];
         foreach ($this->on as $nativeCol => $foreignCol) {

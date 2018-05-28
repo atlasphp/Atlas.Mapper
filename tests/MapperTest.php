@@ -398,7 +398,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
 FROM
     threads
-LEFT JOIN replies AS replies ON threads.thread_id = replies.thread_id
+LEFT JOIN replies ON threads.thread_id = replies.thread_id
 ORDER BY
     replies.reply_id DESC';
 
@@ -418,7 +418,7 @@ ORDER BY
 
 FROM
     threads
-INNER JOIN replies AS replies ON threads.thread_id = replies.thread_id
+INNER JOIN replies ON threads.thread_id = replies.thread_id
 ORDER BY
     replies.reply_id DESC';
 
