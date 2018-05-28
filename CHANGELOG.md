@@ -1,5 +1,50 @@
 # CHANGELOG
 
+## 1.0.0-beta2
+
+This release incorporates a BC break to the signature for
+MapperSelect::joinWith(), in support of additional functionality; to wit,
+joining to sub-relateds.
+
+Previously, to join to a defined relationship, you would specify the join type
+and the relationship name:
+
+    $select->joinWith('LEFT', 'foo');
+
+This allowed only one "level" of join; that is, if you want to then join to the
+"bar" relationship defined in "foo", you were out of luck. Further, you could
+not specify an alias.
+
+With the BC break, you now do this:
+
+    $select->joinWith('LEFT foo');
+
+(If you don't specify a join type, it defaults to "JOIN".)
+
+You can specify an alias using AS:
+
+    $select->joinWith('LEFT foo AS foo_alias');
+
+Finally, you can pass a callable `function ($sub)` as an optional param to do a
+sub-`joinWith()` on the related, allowing you to nest joins to foreign
+relationships:
+
+    $select->joinWith('foo', function ($sub) {
+        $sub->joinWith('bar', function ($sub) {
+            $sub->joinWith('baz');
+        });
+    });
+
+This release also has these changes:
+
+- Exception::rowAlreadyMapped() now receives the Row object as a param; this is
+  in anticipation of giving more information about the mapped row.
+
+- Some method parameter names have been changed for better IDE hinting.
+
+- Added a PHPStorm metadata resource.
+
+
 ## 1.0.0-beta1
 
 This release has a significant change to class names, most notably that
