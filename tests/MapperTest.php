@@ -389,7 +389,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $select = $this->mapperLocator->get(Thread::CLASS)->select()
             ->distinct()
-            ->joinWith('LEFT', 'replies')
+            ->joinWith('LEFT replies')
             ->orderBy('replies.reply_id DESC');
 
         $actual = $select->getStatement();
@@ -409,7 +409,7 @@ ORDER BY
     {
         $select = $this->mapperLocator->get(Thread::CLASS)->select()
             ->distinct()
-            ->joinWith('INNER', 'replies')
+            ->joinWith('INNER replies')
             ->orderBy('replies.reply_id DESC');
 
         $actual = $select->getStatement();

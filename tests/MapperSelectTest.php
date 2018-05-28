@@ -2,6 +2,7 @@
 namespace Atlas\Mapper;
 
 use Atlas\Testing\Assertions;
+use Atlas\Testing\DataSource\Author\Author;
 use Atlas\Testing\DataSource\Employee\Employee;
 use Atlas\Testing\DataSourceFixture;
 use Iterator;
@@ -16,7 +17,8 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
     protected function setUp()
     {
         $connection = (new DataSourceFixture())->exec();
-        $this->mapper = MapperLocator::new($connection)->get(Employee::CLASS);
+        $this->mapperLocator = MapperLocator::new($connection);
+        $this->mapper = $this->mapperLocator->get(Employee::CLASS);
         $this->select = $this->mapper->select();
     }
 
@@ -72,5 +74,30 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage('Mapper already set.');
         $this->select->setMapper($this->mapper);
+    }
+
+    public function testJoinWithSubRelated()
+    {
+        $select = $this->mapperLocator
+            ->get(Author::CLASS)
+            ->select()
+            ->columns('*')
+            ->joinWith('LEFT threads', function ($sub) {
+                $sub->joinWith('INNER taggings AS taggings_alias', function ($sub) {
+                    $sub->joinWith('tag');
+                });
+            });
+
+        $expect = '
+            SELECT
+                *
+            FROM
+                authors
+                    LEFT JOIN threads AS threads ON authors.author_id = threads.author_id
+                    INNER JOIN taggings AS taggings_alias ON threads.thread_id = taggings_alias.thread_id
+                    JOIN tags AS tag ON taggings_alias.tag_id = tag.tag_id
+        ';
+
+        $this->assertSameSql($expect, $select->getStatement());
     }
 }

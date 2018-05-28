@@ -238,6 +238,47 @@ abstract class MapperRelationships
         return new Related($this->fields);
     }
 
+    public function joinSelect(
+        MapperSelect $select,
+        string $nativeAlias,
+        string $relatedName,
+        callable $sub = null
+    ) : void
+    {
+        // clean up the specification
+        $relatedName = trim($relatedName);
+
+        // extract the foreign alias
+        $foreignAlias = '';
+        $pos = stripos($relatedName, ' AS ');
+        if ($pos !== false) {
+            $foreignAlias = trim(substr($relatedName, $pos + 4));
+            $relatedName = trim(substr($relatedName, 0, $pos));
+        }
+
+        // extract the join type
+        $join = 'JOIN';
+        $pos = strpos($relatedName, ' ');
+        if ($pos !== false) {
+            $join = trim(substr($relatedName, 0, $pos));
+            $relatedName = trim(substr($relatedName, $pos));
+        }
+
+        // fix the foreign alias
+        if ($foreignAlias == '') {
+            $foreignAlias = $relatedName;
+        }
+
+        // make the join
+        $this->get($relatedName)->joinSelect(
+            $select,
+            $join,
+            $nativeAlias,
+            $foreignAlias,
+            $sub
+        );
+    }
+
     protected function assertRelatedName(string $relatedName) : void
     {
         if (isset($this->relationships[$relatedName])) {

@@ -104,20 +104,36 @@ abstract class RegularRelationship extends Relationship
         array $foreignRecords
     ) : void;
 
-    public function joinSelect(string $join, MapperSelect $select) : void
+    public function joinSelect(
+        MapperSelect $select,
+        string $join,
+        string $nativeAlias,
+        string $foreignAlias,
+        callable $sub = null
+    ) : void
     {
-        $nativeTable = $this->nativeTableName;
         $foreignTable = $this->foreignTableName;
-        $spec = "{$foreignTable} AS {$this->name}";
+        $spec = "{$foreignTable} AS {$foreignAlias}";
 
         $cond = [];
         foreach ($this->on as $nativeCol => $foreignCol) {
-            $cond[] = "{$nativeTable}.{$nativeCol} = {$this->name}.{$foreignCol}";
+            $cond[] = "{$nativeAlias}.{$nativeCol} = {$foreignAlias}.{$foreignCol}";
         }
         $cond = implode(' AND ', $cond);
         $select->join($join, $spec, $cond);
 
-        $this->foreignSelectWhere($select, $this->name);
+        $this->foreignSelectWhere($select, $foreignAlias);
+
+        if ($sub === null) {
+            return;
+        }
+
+        // invoke the callable for sub-relateds
+        $sub(new SubJoinWith(
+            $this->getForeignMapper()->getRelationships(),
+            $select,
+            $foreignAlias // current "foreign" alias becomes "native" one
+        ));
     }
 
     protected function fetchForeignRecords(array $records, $custom) : array

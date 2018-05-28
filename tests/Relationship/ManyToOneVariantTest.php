@@ -113,7 +113,7 @@ class ManyToOneVariantTest extends RelationshipTest
         $select = $this->mapperLocator->get(Comment::CLASS)->select();
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage('Cannot JOIN on variant relationships.');
-        $select->joinWith('LEFT', 'commentable');
+        $select->joinWith('LEFT commentable');
     }
 
     public function testWhere()

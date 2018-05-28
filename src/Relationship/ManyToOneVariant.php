@@ -83,7 +83,13 @@ class ManyToOneVariant extends Relationship
         return $this;
     }
 
-    public function joinSelect(string $join, MapperSelect $select) : void
+    public function joinSelect(
+        MapperSelect $select,
+        string $join,
+        string $nativeAlias,
+        string $foreignAlias,
+        callable $sub = null
+    ) : void
     {
         throw Exception::cannotJoinOnVariantRelationships();
     }

@@ -36,8 +36,11 @@ abstract class Relationship
     }
 
     abstract public function joinSelect(
+        MapperSelect $select,
         string $join,
-        MapperSelect $select
+        string $nativeAlias,
+        string $foreignAlias,
+        callable $sub = null
     ) : void;
 
     abstract public function stitchIntoRecords(

@@ -27,12 +27,14 @@ abstract class MapperSelect extends TableSelect
         $this->mapper = $mapper;
     }
 
-    public function joinWith(string $join, string $relatedName) : self
+    public function joinWith(string $relatedName, callable $sub = null) : self
     {
-        $this->mapper
-            ->getRelationships()
-            ->get($relatedName)
-            ->joinSelect($join, $this);
+        $this->mapper->getRelationships()->joinSelect(
+            $this,
+            $this->table::NAME,
+            $relatedName,
+            $sub
+        );
 
         return $this;
     }
