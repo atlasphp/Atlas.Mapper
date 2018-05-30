@@ -44,6 +44,10 @@ class OneToMany extends DeletableRelationship
             }
             $this->fixForeignRecordDeleted($nativeRecord, $foreignRecord);
         }
+
+        if ($this->unsetDeleted) {
+            $foreignRecordSet->detachDeleted();
+        }
     }
 
     public function persistForeign(
@@ -60,7 +64,5 @@ class OneToMany extends DeletableRelationship
         foreach ($foreignRecordSet as $foreignRecord) {
             $foreignMapper->persist($foreignRecord, $tracker);
         }
-
-        $foreignRecordSet->detachDeleted();
     }
 }
