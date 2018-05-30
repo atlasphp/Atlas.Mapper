@@ -62,7 +62,7 @@ abstract class DeletableRelationship extends RegularRelationship
         }
 
         if ($this->onDelete === static::CASCADE) {
-            $this->getForeignMapper->delete($foreignRecord);
+            $this->getForeignMapper()->delete($foreignRecord);
             return;
         }
 

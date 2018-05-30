@@ -189,9 +189,11 @@ abstract class Mapper
     {
         $row = $record->getRow();
         $this->mapperEvents->beforeDelete($this, $record);
+        $this->relationships->fixNativeRecord($record);
         $delete = $this->table->deleteRowPrepare($row);
         $this->mapperEvents->modifyDelete($this, $record, $delete);
         $pdoStatement = $this->table->deleteRowPerform($row, $delete);
+        $this->relationships->fixForeignRecord($record);
         $this->mapperEvents->afterDelete(
             $this,
             $record,
