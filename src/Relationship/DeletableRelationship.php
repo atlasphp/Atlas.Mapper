@@ -24,11 +24,13 @@ abstract class DeletableRelationship extends RegularRelationship
     public function onDeleteCascade() : Relationship
     {
         $this->onDelete = static::CASCADE;
+        return $this;
     }
 
     public function onDeleteInitDeleted() : Relationship
     {
         $this->onDelete = static::INIT_DELETED;
+        return $this;
     }
 
     public function onDeleteSetDelete() : Relationship
