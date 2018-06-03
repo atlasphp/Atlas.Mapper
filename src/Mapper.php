@@ -61,7 +61,7 @@ abstract class Mapper
     {
         $serial = $this->identityMap->getSerial($primaryVal);
         $row = $this->identityMap->getRow($serial)
-            ?? $this->table->fetchRow($primaryVal);
+            ?? $this->table->selectRow($this->select(), $primaryVal);
 
         if ($row === null) {
             return null;
@@ -75,7 +75,7 @@ abstract class Mapper
         array $with = []
     ) : ?Record
     {
-        $row = $this->table->select($whereEquals)->fetchRow();
+        $row = $this->select($whereEquals)->fetchRow();
         if ($row === null) {
             return null;
         }
@@ -101,7 +101,7 @@ abstract class Mapper
         }
 
         // fetch rows missing from identity map
-        foreach ($this->table->fetchRows($missing) as $row) {
+        foreach ($this->table->selectRows($this->select(), $missing) as $row) {
             $serial = $this->identityMap->getSerial($row);
             $rows[$serial] = $row;
             unset($missing[$serial]);
@@ -117,7 +117,7 @@ abstract class Mapper
 
     public function fetchRecordsBy(array $whereEquals, array $with = []) : array
     {
-        $rows = $this->table->select($whereEquals)->fetchRows();
+        $rows = $this->select($whereEquals)->fetchRows();
         return $this->turnRowsIntoRecords($rows, $with);
     }
 

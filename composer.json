@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=7.1.0",
-        "atlas/table": "1.x@beta"
+        "atlas/table": "dev-3.x-select-row"
     },
     "autoload": {
         "psr-4": {
