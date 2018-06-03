@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=7.1.0",
-        "atlas/table": "dev-3.x-select-row"
+        "atlas/table": "1.x@beta"
     },
     "autoload": {
         "psr-4": {
@@ -21,7 +21,7 @@
         }
     },
     "require-dev": {
-        "atlas/testing": "1.x@dev",
+        "atlas/testing": "1.x@beta",
         "pds/skeleton": "~1.0",
         "phpunit/phpunit": "~7.0"
     },
