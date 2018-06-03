@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 1.0.0-beta3
+
+In various Mapper methods, use the new Table::selectRow() and selectRows()
+methods combined with a MapperSelect instance. This fixes a bug where those
+methods failed to invoke MapperEvents::modifySelect().
+
+Automatic unsetting of related Records and RecordSets after deletion is now a
+configurable relationship behavior via the `unsetDeleted()` method.
+
+Added testing for DeletableRelationships (cascades).
+
 ## 1.0.0-beta2
 
 This release incorporates a BC break to the signature for
