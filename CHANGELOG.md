@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.0.0
+
+Remove relationship defintion method `unsetDeleted()` as premature, and update
+tests.
+
 ## 1.0.0-beta3
 
 In various Mapper methods, use the new Table::selectRow() and selectRows()
