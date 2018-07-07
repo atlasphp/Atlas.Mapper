@@ -63,7 +63,7 @@ class ManyToOne extends RegularRelationship
             $foreignRecord->$foreignField = $nativeRecord->$nativeField;
         }
 
-        if (! $this->unsetDeleted) {
+        if (! $this->discardDeleted) {
             return;
         }
 

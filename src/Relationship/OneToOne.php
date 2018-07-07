@@ -40,7 +40,7 @@ class OneToOne extends DeletableRelationship
 
         $this->fixForeignRecordDeleted($nativeRecord, $foreignRecord);
 
-        if (! $this->unsetDeleted) {
+        if (! $this->discardDeleted) {
             return;
         }
 

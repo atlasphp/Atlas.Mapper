@@ -153,4 +153,32 @@ class RecordSetTest extends \PHPUnit\Framework\TestCase
             $this->assertTrue($record->getAction() == FakeRow::DELETE);
         }
     }
+
+    public function testDetachDeleted()
+    {
+        $this->recordSet->appendNew(['id' => 2, 'foo' => 'bar1']);
+        $this->recordSet->appendNew(['id' => 3, 'foo' => 'bar2']);
+        $this->recordSet->appendNew(['id' => 4, 'foo' => 'bar3']);
+        $this->recordSet->appendNew(['id' => 5, 'foo' => 'bar1']);
+        $this->recordSet->appendNew(['id' => 6, 'foo' => 'bar2']);
+        $this->recordSet->appendNew(['id' => 7, 'foo' => 'bar3']);
+        $this->recordSet->appendNew(['id' => 8, 'foo' => 'bar1']);
+        $this->recordSet->appendNew(['id' => 9, 'foo' => 'bar2']);
+        $this->recordSet->appendNew(['id' => 10, 'foo' => 'bar3']);
+
+        $this->assertCount(10, $this->recordSet);
+
+        foreach ($this->recordSet as $i => $record) {
+            $this->assertFalse($record->getAction() == FakeRow::DELETE);
+            if ($i % 2) {
+                $row = $record->getRow();
+                $row->init($row::DELETED);
+            }
+        }
+
+        $detached = $this->recordSet->detachDeleted();
+        $this->assertCount(5, $this->recordSet);
+        $this->assertCount(5, $detached);
+        $this->assertInstanceOf(RecordSet::CLASS, $detached);
+    }
 }

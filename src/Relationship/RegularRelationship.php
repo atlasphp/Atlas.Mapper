@@ -34,7 +34,7 @@ abstract class RegularRelationship extends Relationship
 
     protected $foreignStrategy;
 
-    protected $unsetDeleted = false;
+    protected $discardDeleted = false;
 
     public function __construct(
         string $name,
@@ -104,9 +104,10 @@ abstract class RegularRelationship extends Relationship
         array $foreignRecords
     ) : void;
 
-    public function unsetDeleted() : Relationship
+    public function discardDeleted() : RegularRelationship
     {
-        $this->unsetDeleted = true;
+        $this->discardDeleted = true;
+        return $this;
     }
 
     public function joinSelect(
