@@ -34,8 +34,6 @@ abstract class RegularRelationship extends Relationship
 
     protected $foreignStrategy;
 
-    protected $discardDeleted = false;
-
     public function __construct(
         string $name,
         MapperLocator $mapperLocator,
@@ -103,12 +101,6 @@ abstract class RegularRelationship extends Relationship
         Record $nativeRecord,
         array $foreignRecords
     ) : void;
-
-    public function discardDeleted() : RegularRelationship
-    {
-        $this->discardDeleted = true;
-        return $this;
-    }
 
     public function joinSelect(
         MapperSelect $select,

@@ -39,15 +39,6 @@ class OneToOne extends DeletableRelationship
         }
 
         $this->fixForeignRecordDeleted($nativeRecord, $foreignRecord);
-
-        if (! $this->discardDeleted) {
-            return;
-        }
-
-        $row = $foreignRecord->getRow();
-        if ($row->getStatus() === $row::DELETED) {
-            unset($nativeRecord->{$this->name});
-        }
     }
 
     public function persistForeign(

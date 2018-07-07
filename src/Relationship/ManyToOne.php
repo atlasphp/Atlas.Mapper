@@ -62,15 +62,6 @@ class ManyToOne extends RegularRelationship
         foreach ($this->on as $nativeField => $foreignField) {
             $foreignRecord->$foreignField = $nativeRecord->$nativeField;
         }
-
-        if (! $this->discardDeleted) {
-            return;
-        }
-
-        $row = $foreignRecord->getRow();
-        if ($row->getStatus() === $row::DELETED) {
-            unset($nativeRecord->{$this->name});
-        }
     }
 
     public function persistForeign(

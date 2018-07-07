@@ -44,10 +44,6 @@ class OneToMany extends DeletableRelationship
             }
             $this->fixForeignRecordDeleted($nativeRecord, $foreignRecord);
         }
-
-        if ($this->discardDeleted) {
-            $foreignRecordSet->detachDeleted();
-        }
     }
 
     public function persistForeign(
