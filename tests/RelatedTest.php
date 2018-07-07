@@ -99,4 +99,14 @@ class RelatedTest extends \PHPUnit\Framework\TestCase
         $actual = $this->related->getFields();
         $this->assertSame($expect, $actual);
     }
+
+    public function testGetArrayCopy()
+    {
+        $expect = [
+            'zim' => [],
+            'irk' => [],
+        ];
+        $actual = $this->related->getArrayCopy();
+        $this->assertSame($expect, $actual);
+    }
 }

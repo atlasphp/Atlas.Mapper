@@ -42,6 +42,17 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(ReplyRecord::CLASS, $actual);
     }
 
+    public function testNewRecords()
+    {
+        $threadMapper = $this->mapperLocator->get(Thread::CLASS);
+        $actual = $threadMapper->newRecords([
+            ['thread_id' => 1],
+            ['thread_id' => 2],
+            ['thread_id' => 3],
+        ]);
+        $this->assertTrue(is_array($actual));
+    }
+
     public function testNewRecordSet()
     {
         $actual = $this->mapperLocator->get(Thread::CLASS)->newRecordSet();
