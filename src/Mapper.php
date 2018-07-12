@@ -232,8 +232,7 @@ abstract class Mapper
     public function newRecord(array $fields = []) : Record
     {
         $row = $this->table->newRow($fields);
-        $record = $this->newRecordFromRow($row);
-        $record->getRelated()->set($fields);
+        $record = $this->newRecordFromRow($row, $fields);
         return $record;
     }
 
@@ -278,12 +277,12 @@ abstract class Mapper
         return $this->newRecordFromRow($row);
     }
 
-    protected function newRecordFromRow(Row $row) : Record
+    protected function newRecordFromRow(Row $row, array $fields = []) : Record
     {
         $recordClass = $this->getRecordClass($row);
         return new $recordClass(
             $row,
-            $this->relationships->newRelated()
+            $this->relationships->newRelated($fields)
         );
     }
 

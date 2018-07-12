@@ -37,6 +37,8 @@ abstract class MapperRelationships
 
     protected $persistAfterNative = [];
 
+    protected $prototypeRelated = null;
+
     public function __construct(
         MapperLocator $mapperLocator,
         string $nativeMapperClass
@@ -233,9 +235,21 @@ abstract class MapperRelationships
         }
     }
 
-    public function newRelated() : Related
+    public function newRelated(array $fields = []) : Related
     {
-        return new Related($this->fields);
+        if ($this->prototypeRelated === null) {
+            $this->prototypeRelated = new Related($this->fields);
+        }
+
+        $values = [];
+        $fields = array_intersect_key($fields, $this->fields);
+        foreach ($fields as $field => $value) {
+            $values[$field] = $value;
+        }
+
+        $newRelated = clone $this->prototypeRelated;
+        $newRelated->set($values);
+        return $newRelated;
     }
 
     public function joinSelect(
