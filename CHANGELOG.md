@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 1.0.1
+
+This release significantly improves the performance of
+MapperRelationships::newRelated(), and thereby indirectly the performance of
+Mapper::newRecord(). It also incorporates a benchmarking script at
+`tests/bench.php`.
+
 ## 1.0.0
 
 Remove relationship defintion method `unsetDeleted()` as premature, and update
