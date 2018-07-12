@@ -241,14 +241,8 @@ abstract class MapperRelationships
             $this->prototypeRelated = new Related($this->fields);
         }
 
-        $values = [];
-        $fields = array_intersect_key($fields, $this->fields);
-        foreach ($fields as $field => $value) {
-            $values[$field] = $value;
-        }
-
         $newRelated = clone $this->prototypeRelated;
-        $newRelated->set($values);
+        $newRelated->set($fields);
         return $newRelated;
     }
 
