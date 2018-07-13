@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.0.2
+
+Another small performance improvement to MapperRelationships::getRelated().
+
 ## 1.0.1
 
 This release significantly improves the performance of
