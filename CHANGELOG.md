@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.1.0
+
+Added method MapperLocator::getTableLocator().
+
+Updated tests.
+
 ## 1.0.2
 
 Another small performance improvement to MapperRelationships::getRelated().
