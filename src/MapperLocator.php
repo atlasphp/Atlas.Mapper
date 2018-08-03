@@ -62,6 +62,11 @@ class MapperLocator
         return $this->mappers[$mapperClass];
     }
 
+    public function getTableLocator() : TableLocator
+    {
+        return $this->tableLocator;
+    }
+
     protected function newMapper($mapperClass) : Mapper
     {
         $table = "{$mapperClass}Table";
