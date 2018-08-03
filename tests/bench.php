@@ -8,5 +8,10 @@ $mapperLocator = MapperLocator::new($connection);
 $threadMapper = $mapperLocator->get(Thread::CLASS);
 
 bench('ThreadMapper::newRecord()', function () use ($threadMapper) {
-    $threadMapper->newRecord();
+    $threadMapper->newRecord([
+        'thread_id' => null,
+        'author_id' => null,
+        'subject' => null,
+        'body' => null,
+    ]);
 });
