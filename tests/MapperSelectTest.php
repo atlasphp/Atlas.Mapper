@@ -29,7 +29,7 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
             SELECT
                 *
             FROM
-                employee
+                "employee"
         ';
         $actual = $this->select->getStatement();
         $this->assertSameSql($expect, $actual);
@@ -48,7 +48,7 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
                 id,
                 name
             FROM
-                employee
+                "employee"
         ';
 
         $this->select
@@ -92,10 +92,10 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
             SELECT
                 *
             FROM
-                authors
-                    LEFT JOIN threads ON authors.author_id = threads.author_id
-                    INNER JOIN taggings AS taggings_alias ON threads.thread_id = taggings_alias.thread_id
-                    JOIN tags AS tag ON taggings_alias.tag_id = tag.tag_id
+                "authors"
+                    LEFT JOIN "threads" ON "authors"."author_id" = "threads"."author_id"
+                    INNER JOIN "taggings" AS "taggings_alias" ON "threads"."thread_id" = "taggings_alias"."thread_id"
+                    JOIN "tags" AS "tag" ON "taggings_alias"."tag_id" = "tag"."tag_id"
         ';
 
         $this->assertSameSql($expect, $select->getStatement());

@@ -408,8 +408,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $expect = 'SELECT DISTINCT
 
 FROM
-    threads
-LEFT JOIN replies ON threads.thread_id = replies.thread_id
+    "threads"
+LEFT JOIN "replies" ON "threads"."thread_id" = "replies"."thread_id"
 ORDER BY
     replies.reply_id DESC';
 
@@ -428,8 +428,8 @@ ORDER BY
         $expect = 'SELECT DISTINCT
 
 FROM
-    threads
-INNER JOIN replies ON threads.thread_id = replies.thread_id
+    "threads"
+INNER JOIN "replies" ON "threads"."thread_id" = "replies"."thread_id"
 ORDER BY
     replies.reply_id DESC';
 

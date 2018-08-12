@@ -110,14 +110,18 @@ abstract class RegularRelationship extends Relationship
         callable $sub = null
     ) : void
     {
-        $spec = $this->foreignTableName;
-        if ($spec !== $foreignAlias) {
-            $spec .= " AS {$foreignAlias}";
+        $spec = $select->quoteIdentifier($this->foreignTableName);
+        if ($this->foreignTableName !== $foreignAlias) {
+            $spec .= " AS " . $select->quoteIdentifier($foreignAlias);
         }
 
         $cond = [];
         foreach ($this->on as $nativeCol => $foreignCol) {
-            $cond[] = "{$nativeAlias}.{$nativeCol} = {$foreignAlias}.{$foreignCol}";
+            $qna = $select->quoteIdentifier($nativeAlias);
+            $qnc = $select->quoteIdentifier($nativeCol);
+            $qfa = $select->quoteIdentifier($foreignAlias);
+            $qfc = $select->quoteIdentifier($foreignCol);
+            $cond[] = "{$qna}.{$qnc} = {$qfa}.{$qfc}";
         }
         $cond = implode(' AND ', $cond);
         $select->join($join, $spec, $cond);
@@ -154,8 +158,9 @@ abstract class RegularRelationship extends Relationship
 
     protected function foreignSelectWhere(MapperSelect $select, $alias) : void
     {
+        $qa = $select->quoteIdentifier($alias);
         foreach ($this->where as $spec) {
-            $cond = "{$alias}." . array_shift($spec);
+            $cond = "{$qa}." . array_shift($spec);
             $select->where($cond, ...$spec);
         }
     }

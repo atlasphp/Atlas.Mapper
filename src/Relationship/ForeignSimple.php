@@ -35,7 +35,9 @@ class ForeignSimple
             $vals[] = $row->{$this->nativeCol};
         }
 
-        $where = "{$this->foreignTableName}.{$this->foreignCol} IN ";
+        $qftn = $select->quoteIdentifier($this->foreignTableName);
+        $qcol = $select->quoteIdentifier($this->foreignCol);
+        $where = "{$qftn}.{$qcol} IN ";
         $select->where($where, array_unique($vals));
     }
 }

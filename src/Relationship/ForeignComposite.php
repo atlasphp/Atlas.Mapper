@@ -31,7 +31,9 @@ class ForeignComposite
         foreach ($uniques as $unique) {
             $one = [];
             foreach ($unique as $col => $val) {
-                $one[] = "{$this->foreignTableName}.{$col} = " . $select->bindInline($val);
+                $qftn = $select->quoteIdentifier($this->foreignTableName);
+                $qcol = $select->quoteIdentifier($col);
+                $one[] = "{$qftn}.{$qcol} = " . $select->bindInline($val);
             }
             $all[] = '(' . implode(' AND ', $one) . ')';
         }
