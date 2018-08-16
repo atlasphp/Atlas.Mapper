@@ -68,7 +68,7 @@ abstract class Record implements JsonSerializable
                 }
 
                 $this->__set($propertyName, $arguments[0]);
-                return;
+                return $this;
             }
         }
 
