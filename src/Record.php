@@ -51,6 +51,30 @@ abstract class Record implements JsonSerializable
         unset($this->$prop->$field);
     }
 
+    public function __call(string $name, array $arguments)
+    {
+        $prefix3 = substr($name, 0, 3);
+
+        if (in_array($prefix3, ['get', 'set'])) {
+            $propertyName = substr($name, 3);
+            $propertyName = preg_replace('/([^\A])([A-Z][^A-Z]?)/', '\\1_\\2', $propertyName);
+            $propertyName = strtolower($propertyName);
+
+            if ($prefix3 == 'get') {
+                return $this->__get($propertyName);
+            } else {
+                if (!array_key_exists(0, $arguments)) {
+                    throw new \ArgumentCountError(sprintf('Missing argument for method "%s:%s"', static::class, $name));
+                }
+
+                $this->__set($propertyName, $arguments[0]);
+                return;
+            }
+        }
+
+        throw new \BadMethodCallException(sprintf('Method "%s::%s" does not exists', static::class, $name));
+    }
+
     public function getMapperClass() : string
     {
         return substr(static::CLASS, 0, -6);
