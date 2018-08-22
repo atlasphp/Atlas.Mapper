@@ -85,6 +85,22 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         // did the rows identity-map?
         $again = $this->mapperLocator->get(Thread::CLASS)->fetchRecord(1);
         $this->assertSame($actual->getRow(), $again->getRow());
+
+        // easy test for iteration
+        $expect_keys = [
+            'thread_id',
+            'author_id',
+            'subject',
+            'body',
+            'author',
+            'summary',
+            'replies',
+            'taggings',
+        ];
+        foreach ($actual as $key => $val) {
+            $actual_keys[] = $key;
+        }
+        $this->assertSame($expect_keys, $actual_keys);
     }
 
     public function testFetchRecord_missing()

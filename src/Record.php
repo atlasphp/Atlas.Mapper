@@ -10,12 +10,15 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper;
 
+use AppendIterator;
 use Atlas\Mapper\Exception;
 use Atlas\Table\Row;
+use IteratorAggregate;
 use JsonSerializable;
 use SplObjectStorage;
+use Traversable;
 
-abstract class Record implements JsonSerializable
+abstract class Record implements IteratorAggregate, JsonSerializable
 {
     private $row;
 
@@ -49,6 +52,14 @@ abstract class Record implements JsonSerializable
     {
         $prop = $this->assertHas($field);
         unset($this->$prop->$field);
+    }
+
+    public function getIterator() : Traversable
+    {
+        $iterator = new AppendIterator();
+        $iterator->append($this->row->getIterator());
+        $iterator->append($this->related->getIterator());
+        return $iterator;
     }
 
     public function getMapperClass() : string

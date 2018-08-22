@@ -10,10 +10,13 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper;
 
+use ArrayIterator;
 use Atlas\Mapper\Exception;
+use IteratorAggregate;
 use SplObjectStorage;
+use Traversable;
 
-class Related
+class Related implements IteratorAggregate
 {
     private $fields = [];
 
@@ -46,6 +49,11 @@ class Related
     {
         $this->assertHas($field);
         $this->fields[$field] = null;
+    }
+
+    public function getIterator() : Traversable
+    {
+        return new ArrayIterator($this->fields);
     }
 
     public function getFields() : array
