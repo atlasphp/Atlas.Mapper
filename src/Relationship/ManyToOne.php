@@ -31,7 +31,8 @@ class ManyToOne extends RegularRelationship
     protected function stitchIntoRecord(
         Record $nativeRecord,
         array $foreignRecords
-    ) : void {
+    ) : void
+    {
         $nativeRecord->{$this->name} = false;
         foreach ($foreignRecords as $foreignRecord) {
             if ($this->recordsMatch($nativeRecord, $foreignRecord)) {

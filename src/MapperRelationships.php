@@ -13,6 +13,7 @@ namespace Atlas\Mapper;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\MapperLocator;
 use Atlas\Mapper\Record;
+use Atlas\Mapper\Relationship\ManyToMany;
 use Atlas\Mapper\Relationship\ManyToOne;
 use Atlas\Mapper\Relationship\ManyToOneVariant;
 use Atlas\Mapper\Relationship\OneToMany;
@@ -129,6 +130,22 @@ abstract class MapperRelationships
         return $relationship;
     }
 
+    protected function manyToMany(
+        string $relatedName,
+        string $foreignMapperClass,
+        string $throughRelatedName,
+        array $on = []
+    ) {
+        return $this->set(
+            $relatedName,
+            ManyToMany::CLASS,
+            $foreignMapperClass,
+            'persistBeforeNative',
+            $on,
+            $throughRelatedName
+        );
+    }
+
     public function get(string $relatedName) : Relationship
     {
         return $this->relationships[$relatedName];
@@ -160,7 +177,8 @@ abstract class MapperRelationships
         string $relationshipClass,
         string $foreignSpec,
         string $persistencePriority,
-        array $on = []
+        array $on = [],
+        string $throughRelatedName = null
     ) : Relationship
     {
         $this->assertRelatedName($relatedName);
@@ -171,8 +189,15 @@ abstract class MapperRelationships
             $relatedName,
             $this->mapperLocator,
             $this->nativeMapperClass,
-            $foreignSpec,
+            $foreignSpec
         ];
+
+        if ($throughRelatedName !== null) {
+            if (! isset($this->relationships[$throughRelatedName])) {
+                throw Exception::relationshipDoesNotExist($throughRelatedName);
+            }
+            $args[] = $this->relationships[$throughRelatedName];
+        }
 
         if (! empty($on)) {
             $args[] = $on;

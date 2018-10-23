@@ -82,7 +82,7 @@ abstract class RegularRelationship extends Relationship
         callable $custom = null
     ) : void
     {
-        if (! $nativeRecords) {
+        if (empty($nativeRecords)) {
             return;
         }
 

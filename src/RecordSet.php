@@ -86,6 +86,11 @@ abstract class RecordSet implements
         return empty($this->records);
     }
 
+    public function getRecords() : array
+    {
+        return $this->records;
+    }
+
     public function getArrayCopy(SplObjectStorage $tracker = null) : array
     {
         if ($tracker === null) {

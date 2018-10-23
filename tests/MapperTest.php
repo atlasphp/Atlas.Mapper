@@ -69,9 +69,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'replies' => function ($select) {
                     $select->with(['author']);
                 },
-                'taggings' => [
-                    'tag',
-                ],
+                'taggings',
+                'tags',
             ]
         );
 
@@ -103,9 +102,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'replies' => function ($select) {
                     $select->with(['author']);
                 },
-                'taggings' => [
-                    'tag',
-                ],
+                'taggings',
+                'tags',
             ]
         );
 
@@ -126,9 +124,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'replies' => function ($select) {
                     $select->with(['author']);
                 },
-                'taggings' => [
-                    'tag',
-                ],
+                'taggings',
+                'tags',
             ]
         )->getArrayCopy();
 
@@ -147,9 +144,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'replies' => function ($select) {
                     $select->with(['author']);
                 },
-                'taggings' => [
-                    'tag',
-                ],
+                'taggings',
+                'tags',
             ]
         )->getArrayCopy();
 
@@ -168,9 +164,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'replies' => function ($select) {
                     $select->with(['author']);
                 },
-                'taggings' => [
-                    'tag',
-                ],
+                'taggings',
+                'tags',
             ]
         );
 
@@ -190,9 +185,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'replies' => function ($select) {
                     $select->with(['author']);
                 },
-                'taggings' => [
-                    'tag',
-                ],
+                'taggings',
+                'tags',
             ]
         );
 
@@ -212,9 +206,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'replies' => function ($select) {
                     $select->with(['author']);
                 },
-                'taggings' => [
-                    'tag',
-                ],
+                'taggings',
+                'tags',
             ])
             ->fetchRecord();
 
@@ -231,9 +224,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'replies' => function ($select) {
                     $select->with(['author']);
                 },
-                'taggings' => [
-                    'tag',
-                ],
+                'taggings',
+                'tags',
             ])
             ->fetchRecord();
 
@@ -251,9 +243,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                     new Fake\CallableWithObject(),
                     'replies'
                 ],
-                'taggings' => [
-                    'tag',
-                ],
+                'taggings',
+                'tags',
             ])
             ->fetchRecord();
 
@@ -270,9 +261,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'replies' => function ($select) {
                     $select->with(['author']);
                 },
-                'taggings' => [
-                    'tag',
-                ],
+                'taggings',
+                'tags',
             ])
             ->fetchRecordSet()
             ->getArrayCopy();
@@ -628,33 +618,38 @@ ORDER BY
                 'thread_id' => '1',
                 'tag_id' => '1',
                 'thread' => NULL,
-                'tag' => [
-                    'tag_id' => '1',
-                    'name' => 'foo',
-                    'taggings' => NULL,
-                ],
+                'tag' => NULL,
             ],
             1 => [
                 'tagging_id' => '2',
                 'thread_id' => '1',
                 'tag_id' => '2',
                 'thread' => NULL,
-                'tag' => [
-                    'tag_id' => '2',
-                    'name' => 'bar',
-                    'taggings' => NULL,
-                ],
+                'tag' => NULL,
             ],
             2 => [
                 'tagging_id' => '3',
                 'thread_id' => '1',
                 'tag_id' => '3',
                 'thread' => NULL,
-                'tag' => [
-                    'tag_id' => '3',
-                    'name' => 'baz',
-                    'taggings' => NULL,
-                ],
+                'tag' => NULL,
+            ],
+        ],
+        'tags' => [
+            [
+                'tag_id' => '1',
+                'name' => 'foo',
+                'taggings' => NULL,
+            ],
+            [
+                'tag_id' => '2',
+                'name' => 'bar',
+                'taggings' => NULL,
+            ],
+            [
+                'tag_id' => '3',
+                'name' => 'baz',
+                'taggings' => NULL,
             ],
         ],
     ];
@@ -751,36 +746,38 @@ ORDER BY
                     'thread_id' => '1',
                     'tag_id' => '1',
                     'thread' => NULL,
-                    'tag' =>
-                    [
-                        'tag_id' => '1',
-                        'name' => 'foo',
-                        'taggings' => NULL,
-                    ],
+                    'tag' => NULL
                 ],
                 1 => [
                     'tagging_id' => '2',
                     'thread_id' => '1',
                     'tag_id' => '2',
                     'thread' => NULL,
-                    'tag' =>
-                    [
-                        'tag_id' => '2',
-                        'name' => 'bar',
-                        'taggings' => NULL,
-                    ],
+                    'tag' => NULL
                 ],
                 2 => [
                     'tagging_id' => '3',
                     'thread_id' => '1',
                     'tag_id' => '3',
                     'thread' => NULL,
-                    'tag' =>
-                    [
-                        'tag_id' => '3',
-                        'name' => 'baz',
-                        'taggings' => NULL,
-                    ],
+                    'tag' => NULL
+                ],
+            ],
+            'tags' => [
+                [
+                    'tag_id' => '1',
+                    'name' => 'foo',
+                    'taggings' => NULL,
+                ],
+                [
+                    'tag_id' => '2',
+                    'name' => 'bar',
+                    'taggings' => NULL,
+                ],
+                [
+                    'tag_id' => '3',
+                    'name' => 'baz',
+                    'taggings' => NULL,
                 ],
             ],
         ],
@@ -875,36 +872,38 @@ ORDER BY
                     'thread_id' => '2',
                     'tag_id' => '2',
                     'thread' => NULL,
-                    'tag' =>
-                    [
-                        'tag_id' => '2',
-                        'name' => 'bar',
-                        'taggings' => NULL,
-                    ],
+                    'tag' => NULL
                 ],
                 1 => [
                     'tagging_id' => '5',
                     'thread_id' => '2',
                     'tag_id' => '3',
                     'thread' => NULL,
-                    'tag' =>
-                    [
-                        'tag_id' => '3',
-                        'name' => 'baz',
-                        'taggings' => NULL,
-                    ],
+                    'tag' => NULL,
                 ],
                 2 => [
                     'tagging_id' => '6',
                     'thread_id' => '2',
                     'tag_id' => '4',
                     'thread' => NULL,
-                    'tag' =>
-                    [
-                        'tag_id' => '4',
-                        'name' => 'dib',
-                        'taggings' => NULL,
-                    ],
+                    'tag' => NULL,
+                ],
+            ],
+            'tags' => [
+                [
+                    'tag_id' => '2',
+                    'name' => 'bar',
+                    'taggings' => NULL,
+                ],
+                [
+                    'tag_id' => '3',
+                    'name' => 'baz',
+                    'taggings' => NULL,
+                ],
+                [
+                    'tag_id' => '4',
+                    'name' => 'dib',
+                    'taggings' => NULL,
                 ],
             ],
         ],
@@ -993,9 +992,8 @@ ORDER BY
                     ],
                 ],
             ],
-            'taggings' => [
-            ],
+            'taggings' => [],
+            'tags' => [],
         ],
     ];
-
 }
