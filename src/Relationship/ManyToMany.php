@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Atlas\Mapper\Relationship;
 
 use Atlas\Mapper\MapperLocator;
+use Atlas\Mapper\MapperSelect;
 use Atlas\Mapper\Record;
 use Atlas\Mapper\RecordSet;
 use SplObjectStorage;
@@ -31,6 +32,46 @@ class ManyToMany extends RegularRelationship
         OneToMany $throughRelationship,
         array $on = []
     ) {
+        $this->throughRelationship = $throughRelationship;
+        $this->throughName = $throughRelationship->name;
+
+        $throughForeignMapper = $throughRelationship->getForeignMapper();
+        $this->throughRecordSet = $throughForeignMapper->newRecordSet();
+
+        $throughForeignRelationships = $throughForeignMapper->getRelationships();
+        $relatedNames = array_keys($throughForeignRelationships->getFields());
+        foreach ($relatedNames as $relatedName) {
+            $relationship = $throughForeignRelationships->get($relatedName);
+            if (! $relationship instanceof ManyToOne) {
+                continue;
+            }
+
+            if (
+                $this->throughNativeRelatedName === null
+                && $relationship->foreignMapperClass === $nativeMapperClass
+            ) {
+                $this->throughNativeRelatedName = $relatedName;
+            }
+
+            if (
+                $this->throughForeignRelatedName === null
+                && $relationship->foreignMapperClass === $foreignMapperClass
+            ) {
+                $this->throughForeignRelatedName = $relatedName;
+                if (empty($on)) {
+                    $on = $relationship->on;
+                }
+            }
+        }
+
+        if (! $this->throughNativeRelatedName) {
+            throw new \Exception('could not find native relationship');
+        }
+
+        if (! $this->throughForeignRelatedName) {
+            throw new \Exception('could not find foreign relationship');
+        }
+
         parent::__construct(
             $name,
             $mapperLocator,
@@ -38,47 +79,35 @@ class ManyToMany extends RegularRelationship
             $foreignMapperClass,
             $on
         );
-
-        $this->throughRelationship = $throughRelationship;
-        $this->throughName = $throughRelationship->name;
-
-        $throughForeignMapper = $throughRelationship->getForeignMapper();
-        $this->throughRecordSet = $throughForeignMapper->newRecordSet();
-
-        // now what we need is the foreign mapper on the through
-        // relationship (Tagging::CLASS) and the relationships
-        // on that foreign mapper. Look through *those* to find the
-        // native field name (maps to native for this) and the
-        // foreign field name (maps to foreign for this).
-        $throughForeignRelationships = $throughForeignMapper->getRelationships();
-        foreach ($throughForeignRelationships->getFields() as $relatedName => $null) {
-            $relationship = $throughForeignRelationships->get($relatedName);
-            if (
-                $this->throughNativeRelatedName === null
-                && $relationship->foreignMapperClass === $this->nativeMapperClass
-            ) {
-                $this->throughNativeRelatedName = $relatedName;
-            }
-            if (
-                $this->throughForeignRelatedName === null
-                && $relationship->foreignMapperClass === $this->foreignMapperClass
-            ) {
-                $this->throughForeignRelatedName = $relatedName;
-            }
-        }
     }
 
     protected function setOn(array $on) : void
     {
-        if (! empty($on)) {
-            $this->on = $on;
-            return;
-        }
+        $this->on = $on;
+    }
 
-        $foreignTableClass = $this->foreignMapperClass . 'Table';
-        foreach ($foreignTableClass::PRIMARY_KEY as $col) {
-            $this->on[$col] = $col;
-        }
+    public function joinSelect(
+        MapperSelect $select,
+        string $join,
+        string $nativeAlias, // threads
+        string $foreignAlias, // tags
+        callable $sub = null
+    ) : void
+    {
+        $this->throughRelationship->joinSelect(
+            $select,
+            $join,
+            $nativeAlias,
+            $this->throughName
+        );
+
+        parent::joinSelect(
+            $select,
+            $join,
+            $this->throughName,
+            $foreignAlias,
+            $sub
+        );
     }
 
     public function stitchIntoRecords(

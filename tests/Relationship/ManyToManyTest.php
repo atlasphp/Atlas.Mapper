@@ -5,9 +5,12 @@ use Atlas\Mapper\MapperLocator;
 use Atlas\Testing\DataSource\Author\Author;
 use Atlas\Testing\DataSource\Thread\Thread;
 use Atlas\Testing\DataSource\Tag\Tag;
+use Atlas\Testing\Assertions;
 
 class ManyToManyTest extends RelationshipTest
 {
+    use Assertions;
+
     public function testForeignPersist_basic()
     {
         $threadMapper = $this->mapperLocator->get(Thread::CLASS);
@@ -125,5 +128,27 @@ class ManyToManyTest extends RelationshipTest
         });
 
         $this->assertEquals($expect, $actual);
+    }
+
+    public function testJoinSelect()
+    {
+        $actual = $this->mapperLocator->get(Thread::CLASS)
+            ->select()
+            ->joinWith('tags')
+            ->where('tags.name = ', 'foo')
+            ->getStatement();
+
+        $expect = '
+            SELECT
+
+            FROM
+                "threads"
+                    JOIN "taggings" ON "threads"."thread_id" = "taggings"."thread_id"
+                    JOIN "tags" ON "taggings"."tag_id" = "tags"."tag_id"
+            WHERE
+                tags.name = :__1__
+        ';
+
+        $this->assertSameSql($expect, $actual);
     }
 }
