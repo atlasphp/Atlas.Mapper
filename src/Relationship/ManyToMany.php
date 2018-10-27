@@ -65,11 +65,21 @@ class ManyToMany extends RegularRelationship
         }
 
         if (! $this->throughNativeRelatedName) {
-            throw new \Exception('could not find native relationship');
+            throw Exception::couldNotFindThroughRelationship(
+                'native',
+                $throughName,
+                $name,
+                $nativeMapperClass
+            );
         }
 
         if (! $this->throughForeignRelatedName) {
-            throw new \Exception('could not find foreign relationship');
+            throw Exception::couldNotFindThroughRelationship(
+                'foreign',
+                $throughName,
+                $name,
+                $nativeMapperClass
+            );
         }
 
         parent::__construct(

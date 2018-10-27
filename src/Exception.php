@@ -93,4 +93,11 @@ class Exception extends \Exception
         $message = "Mapper already set.";
         return new Exception($message);
     }
+
+    public static function couldNotFindThroughRelationship($type, $throughName, $foreignName, $mapperClass)
+    {
+        $message = "Could not find ManyToOne $type relationship through '$throughName'"
+            . "for ManyToMany '{$foriegnName}' on {$mapperClass}";
+        return new Exception($message);
+    }
 }
