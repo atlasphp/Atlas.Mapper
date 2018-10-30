@@ -232,18 +232,5 @@ class ManyToMany extends RegularRelationship
                 ]);
             }
         }
-
-        // at this point, the through records without matching
-        // foreign records are still set for deletion.
-        //
-        // do not persist the through records; let the rest of
-        // the system do that.
-
-        /*
-        What's funny here is that you don't necessarily want to delete
-        the actual foreign record (e.g. the tag). You want to delete the
-        through mapping (e.g. the tagging). You want to *detach* the tag,
-        which will delete the tagging. This is a big gotcha.
-        */
     }
 }
