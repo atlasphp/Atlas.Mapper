@@ -96,8 +96,8 @@ class Exception extends \Exception
 
     public static function couldNotFindThroughRelationship($type, $throughName, $foreignName, $mapperClass)
     {
-        $message = "Could not find ManyToOne $type relationship through '$throughName'"
-            . "for ManyToMany '{$foriegnName}' on {$mapperClass}";
+        $message = "Could not find ManyToOne $type relationship through '$throughName' "
+            . "for ManyToMany '{$foreignName}' on {$mapperClass}";
         return new Exception($message);
     }
 }

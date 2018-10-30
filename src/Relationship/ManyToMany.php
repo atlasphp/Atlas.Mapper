@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\Relationship;
 
+use Atlas\Mapper\Exception;
 use Atlas\Mapper\MapperLocator;
 use Atlas\Mapper\MapperSelect;
 use Atlas\Mapper\Record;
@@ -67,7 +68,7 @@ class ManyToMany extends RegularRelationship
         if (! $this->throughNativeRelatedName) {
             throw Exception::couldNotFindThroughRelationship(
                 'native',
-                $throughName,
+                $this->throughName,
                 $name,
                 $nativeMapperClass
             );
@@ -76,7 +77,7 @@ class ManyToMany extends RegularRelationship
         if (! $this->throughForeignRelatedName) {
             throw Exception::couldNotFindThroughRelationship(
                 'foreign',
-                $throughName,
+                $this->throughName,
                 $name,
                 $nativeMapperClass
             );

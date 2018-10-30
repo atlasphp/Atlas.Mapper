@@ -1,10 +1,12 @@
 <?php
 namespace Atlas\Mapper\Relationship;
 
+use Atlas\Mapper\Exception;
 use Atlas\Mapper\MapperLocator;
 use Atlas\Testing\DataSource\Author\Author;
 use Atlas\Testing\DataSource\Thread\Thread;
 use Atlas\Testing\DataSource\Tag\Tag;
+use Atlas\Testing\DataSource\Tagging\Tagging;
 use Atlas\Testing\Assertions;
 
 class ManyToManyTest extends RelationshipTest
@@ -150,5 +152,55 @@ class ManyToManyTest extends RelationshipTest
         ';
 
         $this->assertSameSql($expect, $actual);
+    }
+
+    public function testMissingThroughNativeRelated()
+    {
+        $through = new OneToMany(
+            'thread_taggings',
+            $this->mapperLocator,
+            Thread::CLASS,
+            Tagging::CLASS
+        );
+
+        $this->expectException(Exception::CLASS);
+        $this->expectExceptionMessage(
+            "Could not find ManyToOne native relationship through "
+            . "'thread_taggings' for ManyToMany 'tag_authors' on "
+            . "Atlas\Testing\DataSource\Author\Author"
+        );
+
+        $mtm = new ManyToMany(
+            'tag_authors',
+            $this->mapperLocator,
+            Author::CLASS,
+            Tag::CLASS,
+            $through
+        );
+    }
+
+    public function testMissingThroughForeignRelated()
+    {
+        $through = new OneToMany(
+            'thread_taggings',
+            $this->mapperLocator,
+            Thread::CLASS,
+            Tagging::CLASS
+        );
+
+        $this->expectException(Exception::CLASS);
+        $this->expectExceptionMessage(
+            "Could not find ManyToOne foreign relationship through "
+            . "'thread_taggings' for ManyToMany 'tag_authors' on "
+            . "Atlas\Testing\DataSource\Tag\Tag"
+        );
+
+        $mtm = new ManyToMany(
+            'tag_authors',
+            $this->mapperLocator,
+            Tag::CLASS,
+            Author::CLASS,
+            $through
+        );
     }
 }
