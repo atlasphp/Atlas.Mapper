@@ -66,15 +66,21 @@ abstract class RegularRelationship extends Relationship
 
     protected function setOn(array $on) : void
     {
-        if (! empty($on)) {
-            $this->on = $on;
-            return;
+        if (empty($on)) {
+            $on = $this->getDefaultOn();
         }
 
+        $this->on = $on;
+    }
+
+    protected function getDefaultOn() : array
+    {
+        $on = [];
         $nativeTableClass = $this->nativeMapperClass . 'Table';
         foreach ($nativeTableClass::PRIMARY_KEY as $col) {
-            $this->on[$col] = $col;
+            $on[$col] = $col;
         }
+        return $on;
     }
 
     public function stitchIntoRecords(

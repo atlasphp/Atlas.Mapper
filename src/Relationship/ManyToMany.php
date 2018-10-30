@@ -91,11 +91,6 @@ class ManyToMany extends RegularRelationship
         );
     }
 
-    protected function setOn(array $on) : void
-    {
-        $this->on = $on;
-    }
-
     public function joinSelect(
         MapperSelect $select,
         string $join,
