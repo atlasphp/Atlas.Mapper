@@ -1,0 +1,15 @@
+{
+    "title": "Data Mapper",
+    "content": [
+        "getting-started.md",
+        "relationships.md",
+        "reading.md",
+        "records.md",
+        "record-sets.md",
+        "behavior.md",
+        "events.md",
+        "direct.md",
+        "other.md",
+        "domain.md"
+    ]
+}
