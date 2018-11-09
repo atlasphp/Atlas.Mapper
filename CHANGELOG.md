@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.3.0
+
+This release (re-)introduces many-to-many as a first-class relationship, along
+with automatic management of the intercessory association mapping ("through")
+related field. It includes `joinWith()` support for many-to-many as well.
+
 ## 1.2.0
 
 The release introduces automatic quoting of foreign table, alias, and column

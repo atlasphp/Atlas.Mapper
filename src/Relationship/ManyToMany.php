@@ -20,9 +20,13 @@ use SplObjectStorage;
 class ManyToMany extends RegularRelationship
 {
     protected $throughName;
+
     protected $throughRelationship;
+
     protected $throughNativeRelatedName;
+
     protected $throughForeignRelatedName;
+
     protected $throughRecordSet;
 
     public function __construct(
