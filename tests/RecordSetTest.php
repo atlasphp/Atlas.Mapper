@@ -133,9 +133,9 @@ class RecordSetTest extends \PHPUnit\Framework\TestCase
         $this->recordSet->appendNew(['id' => 2, 'foo' => 'bar1']);
         $this->recordSet->appendNew(['id' => 3, 'foo' => 'bar2']);
         $expect = '['
-            . '{"id":"1","foo":"bar","baz":"dib","zim":[],"irk":[]},'
-            . '{"id":2,"foo":"bar1","baz":null,"zim":null,"irk":null},'
-            . '{"id":3,"foo":"bar2","baz":null,"zim":null,"irk":null}'
+            . '{"id":"1","foo":"bar","baz":"dib","snake_column":null,"zim":[],"irk":[]},'
+            . '{"id":2,"foo":"bar1","baz":null,"snake_column":null,"zim":null,"irk":null},'
+            . '{"id":3,"foo":"bar2","baz":null,"snake_column":null,"zim":null,"irk":null}'
             . ']';
         $actual = json_encode($this->recordSet);
         $this->assertSame($expect, $actual);

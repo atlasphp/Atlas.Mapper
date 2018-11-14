@@ -22,6 +22,7 @@ class RecordTest extends \PHPUnit\Framework\TestCase
             'id' => '1',
             'foo' => 'bar',
             'baz' => 'dib',
+            'snake_column' => 'camel',
         ]);
 
         $this->related = new Related([
@@ -45,6 +46,7 @@ class RecordTest extends \PHPUnit\Framework\TestCase
     public function test__get()
     {
         // row
+        $this->assertSame('camel', $this->record->snakeColumn);
         $this->assertSame('bar', $this->record->foo);
 
         // related
@@ -62,7 +64,9 @@ class RecordTest extends \PHPUnit\Framework\TestCase
     {
         // row
         $this->record->foo = 'barbar';
+        $this->record->snake_column = 'barbar';
         $this->assertSame('barbar', $this->record->foo);
+        $this->assertSame('barbar', $this->record->snakeColumn);
         $this->assertSame('barbar', $this->row->foo);
 
         // related
@@ -82,6 +86,7 @@ class RecordTest extends \PHPUnit\Framework\TestCase
     {
         // row
         $this->assertTrue(isset($this->record->foo));
+        $this->assertTrue(isset($this->record->snakeColumn));
 
         // related
         $this->assertTrue(isset($this->record->zim));
@@ -100,6 +105,9 @@ class RecordTest extends \PHPUnit\Framework\TestCase
         unset($this->record->foo);
         $this->assertNull($this->record->foo);
         $this->assertNull($this->row->foo);
+
+        unset($this->record->snakeColumn);
+        $this->assertNull($this->record->snake_column);
 
         // related
         unset($this->record->zim);
@@ -144,6 +152,7 @@ class RecordTest extends \PHPUnit\Framework\TestCase
             'id' => '1',
             'foo' => 'hello',
             'baz' => 'dib',
+            'snake_column' => 'camel',
             'zim' => ['zimkey' => 'zimval'],
             'irk' => [
                 ['doomkey' => 'doomval']
@@ -155,7 +164,7 @@ class RecordTest extends \PHPUnit\Framework\TestCase
     public function testJsonSerialize()
     {
         $actual = json_encode($this->record);
-        $expect = '{"id":"1","foo":"bar","baz":"dib","zim":[],"irk":[]}';
+        $expect = '{"id":"1","foo":"bar","baz":"dib","snake_column":"camel","zim":[],"irk":[]}';
         $this->assertSame($expect, $actual);
     }
 }

@@ -9,5 +9,6 @@ class FakeRow extends Row
         'id' => null,
         'foo' => null,
         'baz' => null,
+        'snake_column' => null,
     ];
 }
