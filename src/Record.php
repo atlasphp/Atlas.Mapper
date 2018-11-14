@@ -116,7 +116,7 @@ abstract class Record implements JsonSerializable
     private function assertHas(&$field) : string
     {
         $camelToSnakeField = strtolower(preg_replace("/(?<=\\w)(?=[A-Z])/", "_$1", $field));
-        $field = $this->has($camelToSnakeField) ? $camelToSnakeField : $field;
+        $field = ($this->has($camelToSnakeField) && !$this->has($field)) ? $camelToSnakeField : $field;
 
         if ($this->row->has($field)) {
             return 'row';
