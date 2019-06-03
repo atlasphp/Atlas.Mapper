@@ -100,6 +100,11 @@ abstract class Mapper
             }
         }
 
+        // early return if all records were identity-mapped
+        if (count($missing) == 0) {
+            return $this->turnRowsIntoRecords($rows, $with);
+        }
+
         // fetch rows missing from identity map
         foreach ($this->table->selectRows($this->select(), $missing) as $row) {
             $serial = $this->identityMap->getSerial($row);
