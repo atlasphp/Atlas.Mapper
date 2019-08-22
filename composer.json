@@ -1,5 +1,6 @@
 {
-    "name": "atlas/mapper",
+    "name": "far-blue/atlas-mapper",
+    "replaces": "atlas/mapper",
     "type": "library",
     "description": "A data mapper for the persistence model.",
     "keywords": [ "sql", "data", "mapper", "mapping", "orm" ],
