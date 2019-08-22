@@ -14,7 +14,7 @@ class FakeRegularRelationship extends RegularRelationship
 
     protected function stitchIntoRecord(
         Record $nativeRecord,
-        array $foreignRecords
+        array &$foreignRecords
     ) : void {
         return;
     }
