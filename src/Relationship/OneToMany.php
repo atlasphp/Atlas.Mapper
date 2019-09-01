@@ -18,13 +18,14 @@ class OneToMany extends DeletableRelationship
 {
     protected function stitchIntoRecord(
         Record $nativeRecord,
-        array $foreignRecords
+        array &$foreignRecords
     ) : void
     {
         $matches = [];
-        foreach ($foreignRecords as $foreignRecord) {
+        foreach ($foreignRecords as $index => $foreignRecord) {
             if ($this->recordsMatch($nativeRecord, $foreignRecord)) {
                 $matches[] = $foreignRecord;
+                unset($foreignRecords[$index]);
             }
         }
 

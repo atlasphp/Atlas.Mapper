@@ -138,7 +138,7 @@ class ManyToMany extends RegularRelationship
 
     protected function stitchIntoRecord(
         Record $nativeRecord,
-        array $foreignRecords
+        array &$foreignRecords
     ) : void
     {
         $matches = $this->getMatches($nativeRecord, $foreignRecords);

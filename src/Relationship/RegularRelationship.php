@@ -105,7 +105,7 @@ abstract class RegularRelationship extends Relationship
 
     abstract protected function stitchIntoRecord(
         Record $nativeRecord,
-        array $foreignRecords
+        array &$foreignRecords
     ) : void;
 
     public function joinSelect(
