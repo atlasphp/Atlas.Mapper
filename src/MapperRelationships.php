@@ -126,8 +126,6 @@ abstract class MapperRelationships
             $referenceCol,
             'persistBeforeNative'
         );
-
-        return $relationship;
     }
 
     protected function manyToMany(
