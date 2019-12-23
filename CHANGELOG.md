@@ -11,7 +11,6 @@
   foreignRecord entries in stitchIntoRecord once they've been matched, where
   possible
 
-
 ## 1.3.0
 
 This release (re-)introduces many-to-many as a first-class relationship, along
