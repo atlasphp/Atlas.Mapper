@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.3.2
+
+- Fixed #15: Required parameter follows optional parameter
+
 ## 1.3.1
 
 - Fixed #10 re: calling fetchRecords on a set where all records are
