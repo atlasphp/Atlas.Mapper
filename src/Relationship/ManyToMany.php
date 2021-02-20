@@ -206,15 +206,17 @@ class ManyToMany extends RegularRelationship
         $throughRecordSet = $nativeRecord->{$this->throughName};
         $throughRecords = $throughRecordSet->getRecords();
 
+        foreach ($throughRecords as $throughRecord) {
+            // set for deletion, unless it matches
+            $throughRecord->setDelete(true);
+        }
+
         // find foreigns with a matching through
         foreach ($foreignRecordSet as $foreignRecord) {
 
             // does the foreign match any through?
             $matched = false;
             foreach ($throughRecords as $i => $throughRecord) {
-
-                // set for deletion, unless it matches
-                $throughRecord->setDelete(true);
 
                 // does this through match the foreign?
                 if ($this->recordsMatch($throughRecord, $foreignRecord)) {
