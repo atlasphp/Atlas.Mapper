@@ -1,5 +1,5 @@
 {
-    "name": "atlas/atlas-mapper",
+    "name": "atlas/mapper",
     "type": "library",
     "description": "A data mapper for the persistence model.",
     "keywords": [ "sql", "data", "mapper", "mapping", "orm" ],
