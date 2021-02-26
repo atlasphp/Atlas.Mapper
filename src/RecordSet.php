@@ -29,7 +29,7 @@ abstract class RecordSet implements
     private $newRecordFactory;
 
     public function __construct(
-        array $records = [],
+        array $records,
         callable $newRecordFactory
     ) {
         $this->newRecordFactory = $newRecordFactory;

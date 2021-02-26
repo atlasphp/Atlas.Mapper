@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## 1.3.2
+
+- Fixed #15: Required parameter follows optional parameter
+
+## 1.3.1
+
+- Fixed #10 re: calling fetchRecords on a set where all records are
+  identity-mapped
+
+- Fixed #11 re: unreachable code
+
+- Fixed #13 re: performance optimisations on stitchIntoRecord by removing
+  foreignRecord entries in stitchIntoRecord once they've been matched, where
+  possible
+
 ## 1.3.0
 
 This release (re-)introduces many-to-many as a first-class relationship, along
@@ -113,4 +128,3 @@ This release also adds:
 ## 1.0.0-alpha1
 
 Initial release.
-

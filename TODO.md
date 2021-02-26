@@ -1,5 +1,3 @@
-- What else needs to be done on ManyToMany?
-
 - Figure how to type-check relateds at setting time
 
     - Look at MapperRelationships statics?
