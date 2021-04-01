@@ -25,6 +25,10 @@ class ManyToManyTest extends RelationshipTest
             ->select()
             ->fetchRecordSet();
 
+        // make sure there are three taggings and tags
+        $this->assertCount(3, $before->tags);
+        $this->assertCount(3, $before->taggings);
+
         // remove tag 'foo'
         $before->tags->detachOneBy(['name' => 'foo']);
 
@@ -34,6 +38,10 @@ class ManyToManyTest extends RelationshipTest
 
         // persist it
         $threadMapper->persist($before);
+
+        // make sure the taggings are detached properly
+        $this->assertCount(3, $before->tags);
+        $this->assertCount(3, $before->taggings);
 
         // re-get the thread, with new taggings
         $after = $threadMapper->fetchRecord(1, [
@@ -130,6 +138,31 @@ class ManyToManyTest extends RelationshipTest
         });
 
         $this->assertEquals($expect, $actual);
+    }
+
+    public function testForeignPersist_detachAll()
+    {
+        $threadMapper = $this->mapperLocator->get(Thread::CLASS);
+
+        $before = $threadMapper->fetchRecord(1, [
+            'tags'
+        ]);
+
+        $this->assertCount(3, $before->taggings);
+        $this->assertCount(3, $before->tags);
+
+        $before->tags->detachAll();
+        $threadMapper->persist($before);
+
+        $this->assertCount(0, $before->tags);
+        $this->assertCount(0, $before->taggings);
+
+        $after = $threadMapper->fetchRecord(1, [
+            'tags'
+        ]);
+
+        $this->assertCount(0, $after->taggings);
+        $this->assertCount(0, $after->tags);
     }
 
     public function testJoinSelect()
