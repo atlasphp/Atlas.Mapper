@@ -6,17 +6,17 @@ use Atlas\Mapper\Related;
 use Atlas\Table\Primary;
 use Atlas\Table\Row;
 use Atlas\Table\TableLocator;
-use Atlas\Testing\DataSource\Employee\Employee;
-use Atlas\Testing\DataSource\Employee\EmployeeRecord;
-use Atlas\Testing\DataSource\Employee\EmployeeRecordSet;
-use Atlas\Testing\DataSource\Employee\EmployeeTable;
-use Atlas\Testing\DataSourceFixture;
+use Atlas\Mapper\DataSource\Employee\Employee;
+use Atlas\Mapper\DataSource\Employee\EmployeeRecord;
+use Atlas\Mapper\DataSource\Employee\EmployeeRecordSet;
+use Atlas\Mapper\DataSource\Employee\EmployeeTable;
+use Atlas\Mapper\DataSourceFixture;
 
 class MapperLocatorTest extends \PHPUnit\Framework\TestCase
 {
     protected $mapperLocator;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $connection = (new DataSourceFixture())->exec();
         $this->mapperLocator = MapperLocator::new($connection);

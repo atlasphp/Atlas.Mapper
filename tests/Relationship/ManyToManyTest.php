@@ -3,11 +3,11 @@ namespace Atlas\Mapper\Relationship;
 
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\MapperLocator;
-use Atlas\Testing\DataSource\Author\Author;
-use Atlas\Testing\DataSource\Thread\Thread;
-use Atlas\Testing\DataSource\Tag\Tag;
-use Atlas\Testing\DataSource\Tagging\Tagging;
-use Atlas\Testing\Assertions;
+use Atlas\Mapper\DataSource\Author\Author;
+use Atlas\Mapper\DataSource\Thread\Thread;
+use Atlas\Mapper\DataSource\Tag\Tag;
+use Atlas\Mapper\DataSource\Tagging\Tagging;
+use Atlas\Mapper\Assertions;
 
 class ManyToManyTest extends RelationshipTest
 {
@@ -136,19 +136,17 @@ class ManyToManyTest extends RelationshipTest
     {
         $actual = $this->mapperLocator->get(Thread::CLASS)
             ->select()
-            ->joinWith('tags')
-            ->where('tags.name = ', 'foo')
+            ->columns('*')
+            ->joinEager('tags')
             ->getStatement();
 
         $expect = '
             SELECT
-
+                *
             FROM
                 "threads"
                     JOIN "taggings" ON "threads"."thread_id" = "taggings"."thread_id"
                     JOIN "tags" ON "taggings"."tag_id" = "tags"."tag_id"
-            WHERE
-                tags.name = :__1__
         ';
 
         $this->assertSameSql($expect, $actual);
@@ -167,7 +165,7 @@ class ManyToManyTest extends RelationshipTest
         $this->expectExceptionMessage(
             "Could not find ManyToOne native relationship through "
             . "'thread_taggings' for ManyToMany 'tag_authors' on "
-            . "Atlas\Testing\DataSource\Author\Author"
+            . "Atlas\Mapper\DataSource\Author\Author"
         );
 
         $mtm = new ManyToMany(
@@ -192,7 +190,7 @@ class ManyToManyTest extends RelationshipTest
         $this->expectExceptionMessage(
             "Could not find ManyToOne foreign relationship through "
             . "'thread_taggings' for ManyToMany 'tag_authors' on "
-            . "Atlas\Testing\DataSource\Tag\Tag"
+            . "Atlas\Mapper\DataSource\Tag\Tag"
         );
 
         $mtm = new ManyToMany(

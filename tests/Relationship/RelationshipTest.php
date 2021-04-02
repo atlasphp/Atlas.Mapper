@@ -2,13 +2,13 @@
 namespace Atlas\Mapper\Relationship;
 
 use Atlas\Mapper\MapperLocator;
-use Atlas\Testing\DataSourceFixture;
+use Atlas\Mapper\DataSourceFixture;
 
 abstract class RelationshipTest extends \PHPUnit\Framework\TestCase
 {
     protected $mapperLocator;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $connection = (new DataSourceFixture())->exec();
         $this->mapperLocator = MapperLocator::new($connection);

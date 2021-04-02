@@ -14,32 +14,32 @@ use Atlas\Mapper\Record;
 
 abstract class DeletableRelationship extends RegularRelationship
 {
-    const CASCADE = 'CASCADE';
-    const INIT_DELETED = 'INIT_DELETED';
-    const SET_DELETE = 'SET_DELETE';
-    const SET_NULL = 'SET_NULL';
+    public const CASCADE = 'CASCADE';
+    public const INIT_DELETED = 'INIT_DELETED';
+    public const SET_DELETE = 'SET_DELETE';
+    public const SET_NULL = 'SET_NULL';
 
-    protected $onDelete;
+    protected string $onDelete;
 
-    public function onDeleteCascade() : Relationship
+    public function onDeleteCascade() : static
     {
         $this->onDelete = static::CASCADE;
         return $this;
     }
 
-    public function onDeleteInitDeleted() : Relationship
+    public function onDeleteInitDeleted() : static
     {
         $this->onDelete = static::INIT_DELETED;
         return $this;
     }
 
-    public function onDeleteSetDelete() : Relationship
+    public function onDeleteSetDelete() : static
     {
         $this->onDelete = static::SET_DELETE;
         return $this;
     }
 
-    public function onDeleteSetNull() : Relationship
+    public function onDeleteSetNull() : static
     {
         $this->onDelete = static::SET_NULL;
         return $this;
@@ -51,13 +51,13 @@ abstract class DeletableRelationship extends RegularRelationship
     ) : void
     {
         $nativeRow = $nativeRecord->getRow();
-        if ($nativeRow->getStatus() !== $nativeRow::DELETED) {
+        if ($nativeRow->getLastAction() !== $nativeRow::DELETE) {
             return;
         }
 
         if ($this->onDelete === static::INIT_DELETED) {
             $foreignRow = $foreignRecord->getRow();
-            $foreignRow->init($foreignRow::DELETED);
+            $foreignRow->setLastAction($foreignRow::DELETE);
             return;
         }
 

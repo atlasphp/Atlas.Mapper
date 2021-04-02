@@ -16,9 +16,11 @@ use SplObjectStorage;
 
 class IdentitySimple extends IdentityMap
 {
-    public function __construct(string $primaryKey)
+    protected string $primaryKey;
+
+    public function __construct(array $primaryKey)
     {
-        $this->primaryKey = $primaryKey;
+        $this->primaryKey = reset($primaryKey);
         $this->rowToSerial = new SplObjectStorage();
     }
 
@@ -27,7 +29,7 @@ class IdentitySimple extends IdentityMap
         return [$row->{$this->primaryKey}];
     }
 
-    protected function getArray($primaryVal) : array
+    protected function getArray(mixed $primaryVal) : array
     {
         if (! is_scalar($primaryVal)) {
             throw Exception::primaryValueNotScalar($this->primaryKey, $primaryVal);

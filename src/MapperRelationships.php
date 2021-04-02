@@ -24,25 +24,21 @@ use SplObjectStorage;
 
 abstract class MapperRelationships
 {
-    protected $mapperLocator;
+    protected array $nativeTableColumns;
 
-    protected $nativeMapperClass;
+    protected array $relationships = [];
 
-    protected $nativeTableColumns;
+    protected array $fields = [];
 
-    protected $relationships = [];
+    protected array $persistBeforeNative = [];
 
-    protected $fields = [];
+    protected array $persistAfterNative = [];
 
-    protected $persistBeforeNative = [];
-
-    protected $persistAfterNative = [];
-
-    protected $prototypeRelated = null;
+    protected ?Related $prototypeRelated = null;
 
     public function __construct(
-        MapperLocator $mapperLocator,
-        string $nativeMapperClass
+        protected MapperLocator $mapperLocator,
+        protected string $nativeMapperClass
     ) {
         $this->mapperLocator = $mapperLocator;
         $this->nativeMapperClass = $nativeMapperClass;
@@ -53,7 +49,7 @@ abstract class MapperRelationships
         $this->define();
     }
 
-    abstract protected function define();
+    abstract protected function define() : void;
 
     protected function oneToOne(
         string $relatedName,
@@ -133,7 +129,8 @@ abstract class MapperRelationships
         string $foreignMapperClass,
         string $throughRelatedName,
         array $on = []
-    ) {
+    ) : ManyToMany
+    {
         return $this->set(
             $relatedName,
             ManyToMany::CLASS,
@@ -156,10 +153,10 @@ abstract class MapperRelationships
 
     public function stitchIntoRecords(
         array $nativeRecords,
-        array $with = []
+        array $eager = []
     ) : void
     {
-        foreach ($this->fixWith($with) as $relatedName => $custom) {
+        foreach ($this->fixEager($eager) as $relatedName => $custom) {
             if (! isset($this->relationships[$relatedName])) {
                 throw Exception::relationshipDoesNotExist($relatedName);
             }
@@ -177,7 +174,7 @@ abstract class MapperRelationships
         string $persistencePriority,
         array $on = [],
         string $throughRelatedName = null
-    ) : Relationship
+    ) : mixed
     {
         $this->assertRelatedName($relatedName);
 
@@ -207,21 +204,21 @@ abstract class MapperRelationships
         return $relationship;
     }
 
-    protected function fixWith(array $spec) : array
+    protected function fixEager(array $spec) : array
     {
-        $with = [];
+        $eager = [];
         foreach ($spec as $key => $val) {
             if (is_int($key)) {
-                $with[$val] = null;
+                $eager[$val] = null;
             } elseif (is_array($val) && ! is_callable($val)) {
-                $with[$key] = function ($select) use ($val) {
-                    $select->with($val);
+                $eager[$key] = function ($select) use ($val) {
+                    $select->eager($val);
                 };
             } else {
-                $with[$key] = $val;
+                $eager[$key] = $val;
             }
         }
-        return $with;
+        return $eager;
     }
 
     public function fixNativeRecord(Record $nativeRecord) : void

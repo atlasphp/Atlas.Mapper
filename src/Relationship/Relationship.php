@@ -17,19 +17,17 @@ use SplObjectStorage;
 
 abstract class Relationship
 {
-    protected $foreignMapperClass;
+    protected bool $ignoreCase = false;
 
-    protected $ignoreCase = false;
+    protected array $where = [];
 
-    protected $where = [];
-
-    public function where(string $condition, ...$bindInline) : Relationship
+    public function where(string $condition, mixed ...$bindInline) : static
     {
         $this->where[] = func_get_args();
         return $this;
     }
 
-    public function ignoreCase(bool $ignoreCase = true) : Relationship
+    public function ignoreCase(bool $ignoreCase = true) : static
     {
         $this->ignoreCase = (bool) $ignoreCase;
         return $this;

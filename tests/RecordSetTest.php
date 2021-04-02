@@ -13,14 +13,14 @@ class RecordSetTest extends \PHPUnit\Framework\TestCase
     protected $record;
     protected $recordSet;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->row = new FakeRow([
             'id' => '1',
             'foo' => 'bar',
             'baz' => 'dib',
         ]);
-        $this->row->init($this->row::SELECTED);
+        $this->row->setLastAction($this->row::SELECT);
 
         $this->related = new Related([
             'zim' => $this->getMockBuilder(Record::CLASS)->disableOriginalConstructor()->getMock(),
@@ -144,13 +144,13 @@ class RecordSetTest extends \PHPUnit\Framework\TestCase
     public function testSetDelete()
     {
         foreach ($this->recordSet as $record) {
-            $this->assertFalse($record->getAction() == FakeRow::DELETE);
+            $this->assertFalse($record->getNextAction() == FakeRow::DELETE);
         }
 
         $this->recordSet->setDelete();
 
         foreach ($this->recordSet as $record) {
-            $this->assertTrue($record->getAction() == FakeRow::DELETE);
+            $this->assertTrue($record->getNextAction() == FakeRow::DELETE);
         }
     }
 
@@ -169,10 +169,10 @@ class RecordSetTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(10, $this->recordSet);
 
         foreach ($this->recordSet as $i => $record) {
-            $this->assertFalse($record->getAction() == FakeRow::DELETE);
+            $this->assertFalse($record->getNextAction() == FakeRow::DELETE);
             if ($i % 2) {
                 $row = $record->getRow();
-                $row->init($row::DELETED);
+                $row->setLastAction($row::DELETE);
             }
         }
 

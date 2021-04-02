@@ -1,10 +1,10 @@
 <?php
 namespace Atlas\Mapper;
 
-use Atlas\Testing\Assertions;
-use Atlas\Testing\DataSource\Author\Author;
-use Atlas\Testing\DataSource\Employee\Employee;
-use Atlas\Testing\DataSourceFixture;
+use Atlas\Mapper\Assertions;
+use Atlas\Mapper\DataSource\Author\Author;
+use Atlas\Mapper\DataSource\Employee\Employee;
+use Atlas\Mapper\DataSourceFixture;
 use Iterator;
 use PDO;
 
@@ -14,7 +14,7 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
 
     protected $select;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $connection = (new DataSourceFixture())->exec();
         $this->mapperLocator = MapperLocator::new($connection);
@@ -66,14 +66,7 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
         $this->expectExceptionMessage(
             "Relationship 'no_such_related' does not exist."
         );
-        $this->select->with(['no_such_related']);
-    }
-
-    public function testMapperAlreadySet()
-    {
-        $this->expectException(Exception::CLASS);
-        $this->expectExceptionMessage('Mapper already set.');
-        $this->select->setMapper($this->mapper);
+        $this->select->eager(['no_such_related']);
     }
 
     public function testJoinWithSubRelated()
@@ -82,9 +75,9 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
             ->get(Author::CLASS)
             ->select()
             ->columns('*')
-            ->joinWith('LEFT threads', function ($sub) {
-                $sub->joinWith('INNER taggings AS taggings_alias', function ($sub) {
-                    $sub->joinWith('tag');
+            ->joinEager('LEFT threads', function ($sub) {
+                $sub->joinEager('INNER taggings AS taggings_alias', function ($sub) {
+                    $sub->joinEager('tag');
                 });
             });
 

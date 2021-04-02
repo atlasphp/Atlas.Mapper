@@ -14,12 +14,10 @@ use Atlas\Mapper\MapperSelect;
 
 class ForeignComposite
 {
-    protected $foreignTableName;
-
-    protected $on;
-
-    public function __construct(string $foreignTableName, array $on)
-    {
+    public function __construct(
+        protected string $foreignTableName,
+        protected array $on
+    ) {
         $this->foreignTableName = $foreignTableName;
         $this->on = $on;
     }

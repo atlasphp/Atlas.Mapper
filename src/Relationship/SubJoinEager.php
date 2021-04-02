@@ -13,23 +13,19 @@ namespace Atlas\Mapper\Relationship;
 use Atlas\Mapper\MapperRelationships;
 use Atlas\Mapper\MapperSelect;
 
-class SubJoinWith
+class SubJoinEager
 {
-    protected $relationships;
-
-    protected $select;
-
     public function __construct(
-        MapperRelationships $relationships,
-        MapperSelect $select,
-        string $nativeAlias
+        protected MapperRelationships $relationships,
+        protected MapperSelect $select,
+        protected string $nativeAlias
     ) {
         $this->relationships = $relationships;
         $this->select = $select;
         $this->nativeAlias = $nativeAlias;
     }
 
-    public function joinWith($relatedName, callable $sub = null) : void
+    public function joinEager(string $relatedName, callable $sub = null) : void
     {
         $this->relationships->joinSelect(
             $this->select,

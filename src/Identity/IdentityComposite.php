@@ -16,6 +16,8 @@ use SplObjectStorage;
 
 class IdentityComposite extends IdentityMap
 {
+    protected array $primaryKey;
+
     public function __construct(array $primaryKey)
     {
         $this->primaryKey = $primaryKey;

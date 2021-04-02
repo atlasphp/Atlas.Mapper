@@ -15,7 +15,7 @@ use SplObjectStorage;
 
 class Related
 {
-    private $fields = [];
+    private array $fields = [];
 
     public function __construct(array $fields = [])
     {
@@ -24,13 +24,13 @@ class Related
         }
     }
 
-    public function __get(string $field)
+    public function __get(string $field) : mixed
     {
         $this->assertHas($field);
         return $this->fields[$field];
     }
 
-    public function __set(string $field, $value) : void
+    public function __set(string $field, mixed $value) : void
     {
         $this->assertHas($field);
         $this->modify($field, $value);
@@ -88,7 +88,7 @@ class Related
         return $tracker[$this];
     }
 
-    protected function modify(string $field, $value) : void
+    protected function modify(string $field, mixed $value) : void
     {
         $valid = $value === null
             || $value === false

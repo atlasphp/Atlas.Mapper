@@ -24,9 +24,9 @@ abstract class RecordSet implements
     IteratorAggregate,
     JsonSerializable
 {
-    private $records = [];
+    private array $records = [];
 
-    private $newRecordFactory;
+    private mixed /* callable */ $newRecordFactory;
 
     public function __construct(
         array $records,
@@ -38,17 +38,17 @@ abstract class RecordSet implements
         }
     }
 
-    public function offsetExists($offset) : bool
+    public function offsetExists(mixed $offset) : bool
     {
         return isset($this->records[$offset]);
     }
 
-    public function offsetGet($offset) : Record
+    public function offsetGet(mixed $offset) : Record
     {
         return $this->records[$offset];
     }
 
-    public function offsetSet($offset, $value) : void
+    public function offsetSet(mixed $offset, mixed $value) : void
     {
         if (! is_object($value)) {
             throw Exception::invalidType(Record::CLASS, gettype($value));
@@ -66,7 +66,7 @@ abstract class RecordSet implements
         $this->records[$offset] = $value;
     }
 
-    public function offsetUnset($offset) : void
+    public function offsetUnset(mixed $offset) : void
     {
         unset($this->records[$offset]);
     }
@@ -172,7 +172,7 @@ abstract class RecordSet implements
         $records = [];
         foreach ($this->records as $i => $record) {
             $row = $record->getRow();
-            if ($row->getStatus() === $row::DELETED) {
+            if ($row->getLastAction() === $row::DELETE) {
                 unset($this->records[$i]);
                 $records[$i] = $record;
             }

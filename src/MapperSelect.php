@@ -14,20 +14,28 @@ use Atlas\Table\TableSelect;
 
 abstract class MapperSelect extends TableSelect
 {
-    protected $mapper;
-
-    protected $with = [];
-
-    public function setMapper(Mapper $mapper)
+    /**
+     * Returns a new TableSelect object.
+     *
+     * @param Connection $connection A read connection.
+     * @param Table $table The table being selected from.
+     * @param array $whereEquals Equality pairs of columns and values.
+     * @param Mapper $mapper The mapper being used.
+     * @return static
+     */
+    static public function new(mixed $arg, mixed ...$args) : static
     {
-        if (isset($this->mapper)) {
-            throw Exception::mapperAlreadySet();
-        }
-
-        $this->mapper = $mapper;
+        $mapper = array_pop($args);
+        $select = parent::new($arg, ...$args);
+        $select->mapper = $mapper;
+        return $select;
     }
 
-    public function joinWith(string $relatedName, callable $sub = null) : self
+    protected Mapper $mapper;
+
+    protected array $eager = [];
+
+    public function joinEager(string $relatedName, callable $sub = null) : static
     {
         $this->mapper->getRelationships()->joinSelect(
             $this,
@@ -39,11 +47,11 @@ abstract class MapperSelect extends TableSelect
         return $this;
     }
 
-    public function with(array $with) : self
+    public function eager(array $eager) : static
     {
-        // make sure that all with() are on relateds that actually exist
+        // make sure that all eager() are on relateds that actually exist
         $fields = array_keys($this->mapper->getRelationships()->getFields());
-        foreach ($with as $key => $val) {
+        foreach ($eager as $key => $val) {
             $related = $key;
             if (is_int($key)) {
                 $related = $val;
@@ -52,7 +60,7 @@ abstract class MapperSelect extends TableSelect
                 throw Exception::relationshipDoesNotExist($related);
             }
         }
-        $this->with = $with;
+        $this->eager = $eager;
         return $this;
     }
 
@@ -63,13 +71,13 @@ abstract class MapperSelect extends TableSelect
             return null;
         }
 
-        return $this->mapper->turnRowIntoRecord($row, $this->with);
+        return $this->mapper->turnRowIntoRecord($row, $this->eager);
     }
 
     public function fetchRecords() : array
     {
         $rows = $this->fetchRows();
-        return $this->mapper->turnRowsIntoRecords($rows, $this->with);
+        return $this->mapper->turnRowsIntoRecords($rows, $this->eager);
     }
 
     public function fetchRecordSet() : RecordSet

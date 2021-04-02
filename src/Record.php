@@ -17,23 +17,19 @@ use SplObjectStorage;
 
 abstract class Record implements JsonSerializable
 {
-    private $row;
-
-    private $related;
-
-    public function __construct(Row $row, Related $related)
-    {
-        $this->row = $row;
-        $this->related = $related;
+    public function __construct(
+        private Row $row,
+        private Related $related
+    ) {
     }
 
-    public function __get(string $field)
+    public function __get(string $field) : mixed
     {
         $prop = $this->assertHas($field);
         return $this->$prop->$field;
     }
 
-    public function __set(string $field, $value) : void
+    public function __set(string $field, mixed $value) : void
     {
         $prop = $this->assertHas($field);
         $this->$prop->$field = $value;
@@ -45,7 +41,7 @@ abstract class Record implements JsonSerializable
         return isset($this->$prop->$field);
     }
 
-    public function __unset($field) : void
+    public function __unset(string $field) : void
     {
         $prop = $this->assertHas($field);
         unset($this->$prop->$field);
@@ -77,7 +73,7 @@ abstract class Record implements JsonSerializable
         }
     }
 
-    public function has($field) : bool
+    public function has(string $field) : bool
     {
         return $this->row->has($field)
             || $this->related->has($field);
@@ -91,7 +87,7 @@ abstract class Record implements JsonSerializable
 
         if (! $tracker->contains($this)) {
             $tracker[$this]
-                = $this->row->getArrayCopy($tracker)
+                = $this->row->getArrayCopy()
                 + $this->related->getArrayCopy($tracker);
         }
 
@@ -103,17 +99,17 @@ abstract class Record implements JsonSerializable
         return $this->getArrayCopy();
     }
 
-    public function setDelete($delete = true) : void
+    public function setDelete(bool $delete = true) : void
     {
         $this->row->setDelete($delete);
     }
 
-    public function getAction() : string
+    public function getNextAction() : ?string
     {
-        return $this->row->getAction();
+        return $this->row->getNextAction();
     }
 
-    private function assertHas($field) : string
+    private function assertHas(string $field) : string
     {
         if ($this->row->has($field)) {
             return 'row';

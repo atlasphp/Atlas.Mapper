@@ -13,7 +13,7 @@ class RecordTest extends \PHPUnit\Framework\TestCase
     protected $zim;
     protected $irk;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->zim = $this->getMockBuilder(Record::CLASS)->disableOriginalConstructor()->getMock();
         $this->irk = $this->getMockBuilder(RecordSet::CLASS)->disableOriginalConstructor()->getMock();

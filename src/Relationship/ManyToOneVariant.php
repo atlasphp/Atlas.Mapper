@@ -18,33 +18,21 @@ use SplObjectStorage;
 
 class ManyToOneVariant extends Relationship
 {
-    protected $name;
-
-    protected $mapperLocator;
-
-    protected $nativeMapperClass;
-
-    protected $typeCol;
-
-    protected $variants = [];
+    protected array $variants = [];
 
     public function __construct(
-        string $name,
-        MapperLocator $mapperLocator,
-        string $nativeMapperClass,
-        string $typeCol
+        protected string $name,
+        protected MapperLocator $mapperLocator,
+        protected string $nativeMapperClass,
+        protected string $typeCol
     ) {
-        $this->name = $name;
-        $this->mapperLocator = $mapperLocator;
-        $this->nativeMapperClass = $nativeMapperClass;
-        $this->typeCol = $typeCol;
     }
 
     public function type(
         string $typeVal,
         string $foreignMapperClass,
         array $on
-    ) : self
+    ) : static
     {
         $variant = new ManyToOne(
             $this->name,
@@ -61,7 +49,7 @@ class ManyToOneVariant extends Relationship
         return $this;
     }
 
-    public function where(string $condition, ...$bindInline) : Relationship
+    public function where(string $condition, mixed ...$bindInline) : static
     {
         if (empty($this->variants)) {
             return parent::where($condition, ...$bindInline);
@@ -72,7 +60,7 @@ class ManyToOneVariant extends Relationship
         return $this;
     }
 
-    public function ignoreCase(bool $ignoreCase = true) : Relationship
+    public function ignoreCase(bool $ignoreCase = true) : static
     {
         if (empty($this->variants)) {
             return parent::ignoreCase($ignoreCase);
@@ -94,7 +82,7 @@ class ManyToOneVariant extends Relationship
         throw Exception::cannotJoinOnVariantRelationships();
     }
 
-    protected function getVariant($typeVal)
+    protected function getVariant(mixed $typeVal) : ManyToOne
     {
         if (isset($this->variants[$typeVal])) {
             return $this->variants[$typeVal];
@@ -146,7 +134,7 @@ class ManyToOneVariant extends Relationship
 
         $foreignRecordMapperClass = $foreignRecord->getMapperClass();
         foreach ($this->variants as $typeVal => $variant) {
-            if ($foreignRecordMapperClass == $variant->foreignMapperClass) {
+            if ($foreignRecordMapperClass == $variant->getForeignMapperClass()) {
                 $nativeRecord->{$this->typeCol} = $typeVal;
                 return;
             }

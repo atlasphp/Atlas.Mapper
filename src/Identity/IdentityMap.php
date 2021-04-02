@@ -16,11 +16,9 @@ use SplObjectStorage;
 
 abstract class IdentityMap
 {
-    protected $primaryKey;
+    protected array $serialToRow = [];
 
-    protected $serialToRow = [];
-
-    protected $rowToSerial;
+    protected SplObjectStorage $rowToSerial;
 
     public function setRow(Row $row) : void
     {
@@ -87,7 +85,7 @@ abstract class IdentityMap
      * though the key-value pairs themselves are the same.
      *
      */
-    public function getSerial($spec) : string
+    public function getSerial(array|Row $spec) : string
     {
         if ($spec instanceof Row) {
             $array = $this->getArrayFromRow($spec);

@@ -14,22 +14,22 @@ use Atlas\Mapper\MapperSelect;
 
 class ForeignSimple
 {
-    protected $foreignTableName;
+    protected string $nativeCol;
 
-    protected $nativeCol;
+    protected string $foreignCol;
 
-    protected $foriegnCol;
-
-    public function __construct(string $foreignTableName, array $on)
-    {
-        $this->foreignTableName = $foreignTableName;
-        $this->nativeCol = key($on);
-        $this->foreignCol = current($on);
+    public function __construct(
+        protected string $foreignTableName,
+        array $on
+    ) {
+        $this->nativeCol = (string) key($on);
+        $this->foreignCol = (string) current($on);
     }
 
     public function modifySelect(MapperSelect $select, array $records) : void
     {
         $vals = [];
+
         foreach ($records as $record) {
             $row = $record->getRow();
             $vals[] = $row->{$this->nativeCol};

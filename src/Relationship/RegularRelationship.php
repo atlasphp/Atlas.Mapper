@@ -20,35 +20,22 @@ use SplObjectStorage;
 
 abstract class RegularRelationship extends Relationship
 {
-    protected $name;
+    protected string $nativeTableName;
 
-    protected $mapperLocator;
+    protected string $foreignTableName;
 
-    protected $nativeMapperClass;
-
-    protected $on = [];
-
-    protected $nativeTableName;
-
-    protected $foreignTableName;
-
-    protected $foreignStrategy;
+    protected ForeignSimple|ForeignComposite $foreignKey;
 
     public function __construct(
-        string $name,
-        MapperLocator $mapperLocator,
-        string $nativeMapperClass,
-        string $foreignMapperClass,
-        array $on = []
+        protected string $name,
+        protected MapperLocator $mapperLocator,
+        protected string $nativeMapperClass,
+        protected string $foreignMapperClass,
+        protected array $on = []
     ) {
         if (! class_exists($foreignMapperClass)) {
             throw Exception::classDoesNotExist($foreignMapperClass);
         }
-
-        $this->name = $name;
-        $this->mapperLocator = $mapperLocator;
-        $this->nativeMapperClass = $nativeMapperClass;
-        $this->foreignMapperClass = $foreignMapperClass;
 
         $foreignTable = $this->foreignMapperClass . 'Table';
         $this->foreignTableName = $foreignTable::NAME;
@@ -56,21 +43,20 @@ abstract class RegularRelationship extends Relationship
         $nativeTable = $this->nativeMapperClass . 'Table';
         $this->nativeTableName = $nativeTable::NAME;
 
-        $this->setOn($on);
+        if (empty($this->on)) {
+            $this->on = $this->getDefaultOn();
+        }
+
         if (count($this->on) == 1) {
-            $this->foreignStrategy = new ForeignSimple($this->foreignTableName, $this->on);
+            $this->foreignKey = new ForeignSimple($this->foreignTableName, $this->on);
         } else {
-            $this->foreignStrategy = new ForeignComposite($this->foreignTableName, $this->on);
+            $this->foreignKey = new ForeignComposite($this->foreignTableName, $this->on);
         }
     }
 
-    protected function setOn(array $on) : void
+    public function getForeignMapperClass() : string
     {
-        if (empty($on)) {
-            $on = $this->getDefaultOn();
-        }
-
-        $this->on = $on;
+        return $this->foreignMapperClass;
     }
 
     protected function getDefaultOn() : array
@@ -139,21 +125,21 @@ abstract class RegularRelationship extends Relationship
         }
 
         // invoke the callable for sub-relateds
-        $sub(new SubJoinWith(
+        $sub(new SubJoinEager(
             $this->getForeignMapper()->getRelationships(),
             $select,
             $foreignAlias // current "foreign" alias becomes "native" one
         ));
     }
 
-    protected function fetchForeignRecords(array $records, $custom) : array
+    protected function fetchForeignRecords(array $records, ?callable $custom) : array
     {
         if (! $records) {
             return [];
         }
 
         $select = $this->getForeignMapper()->select();
-        $this->foreignStrategy->modifySelect($select, $records);
+        $this->foreignKey->modifySelect($select, $records);
         $this->foreignSelectWhere($select, $this->foreignTableName);
 
         if ($custom) {
@@ -162,7 +148,7 @@ abstract class RegularRelationship extends Relationship
         return $select->fetchRecords();
     }
 
-    protected function foreignSelectWhere(MapperSelect $select, $alias) : void
+    protected function foreignSelectWhere(MapperSelect $select, string $alias) : void
     {
         $qa = $select->quoteIdentifier($alias);
         foreach ($this->where as $spec) {
@@ -188,7 +174,7 @@ abstract class RegularRelationship extends Relationship
         return true;
     }
 
-    protected function valuesMatch($nativeVal, $foreignVal) : bool
+    protected function valuesMatch(mixed $nativeVal, mixed $foreignVal) : bool
     {
         // cannot match if one is numeric and other is not
         if (is_numeric($nativeVal) && ! is_numeric($foreignVal)) {

@@ -19,25 +19,22 @@ use SplObjectStorage;
 
 class ManyToMany extends RegularRelationship
 {
-    protected $throughName;
+    protected string $throughName;
 
-    protected $throughRelationship;
+    protected ?string $throughNativeRelatedName = null;
 
-    protected $throughNativeRelatedName;
+    protected ?string $throughForeignRelatedName = null;
 
-    protected $throughForeignRelatedName;
-
-    protected $throughRecordSet;
+    protected RecordSet $throughRecordSet;
 
     public function __construct(
-        string $name,
-        MapperLocator $mapperLocator,
-        string $nativeMapperClass,
-        string $foreignMapperClass,
-        OneToMany $throughRelationship,
-        array $on = []
+        protected string $name,
+        protected MapperLocator $mapperLocator,
+        protected string $nativeMapperClass,
+        protected string $foreignMapperClass,
+        protected OneToMany $throughRelationship,
+        protected array $on = []
     ) {
-        $this->throughRelationship = $throughRelationship;
         $this->throughName = $throughRelationship->name;
 
         $throughForeignMapper = $throughRelationship->getForeignMapper();
@@ -51,16 +48,17 @@ class ManyToMany extends RegularRelationship
                 continue;
             }
 
+            $relatedForeignMapperClass = $relationship->getForeignMapperClass();
             if (
                 $this->throughNativeRelatedName === null
-                && $relationship->foreignMapperClass === $nativeMapperClass
+                && $relatedForeignMapperClass === $nativeMapperClass
             ) {
                 $this->throughNativeRelatedName = $relatedName;
             }
 
             if (
                 $this->throughForeignRelatedName === null
-                && $relationship->foreignMapperClass === $foreignMapperClass
+                && $relatedForeignMapperClass === $foreignMapperClass
             ) {
                 $this->throughForeignRelatedName = $relatedName;
                 if (empty($on)) {

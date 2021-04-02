@@ -7,16 +7,16 @@ use Atlas\Mapper\Record;
 use Atlas\Mapper\RecordSet;
 use Atlas\Pdo\Connection;
 use Atlas\Pdo\Profiler;
-use Atlas\Testing\Assertions;
-use Atlas\Testing\DataSource\Comment\Comment;
-use Atlas\Testing\DataSource\Comment\CommentRecord;
-use Atlas\Testing\DataSource\Page\Page;
-use Atlas\Testing\DataSource\Page\PageRecord;
-use Atlas\Testing\DataSource\Post\Post;
-use Atlas\Testing\DataSource\Post\PostRecord;
-use Atlas\Testing\DataSourceFixture;
-use Atlas\Testing\DataSource\Video\Video;
-use Atlas\Testing\DataSource\Video\VideoRecord;
+use Atlas\Mapper\Assertions;
+use Atlas\Mapper\DataSource\Comment\Comment;
+use Atlas\Mapper\DataSource\Comment\CommentRecord;
+use Atlas\Mapper\DataSource\Page\Page;
+use Atlas\Mapper\DataSource\Page\PageRecord;
+use Atlas\Mapper\DataSource\Post\Post;
+use Atlas\Mapper\DataSource\Post\PostRecord;
+use Atlas\Mapper\DataSourceFixture;
+use Atlas\Mapper\DataSource\Video\Video;
+use Atlas\Mapper\DataSource\Video\VideoRecord;
 
 class ManyToOneVariantTest extends RelationshipTest
 {
@@ -27,7 +27,7 @@ class ManyToOneVariantTest extends RelationshipTest
         $comments = $this->mapperLocator->get(Comment::CLASS)
             ->select()
             ->orderBy('comment_id')
-            ->with(['commentable'])
+            ->eager(['commentable'])
             ->limit(3)
             ->fetchRecords();
 
@@ -76,7 +76,7 @@ class ManyToOneVariantTest extends RelationshipTest
 
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage(
-            "Variant relationship type 'NO_SUCH_TYPE' not defined in Atlas\Testing\DataSource\Comment\CommentRelationships."
+            "Variant relationship type 'NO_SUCH_TYPE' not defined in Atlas\Mapper\DataSource\Comment\CommentRelationships."
         );
         $this->mapperLocator->get(Page::CLASS)->persist($page);
     }
@@ -91,7 +91,7 @@ class ManyToOneVariantTest extends RelationshipTest
 
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage(
-            "Variant relationship type '' not defined in Atlas\Testing\DataSource\Comment\CommentRelationships."
+            "Variant relationship type '' not defined in Atlas\Mapper\DataSource\Comment\CommentRelationships."
         );
         $this->mapperLocator->get(Page::CLASS)->persist($page);
     }
@@ -113,7 +113,7 @@ class ManyToOneVariantTest extends RelationshipTest
         $select = $this->mapperLocator->get(Comment::CLASS)->select();
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage('Cannot JOIN on variant relationships.');
-        $select->joinWith('LEFT commentable');
+        $select->joinEager('LEFT commentable');
     }
 
     public function testWhere()

@@ -1,8 +1,8 @@
 <?php
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Testing\DataSource\Summary\Summary;
-use Atlas\Testing\DataSource\Thread\Thread;
+use Atlas\Mapper\DataSource\Summary\Summary;
+use Atlas\Mapper\DataSource\Thread\Thread;
 
 class OneToOneTest extends RelationshipTest
 {

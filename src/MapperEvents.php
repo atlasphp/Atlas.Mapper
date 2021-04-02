@@ -21,6 +21,8 @@ abstract class MapperEvents
     {
     }
 
+    // modify selected record?
+
     public function beforeInsert(Mapper $mapper, Record $record) : void
     {
     }

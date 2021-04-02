@@ -1,13 +1,13 @@
 <?php
 namespace Atlas\Mapper;
 
-use Atlas\Testing\Assertions;
-use Atlas\Testing\CompositeDataSource\Course\Course;
-use Atlas\Testing\CompositeDataSource\Degree\Degree;
-use Atlas\Testing\CompositeDataSource\Enrollment\Enrollment;
-use Atlas\Testing\CompositeDataSource\Gpa\Gpa;
-use Atlas\Testing\CompositeDataSource\Student\Student;
-use Atlas\Testing\CompositeDataSourceFixture;
+use Atlas\Mapper\Assertions;
+use Atlas\Mapper\CompositeDataSource\Course\Course;
+use Atlas\Mapper\CompositeDataSource\Degree\Degree;
+use Atlas\Mapper\CompositeDataSource\Enrollment\Enrollment;
+use Atlas\Mapper\CompositeDataSource\Gpa\Gpa;
+use Atlas\Mapper\CompositeDataSource\Student\Student;
+use Atlas\Mapper\CompositeDataSourceFixture;
 
 class MapperCompositeTest extends \PHPUnit\Framework\TestCase
 {
@@ -15,7 +15,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
 
     // The $expect* properties are at the end, because they are so long
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $connection = (new CompositeDataSourceFixture())->exec();
         $this->mapperLocator = MapperLocator::new($connection);
@@ -66,7 +66,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                 'gpa',
                 'enrollments' => function ($q) {
                     $q->orderBy('course_subject', 'course_number');
-                    $q->with(['course']);
+                    $q->eager(['course']);
                 },
             ]
         )->getArrayCopy();
@@ -86,7 +86,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                 'gpa',
                 'enrollments' => function ($q) {
                     $q->orderBy('course_subject', 'course_number');
-                    $q->with(['course']);
+                    $q->eager(['course']);
                 },
             ]
         )->getArrayCopy();
@@ -101,7 +101,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
         $actual = $this->mapperLocator->get(Student::CLASS)
             ->select()
             ->where('student_fn = ', 'Anna')
-            ->with([
+            ->eager([
                 'degree',
                 'gpa',
                 'enrollments' => [
@@ -118,12 +118,12 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
         $actual = $this->mapperLocator->get(Student::CLASS)
             ->select()
             ->where('student_fn < ', 'D')
-            ->with([
+            ->eager([
                 'degree',
                 'gpa',
                 'enrollments' => function ($q) {
                     $q->orderBy('course_subject', 'course_number');
-                    $q->with(['course']);
+                    $q->eager(['course']);
                 },
             ])
             ->fetchRecordSet()
