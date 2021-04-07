@@ -8,7 +8,7 @@ class IdentityMapTest extends \PHPUnit\Framework\TestCase
 {
     public function testSetRow_alreadySet()
     {
-        $identityMap = new IdentitySimple('id');
+        $identityMap = new IdentitySimple(['id']);
         $row = new FakeRow(['id' => 1]);
 
         $identityMap->setRow($row);

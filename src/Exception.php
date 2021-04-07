@@ -89,7 +89,7 @@ class Exception extends \Exception
 
     public static function noSuchType(
         string $nativeMapperClass,
-        string $typeVal
+        mixed $typeVal
     ) : self
     {
         $message = "Variant relationship type '{$typeVal}' "

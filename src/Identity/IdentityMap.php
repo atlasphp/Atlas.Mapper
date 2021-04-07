@@ -85,7 +85,7 @@ abstract class IdentityMap
      * though the key-value pairs themselves are the same.
      *
      */
-    public function getSerial(array|Row $spec) : string
+    public function getSerial(mixed $spec) : string
     {
         if ($spec instanceof Row) {
             $array = $this->getArrayFromRow($spec);
