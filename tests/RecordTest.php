@@ -4,6 +4,7 @@ namespace Atlas\Mapper;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\Fake\FakeRecord;
 use Atlas\Mapper\Fake\FakeRow;
+use Atlas\Mapper\Relationship\NotLoaded;
 
 class RecordTest extends \PHPUnit\Framework\TestCase
 {
@@ -103,7 +104,7 @@ class RecordTest extends \PHPUnit\Framework\TestCase
 
         // related
         unset($this->record->zim);
-        $this->assertNull($this->record->zim);
+        $this->assertInstanceOf(NotLoaded::CLASS, $this->record->zim);
 
         // missing
         $this->expectException(Exception::CLASS);

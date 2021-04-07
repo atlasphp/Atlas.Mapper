@@ -2,6 +2,7 @@
 namespace Atlas\Mapper;
 
 use Atlas\Mapper\Exception;
+use Atlas\Mapper\Relationship\NotLoaded;
 
 class RelatedTest extends \PHPUnit\Framework\TestCase
 {
@@ -65,7 +66,7 @@ class RelatedTest extends \PHPUnit\Framework\TestCase
     {
         // related
         unset($this->related->zim);
-        $this->assertNull($this->related->zim);
+        $this->assertInstanceOf(NotLoaded::CLASS, $this->related->zim);
 
         // missing
         $this->expectException(

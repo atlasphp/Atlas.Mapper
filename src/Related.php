@@ -46,7 +46,7 @@ class Related
     public function __unset(string $field) : void
     {
         $this->assertHas($field);
-        $this->fields[$field] = null;
+        $this->fields[$field] = NotLoaded::getFlyweight();
     }
 
     public function getFields() : array
@@ -99,13 +99,12 @@ class Related
     protected function modify(string $field, mixed $value) : void
     {
         $valid = $value === null
-            || $value === false
             || $value instanceof NotLoaded
             || $value instanceof Record
             || $value instanceof RecordSet;
 
         if (! $valid) {
-            $expect = 'null, false, Record, or RecordSet';
+            $expect = 'null, NotLoaded, Record, or RecordSet';
             throw Exception::invalidType($expect, $value);
         }
 
