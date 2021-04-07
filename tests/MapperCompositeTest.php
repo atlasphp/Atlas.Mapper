@@ -217,8 +217,6 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                 'course_number' => '100',
                 'grade' => '65',
                 'points' => '1',
-                'course' => NULL,
-                'student' => NULL,
             ]
         ];
 
@@ -239,7 +237,6 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
             'degree_type' => 'ba',
             'degree_subject' => 'engl',
             'title' => 'Bachelor of Arts, English',
-            'students' => NULL,
         ],
         'enrollments' => [
             0 => [
@@ -253,9 +250,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                     'course_subject' => 'ENGL',
                     'course_number' => '100',
                     'title' => 'Composition',
-                    'enrollments' => NULL,
                 ],
-                'student' => NULL,
             ],
             1 => [
                 'student_fn' => 'Anna',
@@ -268,9 +263,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                     'course_subject' => 'HIST',
                     'course_number' => '100',
                     'title' => 'World History',
-                    'enrollments' => NULL,
                 ],
-                'student' => NULL,
             ],
             2 => [
                 'student_fn' => 'Anna',
@@ -283,12 +276,9 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                     'course_subject' => 'MATH',
                     'course_number' => '100',
                     'title' => 'Algebra',
-                    'enrollments' => NULL,
                 ],
-                'student' => NULL,
             ],
         ],
-        'engl_enrollments' => NULL,
     ];
 
     protected $expectRecordSet = [
@@ -306,7 +296,6 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                 'degree_type' => 'ba',
                 'degree_subject' => 'engl',
                 'title' => 'Bachelor of Arts, English',
-                'students' => NULL,
             ],
             'enrollments' => [
                 0 => [
@@ -320,9 +309,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                         'course_subject' => 'ENGL',
                         'course_number' => '100',
                         'title' => 'Composition',
-                        'enrollments' => NULL,
                     ],
-                    'student' => NULL,
                 ],
                 1 => [
                     'student_fn' => 'Anna',
@@ -335,9 +322,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                         'course_subject' => 'HIST',
                         'course_number' => '100',
                         'title' => 'World History',
-                        'enrollments' => NULL,
                     ],
-                    'student' => NULL,
                 ],
                 2 => [
                     'student_fn' => 'Anna',
@@ -350,12 +335,9 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                         'course_subject' => 'MATH',
                         'course_number' => '100',
                         'title' => 'Algebra',
-                        'enrollments' => NULL,
                     ],
-                    'student' => NULL,
                 ],
             ],
-            'engl_enrollments' => NULL,
         ],
         1 => [
             'student_fn' => 'Betty',
@@ -371,7 +353,6 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                 'degree_type' => 'ma',
                 'degree_subject' => 'hist',
                 'title' => 'Master of Arts, History',
-                'students' => NULL,
             ],
             'enrollments' => [
                 0 => [
@@ -385,9 +366,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                         'course_subject' => 'ENGL',
                         'course_number' => '200',
                         'title' => 'Creative Writing',
-                        'enrollments' => NULL,
                     ],
-                    'student' => NULL,
                 ],
                 1 => [
                     'student_fn' => 'Betty',
@@ -400,9 +379,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                         'course_subject' => 'HIST',
                         'course_number' => '100',
                         'title' => 'World History',
-                        'enrollments' => NULL,
                     ],
-                    'student' => NULL,
                 ],
                 2 => [
                     'student_fn' => 'Betty',
@@ -415,12 +392,9 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                         'course_subject' => 'MATH',
                         'course_number' => '100',
                         'title' => 'Algebra',
-                        'enrollments' => NULL,
                     ],
-                    'student' => NULL,
                 ],
             ],
-            'engl_enrollments' => NULL,
         ],
         2 => [
             'student_fn' => 'Clara',
@@ -436,7 +410,6 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                 'degree_type' => 'bs',
                 'degree_subject' => 'math',
                 'title' => 'Bachelor of Science, Mathematics',
-                'students' => NULL,
             ],
             'enrollments' => [
                 0 => [
@@ -450,9 +423,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                         'course_subject' => 'ENGL',
                         'course_number' => '200',
                         'title' => 'Creative Writing',
-                        'enrollments' => NULL,
                     ],
-                    'student' => NULL,
                 ],
                 1 => [
                     'student_fn' => 'Clara',
@@ -465,9 +436,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                         'course_subject' => 'HIST',
                         'course_number' => '200',
                         'title' => 'US History',
-                        'enrollments' => NULL,
                     ],
-                    'student' => NULL,
                 ],
                 2 => [
                     'student_fn' => 'Clara',
@@ -480,12 +449,9 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                         'course_subject' => 'MATH',
                         'course_number' => '100',
                         'title' => 'Algebra',
-                        'enrollments' => NULL,
                     ],
-                    'student' => NULL,
                 ],
             ],
-            'engl_enrollments' => NULL,
         ],
     ];
 }

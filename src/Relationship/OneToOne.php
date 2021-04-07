@@ -19,7 +19,7 @@ class OneToOne extends DeletableRelationship
         Record $nativeRecord,
         array &$foreignRecords
     ) : void {
-        $nativeRecord->{$this->name} = false;
+        $nativeRecord->{$this->name} = null;
         foreach ($foreignRecords as $index => $foreignRecord) {
             if ($this->recordsMatch($nativeRecord, $foreignRecord)) {
                 $nativeRecord->{$this->name} = $foreignRecord;

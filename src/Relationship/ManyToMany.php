@@ -148,7 +148,7 @@ class ManyToMany extends RegularRelationship
         // this hackish. the "through" relation should be loaded for everything,
         // so if even one is loaded, all the others ought to have been too.
         $firstNative = $nativeRecords[0];
-        if (! isset($firstNative->{$this->throughName})) {
+        if ($firstNative->{$this->throughName} instanceof NotLoaded) {
             $this->throughRelationship->stitchIntoRecords($nativeRecords);
         }
 

@@ -540,15 +540,12 @@ ORDER BY
         'author' => [
             'author_id' => '1',
             'name' => 'Anna',
-            'replies' => NULL,
-            'threads' => NULL,
         ],
         'summary' => [
             'summary_id' => '1',
             'thread_id' => '1',
             'reply_count' => '5',
             'view_count' => '0',
-            'thread' => NULL,
         ],
         'replies' => [
             0 => [
@@ -559,8 +556,6 @@ ORDER BY
                 'author' => [
                     'author_id' => '2',
                     'name' => 'Betty',
-                    'replies' => NULL,
-                    'threads' => NULL,
                 ],
             ],
             1 => [
@@ -571,8 +566,6 @@ ORDER BY
                 'author' => [
                     'author_id' => '3',
                     'name' => 'Clara',
-                    'replies' => NULL,
-                    'threads' => NULL,
                 ],
             ],
             2 => [
@@ -583,8 +576,6 @@ ORDER BY
                 'author' => [
                     'author_id' => '4',
                     'name' => 'Donna',
-                    'replies' => NULL,
-                    'threads' => NULL,
                 ],
             ],
             3 => [
@@ -595,8 +586,6 @@ ORDER BY
                 'author' => [
                     'author_id' => '5',
                     'name' => 'Edna',
-                    'replies' => NULL,
-                    'threads' => NULL,
                 ],
             ],
             4 => [
@@ -607,8 +596,6 @@ ORDER BY
                 'author' => [
                     'author_id' => '6',
                     'name' => 'Fiona',
-                    'replies' => NULL,
-                    'threads' => NULL,
                 ],
             ],
         ],
@@ -617,39 +604,30 @@ ORDER BY
                 'tagging_id' => '1',
                 'thread_id' => '1',
                 'tag_id' => '1',
-                'thread' => NULL,
-                'tag' => NULL,
             ],
             1 => [
                 'tagging_id' => '2',
                 'thread_id' => '1',
                 'tag_id' => '2',
-                'thread' => NULL,
-                'tag' => NULL,
             ],
             2 => [
                 'tagging_id' => '3',
                 'thread_id' => '1',
                 'tag_id' => '3',
-                'thread' => NULL,
-                'tag' => NULL,
             ],
         ],
         'tags' => [
             [
                 'tag_id' => '1',
                 'name' => 'foo',
-                'taggings' => NULL,
             ],
             [
                 'tag_id' => '2',
                 'name' => 'bar',
-                'taggings' => NULL,
             ],
             [
                 'tag_id' => '3',
                 'name' => 'baz',
-                'taggings' => NULL,
             ],
         ],
     ];
@@ -663,15 +641,12 @@ ORDER BY
             'author' => [
                 'author_id' => '1',
                 'name' => 'Anna',
-                'replies' => NULL,
-                'threads' => NULL,
             ],
             'summary' => [
                 'summary_id' => '1',
                 'thread_id' => '1',
                 'reply_count' => '5',
                 'view_count' => '0',
-                'thread' => NULL,
             ],
             'replies' => [
                 0 => [
@@ -683,8 +658,6 @@ ORDER BY
                     [
                         'author_id' => '2',
                         'name' => 'Betty',
-                        'replies' => NULL,
-                        'threads' => NULL,
                     ],
                 ],
                 1 => [
@@ -696,8 +669,6 @@ ORDER BY
                     [
                         'author_id' => '3',
                         'name' => 'Clara',
-                        'replies' => NULL,
-                        'threads' => NULL,
                     ],
                 ],
                 2 => [
@@ -709,8 +680,6 @@ ORDER BY
                     [
                         'author_id' => '4',
                         'name' => 'Donna',
-                        'replies' => NULL,
-                        'threads' => NULL,
                     ],
                 ],
                 3 => [
@@ -722,8 +691,6 @@ ORDER BY
                     [
                         'author_id' => '5',
                         'name' => 'Edna',
-                        'replies' => NULL,
-                        'threads' => NULL,
                     ],
                 ],
                 4 => [
@@ -735,8 +702,6 @@ ORDER BY
                     [
                         'author_id' => '6',
                         'name' => 'Fiona',
-                        'replies' => NULL,
-                        'threads' => NULL,
                     ],
                 ],
             ],
@@ -745,39 +710,30 @@ ORDER BY
                     'tagging_id' => '1',
                     'thread_id' => '1',
                     'tag_id' => '1',
-                    'thread' => NULL,
-                    'tag' => NULL
                 ],
                 1 => [
                     'tagging_id' => '2',
                     'thread_id' => '1',
                     'tag_id' => '2',
-                    'thread' => NULL,
-                    'tag' => NULL
                 ],
                 2 => [
                     'tagging_id' => '3',
                     'thread_id' => '1',
                     'tag_id' => '3',
-                    'thread' => NULL,
-                    'tag' => NULL
                 ],
             ],
             'tags' => [
                 [
                     'tag_id' => '1',
                     'name' => 'foo',
-                    'taggings' => NULL,
                 ],
                 [
                     'tag_id' => '2',
                     'name' => 'bar',
-                    'taggings' => NULL,
                 ],
                 [
                     'tag_id' => '3',
                     'name' => 'baz',
-                    'taggings' => NULL,
                 ],
             ],
         ],
@@ -789,15 +745,12 @@ ORDER BY
             'author' => [
                 'author_id' => '2',
                 'name' => 'Betty',
-                'replies' => NULL,
-                'threads' => NULL,
             ],
             'summary' => [
                 'summary_id' => '2',
                 'thread_id' => '2',
                 'reply_count' => '5',
                 'view_count' => '0',
-                'thread' => NULL,
             ],
             'replies' => [
                 0 => [
@@ -809,8 +762,6 @@ ORDER BY
                     [
                         'author_id' => '3',
                         'name' => 'Clara',
-                        'replies' => NULL,
-                        'threads' => NULL,
                     ],
                 ],
                 1 => [
@@ -822,8 +773,6 @@ ORDER BY
                     [
                         'author_id' => '4',
                         'name' => 'Donna',
-                        'replies' => NULL,
-                        'threads' => NULL,
                     ],
                 ],
                 2 => [
@@ -835,8 +784,6 @@ ORDER BY
                     [
                         'author_id' => '5',
                         'name' => 'Edna',
-                        'replies' => NULL,
-                        'threads' => NULL,
                     ],
                 ],
                 3 => [
@@ -848,8 +795,6 @@ ORDER BY
                     [
                         'author_id' => '6',
                         'name' => 'Fiona',
-                        'replies' => NULL,
-                        'threads' => NULL,
                     ],
                 ],
                 4 => [
@@ -861,8 +806,6 @@ ORDER BY
                     [
                         'author_id' => '7',
                         'name' => 'Gina',
-                        'replies' => NULL,
-                        'threads' => NULL,
                     ],
                 ],
             ],
@@ -871,39 +814,30 @@ ORDER BY
                     'tagging_id' => '4',
                     'thread_id' => '2',
                     'tag_id' => '2',
-                    'thread' => NULL,
-                    'tag' => NULL
                 ],
                 1 => [
                     'tagging_id' => '5',
                     'thread_id' => '2',
                     'tag_id' => '3',
-                    'thread' => NULL,
-                    'tag' => NULL,
                 ],
                 2 => [
                     'tagging_id' => '6',
                     'thread_id' => '2',
                     'tag_id' => '4',
-                    'thread' => NULL,
-                    'tag' => NULL,
                 ],
             ],
             'tags' => [
                 [
                     'tag_id' => '2',
                     'name' => 'bar',
-                    'taggings' => NULL,
                 ],
                 [
                     'tag_id' => '3',
                     'name' => 'baz',
-                    'taggings' => NULL,
                 ],
                 [
                     'tag_id' => '4',
                     'name' => 'dib',
-                    'taggings' => NULL,
                 ],
             ],
         ],
@@ -915,15 +849,12 @@ ORDER BY
             'author' => [
                 'author_id' => '3',
                 'name' => 'Clara',
-                'replies' => NULL,
-                'threads' => NULL,
             ],
             'summary' => [
                 'summary_id' => '3',
                 'thread_id' => '3',
                 'reply_count' => '5',
                 'view_count' => '0',
-                'thread' => NULL,
             ],
             'replies' => [
                 0 => [
@@ -935,8 +866,6 @@ ORDER BY
                     [
                         'author_id' => '4',
                         'name' => 'Donna',
-                        'replies' => NULL,
-                        'threads' => NULL,
                     ],
                 ],
                 1 => [
@@ -948,8 +877,6 @@ ORDER BY
                     [
                         'author_id' => '5',
                         'name' => 'Edna',
-                        'replies' => NULL,
-                        'threads' => NULL,
                     ],
                 ],
                 2 => [
@@ -961,8 +888,6 @@ ORDER BY
                     [
                         'author_id' => '6',
                         'name' => 'Fiona',
-                        'replies' => NULL,
-                        'threads' => NULL,
                     ],
                 ],
                 3 => [
@@ -974,8 +899,6 @@ ORDER BY
                     [
                         'author_id' => '7',
                         'name' => 'Gina',
-                        'replies' => NULL,
-                        'threads' => NULL,
                     ],
                 ],
                 4 => [
@@ -987,8 +910,6 @@ ORDER BY
                     [
                         'author_id' => '8',
                         'name' => 'Hanna',
-                        'replies' => NULL,
-                        'threads' => NULL,
                     ],
                 ],
             ],

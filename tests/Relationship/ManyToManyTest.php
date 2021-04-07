@@ -47,22 +47,16 @@ class ManyToManyTest extends RelationshipTest
                 'tagging_id' => '2',
                 'thread_id' => '1',
                 'tag_id' => '2',
-                'thread' => NULL,
-                'tag' => NULL,
             ),
             array (
                 'tagging_id' => '3',
                 'thread_id' => '1',
                 'tag_id' => '3',
-                'thread' => NULL,
-                'tag' => NULL,
             ),
             array (
                 'tagging_id' => '58',
                 'thread_id' => '1',
                 'tag_id' => '5',
-                'thread' => NULL,
-                'tag' => NULL,
             ),
         );
         $actual = $after->taggings->getArrayCopy();
@@ -73,17 +67,14 @@ class ManyToManyTest extends RelationshipTest
             array (
                 'tag_id' => '2',
                 'name' => 'bar',
-                'taggings' => NULL,
             ),
             array (
                 'tag_id' => '3',
                 'name' => 'baz',
-                'taggings' => NULL,
             ),
             array (
                 'tag_id' => '5',
                 'name' => 'zim',
-                'taggings' => NULL,
             ),
         );
         $actual = $after->tags->getArrayCopy();

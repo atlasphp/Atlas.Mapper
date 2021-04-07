@@ -20,6 +20,7 @@ use Atlas\Mapper\Relationship\OneToMany;
 use Atlas\Mapper\Relationship\OneToOne;
 use Atlas\Mapper\Relationship\OneToOneBidi;
 use Atlas\Mapper\Relationship\Relationship;
+use Atlas\Mapper\Relationship\NotLoaded;
 use SplObjectStorage;
 
 abstract class MapperRelationships
@@ -178,7 +179,7 @@ abstract class MapperRelationships
     {
         $this->assertRelatedName($relatedName);
 
-        $this->fields[$relatedName] = null;
+        $this->fields[$relatedName] = NotLoaded::getFlyweight();
 
         $args = [
             $relatedName,

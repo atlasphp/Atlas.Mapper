@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Atlas\Mapper;
 
 use Atlas\Mapper\Exception;
+use Atlas\Mapper\Relationship\NotLoaded;
 use SplObjectStorage;
 
 class Related
@@ -76,12 +77,19 @@ class Related
         if (! $tracker->contains($this)) {
             $tracker[$this] = [];
             $array = [];
+
             foreach ($this->fields as $field => $foreign) {
+                if ($foreign instanceof NotLoaded) {
+                    continue;
+                }
+
                 $array[$field] = $foreign;
+
                 if ($foreign) {
                     $array[$field] = $foreign->getArrayCopy($tracker);
                 }
             }
+
             $tracker[$this] = $array;
         }
 
@@ -92,6 +100,7 @@ class Related
     {
         $valid = $value === null
             || $value === false
+            || $value instanceof NotLoaded
             || $value instanceof Record
             || $value instanceof RecordSet;
 
