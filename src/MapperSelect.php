@@ -49,17 +49,20 @@ abstract class MapperSelect extends TableSelect
 
     public function eager(array $eager) : static
     {
-        // make sure that all eager() are on relateds that actually exist
-        $fields = array_keys($this->mapper->getRelationships()->getFields());
+        $relationships = $this->mapper->getRelationships();
+
         foreach ($eager as $key => $val) {
-            $related = $key;
+            $relatedName = $key;
+
             if (is_int($key)) {
-                $related = $val;
+                $relatedName = $val;
             }
-            if (! in_array($related, $fields)) {
-                throw Exception::relationshipDoesNotExist($related);
+
+            if (! $relationships->has($relatedName)) {
+                throw Exception::relationshipDoesNotExist($relatedName);
             }
         }
+
         $this->eager = $eager;
         return $this;
     }

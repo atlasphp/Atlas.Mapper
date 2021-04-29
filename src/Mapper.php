@@ -24,6 +24,8 @@ abstract class Mapper
 
     protected IdentityMap $identityMap;
 
+    protected ?Related $related = null;
+
     public function __construct(
         protected Table $table,
         protected MapperRelationships $relationships,
@@ -287,8 +289,24 @@ abstract class Mapper
         $recordClass = $this->getRecordClass($row);
         return new $recordClass(
             $row,
-            $this->relationships->newRelated($fields)
+            $this->newRelated($fields)
         );
+    }
+
+    protected function newRelated(array $fields = []) : Related
+    {
+        if ($this->related === null) {
+            $default = [];
+            foreach ($this->relationships as $name => $relationship) {
+                $default[$name] = NotLoaded::getFlyweight();
+            }
+            $relatedClass = get_class($this) . 'Related';
+            $this->related = new $relatedClass($default);
+        }
+
+        $related = clone $this->related;
+        $related->set($fields);
+        return $related;
     }
 
     protected function getRecordClass(Row $row) : string

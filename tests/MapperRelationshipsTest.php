@@ -1,7 +1,7 @@
 <?php
 namespace Atlas\Mapper;
 
-use Atlas\Mapper\Fake\FakeMapperRelationships;
+use Atlas\Mapper\Fake\FakeRelatedBad;
 use Atlas\Mapper\DataSource\Employee\Employee;
 use Atlas\Mapper\DataSourceFixture;
 
@@ -15,6 +15,6 @@ class MapperRelationshipsTest extends \PHPUnit\Framework\TestCase
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage("Relationship 'id' conflicts with existing column name.");
 
-        new FakeMapperRelationships($mapperLocator, Employee::CLASS);
+        new MapperRelationships($mapperLocator, Employee::CLASS, FakeRelatedBad::CLASS);
     }
 }

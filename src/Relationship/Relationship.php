@@ -21,17 +21,17 @@ abstract class Relationship
 
     protected array $where = [];
 
-    public function where(string $condition, mixed ...$bindInline) : static
+    public function where(string $condition, mixed ...$bindInline) : void
     {
         $this->where[] = func_get_args();
-        return $this;
     }
 
-    public function ignoreCase(bool $ignoreCase = true) : static
+    public function ignoreCase(bool $ignoreCase = true) : void
     {
         $this->ignoreCase = (bool) $ignoreCase;
-        return $this;
     }
+
+    abstract public function getOn() : array;
 
     abstract public function joinSelect(
         MapperSelect $select,
@@ -55,6 +55,8 @@ abstract class Relationship
     {
         // by default do nothing
     }
+
+    abstract public function getPriority() : string;
 
     abstract public function persistForeign(
         Record $nativeRecord,

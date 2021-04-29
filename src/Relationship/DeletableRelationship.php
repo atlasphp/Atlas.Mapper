@@ -19,30 +19,26 @@ abstract class DeletableRelationship extends RegularRelationship
     public const SET_DELETE = 'SET_DELETE';
     public const SET_NULL = 'SET_NULL';
 
-    protected string $onDelete;
+    protected ?string $onDelete = null;
 
-    public function onDeleteCascade() : static
+    public function onDeleteCascade() : void
     {
         $this->onDelete = static::CASCADE;
-        return $this;
     }
 
-    public function onDeleteInitDeleted() : static
+    public function onDeleteInitDeleted() : void
     {
         $this->onDelete = static::INIT_DELETED;
-        return $this;
     }
 
-    public function onDeleteSetDelete() : static
+    public function onDeleteSetDelete() : void
     {
         $this->onDelete = static::SET_DELETE;
-        return $this;
     }
 
-    public function onDeleteSetNull() : static
+    public function onDeleteSetNull() : void
     {
         $this->onDelete = static::SET_NULL;
-        return $this;
     }
 
     protected function fixForeignRecordDeleted(

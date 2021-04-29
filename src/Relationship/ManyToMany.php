@@ -13,6 +13,7 @@ namespace Atlas\Mapper\Relationship;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\MapperLocator;
 use Atlas\Mapper\MapperSelect;
+use Atlas\Mapper\NotLoaded;
 use Atlas\Mapper\Record;
 use Atlas\Mapper\RecordSet;
 use SplObjectStorage;
@@ -21,11 +22,9 @@ class ManyToMany extends RegularRelationship
 {
     protected string $throughName;
 
-    protected ?string $throughNativeRelatedName = null;
-
-    protected ?string $throughForeignRelatedName = null;
-
     protected RecordSet $throughRecordSet;
+
+    protected array $on;
 
     public function __construct(
         protected string $name,
@@ -33,57 +32,15 @@ class ManyToMany extends RegularRelationship
         protected string $nativeMapperClass,
         protected string $foreignMapperClass,
         protected OneToMany $throughRelationship,
-        protected array $on = []
+        protected string $throughNativeRelatedName,
+        protected string $throughForeignRelatedName
     ) {
-        $this->throughName = $throughRelationship->name;
-
         $throughForeignMapper = $throughRelationship->getForeignMapper();
-        $this->throughRecordSet = $throughForeignMapper->newRecordSet();
 
-        $throughForeignRelationships = $throughForeignMapper->getRelationships();
-        $relatedNames = array_keys($throughForeignRelationships->getFields());
-        foreach ($relatedNames as $relatedName) {
-            $relationship = $throughForeignRelationships->get($relatedName);
-            if (! $relationship instanceof ManyToOne) {
-                continue;
-            }
-
-            $relatedForeignMapperClass = $relationship->getForeignMapperClass();
-            if (
-                $this->throughNativeRelatedName === null
-                && $relatedForeignMapperClass === $nativeMapperClass
-            ) {
-                $this->throughNativeRelatedName = $relatedName;
-            }
-
-            if (
-                $this->throughForeignRelatedName === null
-                && $relatedForeignMapperClass === $foreignMapperClass
-            ) {
-                $this->throughForeignRelatedName = $relatedName;
-                if (empty($on)) {
-                    $on = $relationship->on;
-                }
-            }
-        }
-
-        if (! $this->throughNativeRelatedName) {
-            throw Exception::couldNotFindThroughRelationship(
-                'native',
-                $this->throughName,
-                $name,
-                $nativeMapperClass
-            );
-        }
-
-        if (! $this->throughForeignRelatedName) {
-            throw Exception::couldNotFindThroughRelationship(
-                'foreign',
-                $this->throughName,
-                $name,
-                $nativeMapperClass
-            );
-        }
+        $on = $throughForeignMapper
+            ->getRelationships()
+            ->get($this->throughForeignRelatedName)
+            ->getOn();
 
         parent::__construct(
             $name,
@@ -92,6 +49,14 @@ class ManyToMany extends RegularRelationship
             $foreignMapperClass,
             $on
         );
+
+        $this->throughName = $throughRelationship->name;
+        $this->throughRecordSet = $throughForeignMapper->newRecordSet();
+    }
+
+    public function getPriority() : string
+    {
+        return 'persistBeforeNative';
     }
 
     public function joinSelect(

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Atlas\Mapper\Relationship;
+namespace Atlas\Mapper;
 
 use EmptyIterator;
 use IteratorAggregate;

@@ -12,7 +12,8 @@ class OneToOneTest extends RelationshipTest
             'summary',
             $this->mapperLocator,
             Thread::CLASS,
-            Summary::CLASS
+            Summary::CLASS,
+            []
         );
 
         $threads = [];

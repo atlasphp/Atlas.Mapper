@@ -10,26 +10,21 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper;
 
+use ArrayIterator;
+use Atlas\Mapper\Attribute\RelationshipAttribute;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\MapperLocator;
-use Atlas\Mapper\Record;
-use Atlas\Mapper\Relationship\ManyToMany;
-use Atlas\Mapper\Relationship\ManyToOne;
-use Atlas\Mapper\Relationship\ManyToOneVariant;
-use Atlas\Mapper\Relationship\OneToMany;
-use Atlas\Mapper\Relationship\OneToOne;
-use Atlas\Mapper\Relationship\OneToOneBidi;
 use Atlas\Mapper\Relationship\Relationship;
-use Atlas\Mapper\Relationship\NotLoaded;
+use IteratorAggregate;
+use ReflectionClass;
+use ReflectionProperty;
 use SplObjectStorage;
 
-abstract class MapperRelationships
+class MapperRelationships implements IteratorAggregate
 {
     protected array $nativeTableColumns;
 
     protected array $relationships = [];
-
-    protected array $fields = [];
 
     protected array $persistBeforeNative = [];
 
@@ -37,119 +32,74 @@ abstract class MapperRelationships
 
     protected ?Related $prototypeRelated = null;
 
+    public function getIterator()
+    {
+        return new ArrayIterator($this->relationships);
+    }
+
     public function __construct(
         protected MapperLocator $mapperLocator,
-        protected string $nativeMapperClass
+        protected string $nativeMapperClass,
+        protected string $nativeRelatedClass
     ) {
-        $this->mapperLocator = $mapperLocator;
-        $this->nativeMapperClass = $nativeMapperClass;
-
         $nativeTableClass = $this->nativeMapperClass . 'Table';
         $this->nativeTableColumns = $nativeTableClass::COLUMN_NAMES;
+        $refl = new ReflectionClass($this->nativeRelatedClass);
+        $props = $refl->getProperties();
 
-        $this->define();
+        foreach ($props as $prop) {
+            $this->handleProperty($prop);
+        }
     }
 
-    abstract protected function define() : void;
-
-    protected function oneToOne(
-        string $relatedName,
-        string $foreignMapperClass,
-        array $on = []
-    ) : OneToOne
+    protected function handleProperty(ReflectionProperty $prop) : void
     {
-        return $this->set(
-            $relatedName,
-            OneToOne::CLASS,
-            $foreignMapperClass,
-            'persistAfterNative',
-            $on
+        $name = $prop->getName();
+
+        if (in_array($name, $this->nativeTableColumns)) {
+            throw Exception::relatedNameConflict($name, 'column');
+        }
+
+        $attrs = $prop->getAttributes();
+
+        foreach ($attrs as $attr) {
+            /** @var RelationshipAttribute */
+            $attr = $attr->newInstance();
+            $this->handleAttribute($prop, $attr);
+        }
+    }
+
+    protected function handleAttribute(
+        ReflectionProperty $prop,
+        RelationshipAttribute $attr
+    ) : void
+    {
+        $result = $attr(
+            $prop->getName(),
+            $this->mapperLocator,
+            $this->nativeMapperClass,
+            $prop,
+            $this->relationships
         );
+
+        if (! $result instanceof Relationship) {
+            return;
+        }
+
+        $name = $prop->getName();
+        $priority = $result->getPriority();
+        $this->{$priority}[] = $result;
+        $this->relationships[$name] = $result;
     }
 
-    protected function oneToOneBidi(
-        string $relatedName,
-        string $foreignMapperClass,
-        array $on = []
-    ) : OneToOneBidi
+    public function get(string $name) : Relationship
     {
-        return $this->set(
-            $relatedName,
-            OneToOneBidi::CLASS,
-            $foreignMapperClass,
-            'persistAfterNative',
-            $on
-        );
+        return $this->relationships[$name];
     }
 
-    protected function oneToMany(
-        string $relatedName,
-        string $foreignMapperClass,
-        array $on = []
-    ) : OneToMany
+    public function has(string $name) : bool
     {
-        return $this->set(
-            $relatedName,
-            OneToMany::CLASS,
-            $foreignMapperClass,
-            'persistAfterNative',
-            $on
-        );
-    }
-
-    protected function manyToOne(
-        string $relatedName,
-        string $foreignMapperClass,
-        array $on = []
-    ) : ManyToOne
-    {
-        return $this->set(
-            $relatedName,
-            ManyToOne::CLASS,
-            $foreignMapperClass,
-            'persistBeforeNative',
-            $on
-        );
-    }
-
-    protected function manyToOneVariant(
-        string $relatedName,
-        string $referenceCol
-    ) : ManyToOneVariant
-    {
-        return $this->set(
-            $relatedName,
-            ManyToOneVariant::CLASS,
-            $referenceCol,
-            'persistBeforeNative'
-        );
-    }
-
-    protected function manyToMany(
-        string $relatedName,
-        string $foreignMapperClass,
-        string $throughRelatedName,
-        array $on = []
-    ) : ManyToMany
-    {
-        return $this->set(
-            $relatedName,
-            ManyToMany::CLASS,
-            $foreignMapperClass,
-            'persistBeforeNative',
-            $on,
-            $throughRelatedName
-        );
-    }
-
-    public function get(string $relatedName) : Relationship
-    {
-        return $this->relationships[$relatedName];
-    }
-
-    public function getFields() : array
-    {
-        return $this->fields;
+        return isset($this->relationships[$name]);
     }
 
     public function stitchIntoRecords(
@@ -157,52 +107,15 @@ abstract class MapperRelationships
         array $eager = []
     ) : void
     {
-        foreach ($this->fixEager($eager) as $relatedName => $custom) {
-            if (! isset($this->relationships[$relatedName])) {
-                throw Exception::relationshipDoesNotExist($relatedName);
+        foreach ($this->fixEager($eager) as $name => $custom) {
+            if (! isset($this->relationships[$name])) {
+                throw Exception::relationshipDoesNotExist($name);
             }
-            $this->relationships[$relatedName]->stitchIntoRecords(
+            $this->relationships[$name]->stitchIntoRecords(
                 $nativeRecords,
                 $custom
             );
         }
-    }
-
-    protected function set(
-        string $relatedName,
-        string $relationshipClass,
-        string $foreignSpec,
-        string $persistencePriority,
-        array $on = [],
-        string $throughRelatedName = null
-    ) : mixed
-    {
-        $this->assertRelatedName($relatedName);
-
-        $this->fields[$relatedName] = NotLoaded::getFlyweight();
-
-        $args = [
-            $relatedName,
-            $this->mapperLocator,
-            $this->nativeMapperClass,
-            $foreignSpec
-        ];
-
-        if ($throughRelatedName !== null) {
-            if (! isset($this->relationships[$throughRelatedName])) {
-                throw Exception::relationshipDoesNotExist($throughRelatedName);
-            }
-            $args[] = $this->relationships[$throughRelatedName];
-        }
-
-        if (! empty($on)) {
-            $args[] = $on;
-        }
-
-        $relationship = new $relationshipClass(...$args);
-        $this->{$persistencePriority}[] = $relationship;
-        $this->relationships[$relatedName] = $relationship;
-        return $relationship;
     }
 
     protected function fixEager(array $spec) : array
@@ -256,66 +169,44 @@ abstract class MapperRelationships
         }
     }
 
-    public function newRelated(array $fields = []) : Related
-    {
-        if ($this->prototypeRelated === null) {
-            $this->prototypeRelated = new Related($this->fields);
-        }
-
-        $newRelated = clone $this->prototypeRelated;
-        $newRelated->set($fields);
-        return $newRelated;
-    }
-
     public function joinSelect(
         MapperSelect $select,
         string $nativeAlias,
-        string $relatedName,
+        string $name,
         callable $sub = null
     ) : void
     {
         // clean up the specification
-        $relatedName = trim($relatedName);
+        $name = trim($name);
 
         // extract the foreign alias
         $foreignAlias = '';
-        $pos = stripos($relatedName, ' AS ');
+        $pos = stripos($name, ' AS ');
         if ($pos !== false) {
-            $foreignAlias = trim(substr($relatedName, $pos + 4));
-            $relatedName = trim(substr($relatedName, 0, $pos));
+            $foreignAlias = trim(substr($name, $pos + 4));
+            $name = trim(substr($name, 0, $pos));
         }
 
         // extract the join type
         $join = 'JOIN';
-        $pos = strpos($relatedName, ' ');
+        $pos = strpos($name, ' ');
         if ($pos !== false) {
-            $join = trim(substr($relatedName, 0, $pos));
-            $relatedName = trim(substr($relatedName, $pos));
+            $join = trim(substr($name, 0, $pos));
+            $name = trim(substr($name, $pos));
         }
 
         // fix the foreign alias
         if ($foreignAlias == '') {
-            $foreignAlias = $relatedName;
+            $foreignAlias = $name;
         }
 
         // make the join
-        $this->get($relatedName)->joinSelect(
+        $this->get($name)->joinSelect(
             $select,
             $join,
             $nativeAlias,
             $foreignAlias,
             $sub
         );
-    }
-
-    protected function assertRelatedName(string $relatedName) : void
-    {
-        if (isset($this->relationships[$relatedName])) {
-            throw Exception::relatedNameConflict($relatedName, 'relationship');
-        }
-
-        if (in_array($relatedName, $this->nativeTableColumns)) {
-            throw Exception::relatedNameConflict($relatedName, 'column');
-        }
     }
 }

@@ -133,14 +133,12 @@ class ManyToOneVariantTest extends RelationshipTest
             ->type('page', Page::CLASS, ['related_id' => 'page_id']);
 
         // additional condition
-        $relationship
-            ->type('post', Post::CLASS, ['related_id' => 'post_id'])
-            ->where('bar = 2');
+        $relationship->type('post', Post::CLASS, ['related_id' => 'post_id']);
+        $relationship->where('bar = 2');
 
         // different additional condition
-        $relationship
-            ->type('video', Post::CLASS, ['related_id' => 'video_id'])
-            ->where('baz = 3');
+        $relationship->type('video', Post::CLASS, ['related_id' => 'video_id']);
+        $relationship->where('baz = 3');
 
         // brittle assertions
         $variants = $this->getProperty($relationship, 'variants');
@@ -183,9 +181,8 @@ class ManyToOneVariantTest extends RelationshipTest
             ->type('page', Page::CLASS, ['related_id' => 'page_id']);
 
         // different flag
-        $relationship
-            ->type('post', Post::CLASS, ['related_id' => 'post_id'])
-            ->ignoreCase(false);
+        $relationship->type('post', Post::CLASS, ['related_id' => 'post_id']);
+        $relationship->ignoreCase(false);
 
         // brittle assertions
         $variants = $this->getProperty($relationship, 'variants');

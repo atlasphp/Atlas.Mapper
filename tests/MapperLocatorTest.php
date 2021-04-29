@@ -2,14 +2,9 @@
 namespace Atlas\Mapper;
 
 use Atlas\Mapper\Exception;
-use Atlas\Mapper\Related;
-use Atlas\Table\Primary;
-use Atlas\Table\Row;
 use Atlas\Table\TableLocator;
-use Atlas\Mapper\DataSource\Employee\Employee;
-use Atlas\Mapper\DataSource\Employee\EmployeeRecord;
-use Atlas\Mapper\DataSource\Employee\EmployeeRecordSet;
-use Atlas\Mapper\DataSource\Employee\EmployeeTable;
+use Atlas\Mapper\DataSource\Author\Author;
+use Atlas\Mapper\DataSource\Author\AuthorTable;
 use Atlas\Mapper\DataSourceFixture;
 
 class MapperLocatorTest extends \PHPUnit\Framework\TestCase
@@ -25,13 +20,13 @@ class MapperLocatorTest extends \PHPUnit\Framework\TestCase
     public function testHas()
     {
         $this->assertFalse($this->mapperLocator->has('NoSuchMapper'));
-        $this->assertTrue($this->mapperLocator->has(Employee::CLASS));
+        $this->assertTrue($this->mapperLocator->has(Author::CLASS));
     }
 
     public function testGet()
     {
-        $expect = Employee::CLASS;
-        $this->assertInstanceOf($expect, $this->mapperLocator->get(Employee::CLASS));
+        $expect = Author::CLASS;
+        $this->assertInstanceOf($expect, $this->mapperLocator->get(Author::CLASS));
 
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage("NoSuchMapper not found in mapper locator");

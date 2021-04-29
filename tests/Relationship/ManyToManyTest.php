@@ -143,53 +143,59 @@ class ManyToManyTest extends RelationshipTest
         $this->assertSameSql($expect, $actual);
     }
 
-    public function testMissingThroughNativeRelated()
-    {
-        $through = new OneToMany(
-            'thread_taggings',
-            $this->mapperLocator,
-            Thread::CLASS,
-            Tagging::CLASS
-        );
+    // // MOVE TO ATTRIBUTE TEST
+    // public function testMissingThroughNativeRelated()
+    // {
+    //     $through = new OneToMany(
+    //         'thread_taggings',
+    //         $this->mapperLocator,
+    //         Thread::CLASS,
+    //         Tagging::CLASS,
+    //         []
+    //     );
 
-        $this->expectException(Exception::CLASS);
-        $this->expectExceptionMessage(
-            "Could not find ManyToOne native relationship through "
-            . "'thread_taggings' for ManyToMany 'tag_authors' on "
-            . "Atlas\Mapper\DataSource\Author\Author"
-        );
+    //     $this->expectException(Exception::CLASS);
+    //     $this->expectExceptionMessage(
+    //         "Could not find ManyToOne native relationship through "
+    //         . "'thread_taggings' for ManyToMany 'tag_authors' on "
+    //         . "Atlas\Mapper\DataSource\Author\Author"
+    //     );
 
-        $mtm = new ManyToMany(
-            'tag_authors',
-            $this->mapperLocator,
-            Author::CLASS,
-            Tag::CLASS,
-            $through
-        );
-    }
+    //     $mtm = new ManyToMany(
+    //         'tag_authors',
+    //         $this->mapperLocator,
+    //         Author::CLASS,
+    //         Tag::CLASS,
+    //         $through,
+    //         'author',
+    //         'tag'
+    //     );
+    // }
 
-    public function testMissingThroughForeignRelated()
-    {
-        $through = new OneToMany(
-            'thread_taggings',
-            $this->mapperLocator,
-            Thread::CLASS,
-            Tagging::CLASS
-        );
+    // // MOVE TO ATTRIBUTE TEST
+    // public function testMissingThroughForeignRelated()
+    // {
+    //     $through = new OneToMany(
+    //         'thread_taggings',
+    //         $this->mapperLocator,
+    //         Thread::CLASS,
+    //         Tagging::CLASS,
+    //         []
+    //     );
 
-        $this->expectException(Exception::CLASS);
-        $this->expectExceptionMessage(
-            "Could not find ManyToOne foreign relationship through "
-            . "'thread_taggings' for ManyToMany 'tag_authors' on "
-            . "Atlas\Mapper\DataSource\Tag\Tag"
-        );
+    //     $this->expectException(Exception::CLASS);
+    //     $this->expectExceptionMessage(
+    //         "Could not find ManyToOne foreign relationship through "
+    //         . "'thread_taggings' for ManyToMany 'tag_authors' on "
+    //         . "Atlas\Mapper\DataSource\Tag\Tag"
+    //     );
 
-        $mtm = new ManyToMany(
-            'tag_authors',
-            $this->mapperLocator,
-            Tag::CLASS,
-            Author::CLASS,
-            $through
-        );
-    }
+    //     $mtm = new ManyToMany(
+    //         'tag_authors',
+    //         $this->mapperLocator,
+    //         Tag::CLASS,
+    //         Author::CLASS,
+    //         $through
+    //     );
+    // }
 }

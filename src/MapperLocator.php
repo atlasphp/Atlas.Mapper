@@ -65,11 +65,10 @@ class MapperLocator
     protected function newMapper(string $mapperClass) : Mapper
     {
         $table = "{$mapperClass}Table";
-        $relationships = "{$mapperClass}Relationships";
         $events = "{$mapperClass}Events";
         return new $mapperClass(
             $this->tableLocator->get($table),
-            new $relationships($this, $mapperClass),
+            new MapperRelationships($this, $mapperClass, $mapperClass . 'Related'),
             ($this->factory)($events)
         );
     }

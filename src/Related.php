@@ -11,61 +11,62 @@ declare(strict_types=1);
 namespace Atlas\Mapper;
 
 use Atlas\Mapper\Exception;
-use Atlas\Mapper\Relationship\NotLoaded;
 use SplObjectStorage;
 
-class Related
+abstract class Related
 {
-    private array $fields = [];
-
     public function __construct(array $fields = [])
     {
-        foreach ($fields as $field => $value) {
-            $this->modify($field, $value);
-        }
+        $this->set($fields);
     }
 
     public function __get(string $field) : mixed
     {
         $this->assertHas($field);
-        return $this->fields[$field];
+        return $this->$field;
     }
 
     public function __set(string $field, mixed $value) : void
     {
         $this->assertHas($field);
-        $this->modify($field, $value);
+        $this->$field = $value;
     }
 
     public function __isset(string $field) : bool
     {
         $this->assertHas($field);
-        return isset($this->fields[$field]);
+        return isset($this->$field); // ! instanceof NotLoaded?
     }
 
     public function __unset(string $field) : void
     {
         $this->assertHas($field);
-        $this->fields[$field] = NotLoaded::getFlyweight();
+        $this->$field = NotLoaded::getFlyweight();
+    }
+
+    public function isLoaded(string $field) : bool
+    {
+        $this->assertHas($field);
+        return ! $this->$field instanceof NotLoaded;
     }
 
     public function getFields() : array
     {
-        return $this->fields;
+        return get_object_vars($this);
     }
 
-    public function set(array $fieldsValues = []) : void
+    public function set(array $fields) : void
     {
-        foreach ($fieldsValues as $field => $value) {
+        foreach ($fields as $field => $value) {
             if ($this->has($field)) {
-                $this->modify($field, $value);
+                $this->$field = $value;
             }
         }
     }
 
     public function has(string $field) : bool
     {
-        return array_key_exists($field, $this->fields);
+        return property_exists($this, $field);
     }
 
     public function getArrayCopy(SplObjectStorage $tracker = null) : array
@@ -78,15 +79,15 @@ class Related
             $tracker[$this] = [];
             $array = [];
 
-            foreach ($this->fields as $field => $foreign) {
-                if ($foreign instanceof NotLoaded) {
+            foreach ($this->getFields() as $field => $value) {
+                if ($value instanceof NotLoaded) {
                     continue;
                 }
 
-                $array[$field] = $foreign;
+                $array[$field] = $value;
 
-                if ($foreign) {
-                    $array[$field] = $foreign->getArrayCopy($tracker);
+                if ($value) {
+                    $array[$field] = $value->getArrayCopy($tracker);
                 }
             }
 
@@ -94,21 +95,6 @@ class Related
         }
 
         return $tracker[$this];
-    }
-
-    protected function modify(string $field, mixed $value) : void
-    {
-        $valid = $value === null
-            || $value instanceof NotLoaded
-            || $value instanceof Record
-            || $value instanceof RecordSet;
-
-        if (! $valid) {
-            $expect = 'null, NotLoaded, Record, or RecordSet';
-            throw Exception::invalidType($expect, $value);
-        }
-
-        $this->fields[$field] = $value;
     }
 
     protected function assertHas(string $field) : void

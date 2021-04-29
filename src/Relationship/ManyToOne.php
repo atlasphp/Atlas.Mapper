@@ -15,14 +15,14 @@ use SplObjectStorage;
 
 class ManyToOne extends RegularRelationship
 {
-    protected function getDefaultOn() : array
+    public function getPriority() : string
     {
-        $on = [];
-        $foreignTableClass = $this->foreignMapperClass . 'Table';
-        foreach ($foreignTableClass::PRIMARY_KEY as $col) {
-            $on[$col] = $col;
-        }
-        return $on;
+        return 'persistBeforeNative';
+    }
+
+    public function getForeignMapperClass() : string
+    {
+        return $this->foreignMapperClass;
     }
 
     protected function stitchIntoRecord(

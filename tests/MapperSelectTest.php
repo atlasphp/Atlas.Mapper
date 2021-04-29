@@ -3,7 +3,6 @@ namespace Atlas\Mapper;
 
 use Atlas\Mapper\Assertions;
 use Atlas\Mapper\DataSource\Author\Author;
-use Atlas\Mapper\DataSource\Employee\Employee;
 use Atlas\Mapper\DataSourceFixture;
 use Iterator;
 use PDO;
@@ -18,7 +17,7 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
     {
         $connection = (new DataSourceFixture())->exec();
         $this->mapperLocator = MapperLocator::new($connection);
-        $this->mapper = $this->mapperLocator->get(Employee::CLASS);
+        $this->mapper = $this->mapperLocator->get(Author::CLASS);
         $this->select = $this->mapper->select();
     }
 
@@ -29,7 +28,7 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
             SELECT
                 *
             FROM
-                "employee"
+                "authors"
         ';
         $actual = $this->select->getStatement();
         $this->assertSameSql($expect, $actual);
@@ -37,7 +36,7 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
 
     public function testFetchRecord_missing()
     {
-        $actual = $this->select->where('id = 88')->fetchRecord();
+        $actual = $this->select->where('author_id = 88')->fetchRecord();
         $this->assertNull($actual);
     }
 
@@ -45,14 +44,14 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
     {
         $expect = '
             SELECT
-                id,
+                author_id,
                 name
             FROM
-                "employee"
+                "authors"
         ';
 
         $this->select
-            ->columns('id', 'name')
+            ->columns('author_id', 'name')
             ->fetchRecord();
 
         $actual = $this->select->getStatement();

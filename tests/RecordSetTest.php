@@ -4,6 +4,7 @@ namespace Atlas\Mapper;
 use Atlas\Mapper\Fake\FakeRecord;
 use Atlas\Mapper\Fake\FakeRecordSet;
 use Atlas\Mapper\Fake\FakeRow;
+use Atlas\Mapper\Fake\FakeRelated;
 use stdClass;
 
 class RecordSetTest extends \PHPUnit\Framework\TestCase
@@ -22,16 +23,16 @@ class RecordSetTest extends \PHPUnit\Framework\TestCase
         ]);
         $this->row->setLastAction($this->row::SELECT);
 
-        $this->related = new Related([
-            'zim' => $this->getMockBuilder(Record::CLASS)->disableOriginalConstructor()->getMock(),
-            'irk' => $this->getMockBuilder(RecordSet::CLASS)->disableOriginalConstructor()->getMock(),
+        $this->related = new FakeRelated([
+            'zim' => new FakeRecord(new FakeRow(), new FakeRelated()),
+            'irk' => new FakeRecord(new FakeRow(), new FakeRelated()),
         ]);
 
         $this->record = new FakeRecord($this->row, $this->related);
 
         $newRecord = function ($cols = []) {
             $row = new FakeRow($cols);
-            $related = new Related(['zim' => null, 'irk' => null]);
+            $related = new FakeRelated(['zim' => null, 'irk' => null]);
             return new FakeRecord($row, $related);
         };
 
@@ -133,10 +134,9 @@ class RecordSetTest extends \PHPUnit\Framework\TestCase
         $this->recordSet->appendNew(['id' => 2, 'foo' => 'bar1']);
         $this->recordSet->appendNew(['id' => 3, 'foo' => 'bar2']);
         $expect = '['
-            . '{"id":"1","foo":"bar","baz":"dib","zim":[],"irk":[]},'
+            . '{"id":"1","foo":"bar","baz":"dib","zim":{"id":null,"foo":null,"baz":null},"irk":{"id":null,"foo":null,"baz":null}},'
             . '{"id":2,"foo":"bar1","baz":null,"zim":null,"irk":null},'
-            . '{"id":3,"foo":"bar2","baz":null,"zim":null,"irk":null}'
-            . ']';
+            . '{"id":3,"foo":"bar2","baz":null,"zim":null,"irk":null}]';
         $actual = json_encode($this->recordSet);
         $this->assertSame($expect, $actual);
     }

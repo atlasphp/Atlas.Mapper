@@ -28,11 +28,16 @@ class ManyToOneVariant extends Relationship
     ) {
     }
 
+    public function getPriority() : string
+    {
+        return 'persistBeforeNative';
+    }
+
     public function type(
         string $typeVal,
         string $foreignMapperClass,
         array $on
-    ) : static
+    ) : void
     {
         $variant = new ManyToOne(
             $this->name,
@@ -46,29 +51,28 @@ class ManyToOneVariant extends Relationship
         $variant->ignoreCase = $this->ignoreCase;
 
         $this->variants[$typeVal] = $variant;
-        return $this;
     }
 
-    public function where(string $condition, mixed ...$bindInline) : static
+    public function where(string $condition, mixed ...$bindInline) : void
     {
         if (empty($this->variants)) {
-            return parent::where($condition, ...$bindInline);
+            parent::where($condition, ...$bindInline);
+            return;
         }
 
         $variant = end($this->variants);
         $variant->where($condition, ...$bindInline);
-        return $this;
     }
 
-    public function ignoreCase(bool $ignoreCase = true) : static
+    public function ignoreCase(bool $ignoreCase = true) : void
     {
         if (empty($this->variants)) {
-            return parent::ignoreCase($ignoreCase);
+            parent::ignoreCase($ignoreCase);
+            return;
         }
 
         $variant = end($this->variants);
         $variant->ignoreCase($ignoreCase);
-        return $this;
     }
 
     public function joinSelect(
@@ -80,6 +84,11 @@ class ManyToOneVariant extends Relationship
     ) : void
     {
         throw Exception::cannotJoinOnVariantRelationships();
+    }
+
+    public function getOn() : array
+    {
+        throw new Exception('Cannot get "on" for variant relationships');
     }
 
     protected function getVariant(mixed $typeVal) : ManyToOne

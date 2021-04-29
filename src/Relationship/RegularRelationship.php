@@ -31,21 +31,13 @@ abstract class RegularRelationship extends Relationship
         protected MapperLocator $mapperLocator,
         protected string $nativeMapperClass,
         protected string $foreignMapperClass,
-        protected array $on = []
+        protected array $on
     ) {
-        if (! class_exists($foreignMapperClass)) {
-            throw Exception::classDoesNotExist($foreignMapperClass);
-        }
-
         $foreignTable = $this->foreignMapperClass . 'Table';
         $this->foreignTableName = $foreignTable::NAME;
 
         $nativeTable = $this->nativeMapperClass . 'Table';
         $this->nativeTableName = $nativeTable::NAME;
-
-        if (empty($this->on)) {
-            $this->on = $this->getDefaultOn();
-        }
 
         if (count($this->on) == 1) {
             $this->foreignKey = new ForeignSimple($this->foreignTableName, $this->on);
@@ -54,19 +46,9 @@ abstract class RegularRelationship extends Relationship
         }
     }
 
-    public function getForeignMapperClass() : string
+    public function getOn() : array
     {
-        return $this->foreignMapperClass;
-    }
-
-    protected function getDefaultOn() : array
-    {
-        $on = [];
-        $nativeTableClass = $this->nativeMapperClass . 'Table';
-        foreach ($nativeTableClass::PRIMARY_KEY as $col) {
-            $on[$col] = $col;
-        }
-        return $on;
+        return $this->on;
     }
 
     public function stitchIntoRecords(
@@ -84,7 +66,7 @@ abstract class RegularRelationship extends Relationship
         }
     }
 
-    protected function getForeignMapper() : Mapper
+    public function getForeignMapper() : Mapper
     {
         return $this->mapperLocator->get($this->foreignMapperClass);
     }

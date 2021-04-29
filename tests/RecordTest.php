@@ -4,7 +4,7 @@ namespace Atlas\Mapper;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\Fake\FakeRecord;
 use Atlas\Mapper\Fake\FakeRow;
-use Atlas\Mapper\Relationship\NotLoaded;
+use Atlas\Mapper\Fake\FakeRelated;
 
 class RecordTest extends \PHPUnit\Framework\TestCase
 {
@@ -16,8 +16,8 @@ class RecordTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->zim = $this->getMockBuilder(Record::CLASS)->disableOriginalConstructor()->getMock();
-        $this->irk = $this->getMockBuilder(RecordSet::CLASS)->disableOriginalConstructor()->getMock();
+        $this->zim = new FakeRecord(new FakeRow(), new FakeRelated());
+        $this->irk = new FakeRecord(new FakeRow(), new FakeRelated());
 
         $this->row = new FakeRow([
             'id' => '1',
@@ -25,7 +25,7 @@ class RecordTest extends \PHPUnit\Framework\TestCase
             'baz' => 'dib',
         ]);
 
-        $this->related = new Related([
+        $this->related = new FakeRelated([
             'zim' => $this->zim,
             'irk' => $this->irk,
         ]);
@@ -126,37 +126,10 @@ class RecordTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->record->has('noSuchField'));
     }
 
-    public function testSet()
-    {
-        $newZim = $this->getMockBuilder(Record::CLASS)->disableOriginalConstructor()->getMock();
-        $newZim->method('getArrayCopy')->willReturn(['zimkey' => 'zimval']);
-
-        $newIrk = $this->getMockBuilder(RecordSet::CLASS)->disableOriginalConstructor()->getMock();
-        $newIrk->method('getArrayCopy')->willReturn([['doomkey' => 'doomval']]);
-
-        $this->record->set([
-            'foo' => 'hello',
-            'zim' => $newZim,
-            'irk' => $newIrk,
-        ]);
-
-        $actual = $this->record->getArrayCopy();
-        $expected = [
-            'id' => '1',
-            'foo' => 'hello',
-            'baz' => 'dib',
-            'zim' => ['zimkey' => 'zimval'],
-            'irk' => [
-                ['doomkey' => 'doomval']
-            ],
-        ];
-        $this->assertSame($expected, $actual);
-    }
-
     public function testJsonSerialize()
     {
         $actual = json_encode($this->record);
-        $expect = '{"id":"1","foo":"bar","baz":"dib","zim":[],"irk":[]}';
+        $expect = '{"id":"1","foo":"bar","baz":"dib","zim":{"id":null,"foo":null,"baz":null},"irk":{"id":null,"foo":null,"baz":null}}';
         $this->assertSame($expect, $actual);
     }
 }
