@@ -16,9 +16,9 @@ use SplObjectStorage;
 
 class OneToMany extends DeletableRelationship
 {
-    public function getPriority() : string
+    public function getPersistOrder() : string
     {
-        return 'persistAfterNative';
+        return 'afterNative';
     }
 
     protected function stitchIntoRecord(

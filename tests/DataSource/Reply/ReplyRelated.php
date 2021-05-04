@@ -12,5 +12,5 @@ use Atlas\Mapper\NotLoaded;
 class ReplyRelated extends Related
 {
     #[ManyToOne]
-    protected NotLoaded|null|AuthorRecord $author;
+    protected ?AuthorRecord $author;
 }

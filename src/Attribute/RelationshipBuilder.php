@@ -29,15 +29,13 @@ abstract class RelationshipBuilder extends RelationshipAttribute
 
     protected function getType(ReflectionProperty $prop) : string
     {
-        $types = explode('|', (string) $prop->getType());
+        $type = $prop->getType()->getName();
 
-        foreach ($types as $type) {
-            if (
-                is_subclass_of($type, Record::CLASS)
-                || is_subclass_of($type, RecordSet::CLASS)
-            ) {
-                return $type;
-            }
+        if (
+            is_subclass_of($type, Record::CLASS)
+            || is_subclass_of($type, RecordSet::CLASS)
+        ) {
+            return $type;
         }
 
         return 'UNKNOWN';

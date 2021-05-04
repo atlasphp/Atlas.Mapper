@@ -17,20 +17,20 @@ use Atlas\Mapper\NotLoaded;
 class ThreadRelated extends Related
 {
     #[ManyToOne]
-    protected NotLoaded|null|AuthorRecord $author;
+    protected ?AuthorRecord $author;
 
     #[OneToOne]
     #[OnDelete('initDeleted')]
-    protected NotLoaded|null|SummaryRecord $summary;
+    protected ?SummaryRecord $summary;
 
     #[OneToMany]
     #[OnDelete('setDelete')]
-    protected NotLoaded|ReplyRecordSet $replies;
+    protected ReplyRecordSet $replies;
 
     #[OneToMany]
     #[OnDelete('setNull')]
-    protected NotLoaded|TaggingRecordSet $taggings;
+    protected TaggingRecordSet $taggings;
 
     #[ManyToMany(through: 'taggings')]
-    protected NotLoaded|TagRecordSet $tags;
+    protected TagRecordSet $tags;
 }

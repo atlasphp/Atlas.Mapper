@@ -15,44 +15,49 @@ use SplObjectStorage;
 
 abstract class Related
 {
+    protected const LOADED = '\0LOADED';
+
     public function __construct(array $fields = [])
     {
+        $this->{static::LOADED} = (object) [];
         $this->set($fields);
     }
 
     public function __get(string $field) : mixed
     {
         $this->assertHas($field);
-        return $this->$field;
+
+        if (isset($this->{static::LOADED}->$field)) {
+            return $this->$field;
+        }
+
+        return NotLoaded::getInstance();
     }
 
     public function __set(string $field, mixed $value) : void
     {
+        if ($field === static::LOADED) {
+            $this->{static::LOADED} = $value;
+            return;
+        }
+
         $this->assertHas($field);
+
         $this->$field = $value;
+        $this->{static::LOADED}->$field = true;
     }
 
     public function __isset(string $field) : bool
     {
         $this->assertHas($field);
-        return isset($this->$field); // ! instanceof NotLoaded?
+        return isset($this->{static::LOADED}->$field)
+            && isset($this->$field);
     }
 
     public function __unset(string $field) : void
     {
         $this->assertHas($field);
-        $this->$field = NotLoaded::getFlyweight();
-    }
-
-    public function isLoaded(string $field) : bool
-    {
-        $this->assertHas($field);
-        return ! $this->$field instanceof NotLoaded;
-    }
-
-    public function getFields() : array
-    {
-        return get_object_vars($this);
+        unset($this->{static::LOADED}->$field);
     }
 
     public function set(array $fields) : void
@@ -60,6 +65,7 @@ abstract class Related
         foreach ($fields as $field => $value) {
             if ($this->has($field)) {
                 $this->$field = $value;
+                $this->{static::LOADED}->$field = true;
             }
         }
     }
@@ -79,14 +85,14 @@ abstract class Related
             $tracker[$this] = [];
             $array = [];
 
-            foreach ($this->getFields() as $field => $value) {
-                if ($value instanceof NotLoaded) {
+            foreach (get_object_vars($this) as $field => $value) {
+                if ($field === static::LOADED) {
                     continue;
                 }
 
                 $array[$field] = $value;
 
-                if ($value) {
+                if ($value !== null) {
                     $array[$field] = $value->getArrayCopy($tracker);
                 }
             }

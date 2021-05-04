@@ -14,5 +14,5 @@ class PageRelated extends Related
 {
     #[OneToMany(on: ['page_id' => 'related_id'])]
     #[Where('related_type = ', 'page')]
-    protected NotLoaded|CommentRecordSet $comments;
+    protected CommentRecordSet $comments;
 }

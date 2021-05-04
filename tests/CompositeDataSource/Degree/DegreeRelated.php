@@ -14,5 +14,5 @@ class DegreeRelated extends Related
 {
     #[OneToMany]
     #[IgnoreCase]
-    protected NotLoaded|StudentRecordSet $students;
+    protected StudentRecordSet $students;
 }

@@ -26,9 +26,10 @@ class MapperRelationships implements IteratorAggregate
 
     protected array $relationships = [];
 
-    protected array $persistBeforeNative = [];
-
-    protected array $persistAfterNative = [];
+    protected array $persistOrder = [
+        'beforeNative' => [],
+        'afterNative' => [],
+    ];
 
     protected ?Related $prototypeRelated = null;
 
@@ -87,8 +88,7 @@ class MapperRelationships implements IteratorAggregate
         }
 
         $name = $prop->getName();
-        $priority = $result->getPriority();
-        $this->{$priority}[] = $result;
+        $this->persistOrder[$result->getPersistOrder()][] = $name;
         $this->relationships[$name] = $result;
     }
 
@@ -154,8 +154,8 @@ class MapperRelationships implements IteratorAggregate
         SplObjectStorage $tracker
     ) : void
     {
-        foreach ($this->persistBeforeNative as $relationship) {
-            $relationship->persistForeign($nativeRecord, $tracker);
+        foreach ($this->persistOrder['beforeNative'] as $name) {
+            $this->relationships[$name]->persistForeign($nativeRecord, $tracker);
         }
     }
 
@@ -164,8 +164,8 @@ class MapperRelationships implements IteratorAggregate
         SplObjectStorage $tracker
     ) : void
     {
-        foreach ($this->persistAfterNative as $relationship) {
-            $relationship->persistForeign($nativeRecord, $tracker);
+        foreach ($this->persistOrder['afterNative'] as $name) {
+            $this->relationships[$name]->persistForeign($nativeRecord, $tracker);
         }
     }
 

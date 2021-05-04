@@ -8,5 +8,5 @@ use Atlas\Mapper\Attribute\OneToOne;
 class FakeRelatedBad extends Related
 {
     #[OneToOne]
-    protected NotLoaded|null|Record $id;
+    protected ?Record $id;
 }

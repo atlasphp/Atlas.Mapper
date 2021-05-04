@@ -13,8 +13,8 @@ use Atlas\Mapper\NotLoaded;
 class TaggingRelated extends Related
 {
     #[ManyToOne]
-    protected NotLoaded|null|ThreadRecord $thread;
+    protected ?ThreadRecord $thread;
 
     #[ManyToOne]
-    protected NotLoaded|null|TagRecord $tag;
+    protected ?TagRecord $tag;
 }

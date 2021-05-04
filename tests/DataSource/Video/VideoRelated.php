@@ -14,5 +14,5 @@ class VideoRelated extends Related
 {
     #[OneToMany(on: ['video_id' => 'related_id'])]
     #[Where('related_type = ', 'video')]
-    protected NotLoaded|CommentRecordSet $comments;
+    protected CommentRecordSet $comments;
 }

@@ -12,5 +12,5 @@ use Atlas\Mapper\NotLoaded;
 class SummaryRelated extends Related
 {
     #[OneToOne]
-    protected NotLoaded|null|ThreadRecord $thread;
+    protected ?ThreadRecord $thread;
 }

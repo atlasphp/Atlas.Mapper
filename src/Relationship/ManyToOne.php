@@ -15,9 +15,9 @@ use SplObjectStorage;
 
 class ManyToOne extends RegularRelationship
 {
-    public function getPriority() : string
+    public function getPersistOrder() : string
     {
-        return 'persistBeforeNative';
+        return 'beforeNative';
     }
 
     public function getForeignMapperClass() : string

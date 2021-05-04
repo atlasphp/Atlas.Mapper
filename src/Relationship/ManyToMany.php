@@ -54,9 +54,9 @@ class ManyToMany extends RegularRelationship
         $this->throughRecordSet = $throughForeignMapper->newRecordSet();
     }
 
-    public function getPriority() : string
+    public function getPersistOrder() : string
     {
-        return 'persistBeforeNative';
+        return 'beforeNative';
     }
 
     public function joinSelect(

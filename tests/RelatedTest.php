@@ -87,13 +87,6 @@ class RelatedTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->related->has('noSuchForeign'));
     }
 
-    public function testGetFields()
-    {
-        $expect = ['zim' => $this->zim, 'irk' => $this->irk];
-        $actual = $this->related->getFields();
-        $this->assertSame($expect, $actual);
-    }
-
     public function testGetArrayCopy()
     {
         $expect = [

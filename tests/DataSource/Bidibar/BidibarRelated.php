@@ -12,5 +12,5 @@ use Atlas\Mapper\NotLoaded;
 class BidibarRelated extends Related
 {
     #[OneToOneBidi(on: ['bidifoo_id' => 'bidifoo_id'])]
-    protected NotLoaded|null|BidifooRecord $bidifoo;
+    protected ?BidifooRecord $bidifoo;
 }

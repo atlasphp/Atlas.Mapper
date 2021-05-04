@@ -18,16 +18,16 @@ use Atlas\Mapper\CompositeDataSource\Enrollment\Enrollment;
 class StudentRelated extends Related
 {
     #[OneToOne]
-    protected NotLoaded|null|GpaRecord $gpa;
+    protected ?GpaRecord $gpa;
 
     #[ManyToOne]
     #[IgnoreCase]
-    protected NotLoaded|null|DegreeRecord $degree;
+    protected ?DegreeRecord $degree;
 
     #[OneToMany]
-    protected NotLoaded|EnrollmentRecordSet $enrollments;
+    protected EnrollmentRecordSet $enrollments;
 
     #[OneToMany]
     #[Where('course_subject = ', 'ENGL')]
-    protected NotLoaded|EnrollmentRecordSet $engl_enrollments;
+    protected EnrollmentRecordSet $engl_enrollments;
 }

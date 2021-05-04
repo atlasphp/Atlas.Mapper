@@ -12,7 +12,7 @@ class FakeRegularRelationship extends RegularRelationship
         return $this->$func(...$args);
     }
 
-    public function getPriority() : string
+    public function getPersistOrder() : string
     {
         return 'FAKE';
     }

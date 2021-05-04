@@ -14,5 +14,5 @@ class PostRelated extends Related
 {
     #[OneToMany(on: ['post_id' => 'related_id'])]
     #[Where('related_type = ', 'post')]
-    protected NotLoaded|CommentRecordSet $comments;
+    protected CommentRecordSet $comments;
 }

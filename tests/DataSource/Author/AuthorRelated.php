@@ -13,8 +13,8 @@ use Atlas\Mapper\NotLoaded;
 class AuthorRelated extends Related
 {
     #[OneToMany]
-    protected NotLoaded|ReplyRecordSet $replies;
+    protected ReplyRecordSet $replies;
 
     #[OneToMany]
-    protected NotLoaded|ThreadRecordSet $threads;
+    protected ThreadRecordSet $threads;
 }

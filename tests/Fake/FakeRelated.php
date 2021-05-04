@@ -7,6 +7,6 @@ use Atlas\Mapper\NotLoaded;
 
 class FakeRelated extends Related
 {
-    protected NotLoaded|null|Record $zim;
-    protected NotLoaded|null|Record $irk;
+    protected ?Record $zim;
+    protected ?Record $irk;
 }

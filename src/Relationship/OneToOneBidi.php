@@ -15,9 +15,9 @@ use SplObjectStorage;
 
 class OneToOneBidi extends OneToOne
 {
-    public function getPriority() : string
+    public function getPersistOrder() : string
     {
-        return 'persistAfterNative';
+        return 'afterNative';
     }
 
     public function fixNativeRecord(Record $nativeRecord) : void

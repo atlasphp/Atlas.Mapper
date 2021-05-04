@@ -56,7 +56,7 @@ abstract class Relationship
         // by default do nothing
     }
 
-    abstract public function getPriority() : string;
+    abstract public function getPersistOrder() : string;
 
     abstract public function persistForeign(
         Record $nativeRecord,

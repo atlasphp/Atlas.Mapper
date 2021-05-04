@@ -28,9 +28,9 @@ class ManyToOneVariant extends Relationship
     ) {
     }
 
-    public function getPriority() : string
+    public function getPersistOrder() : string
     {
-        return 'persistBeforeNative';
+        return 'beforeNative';
     }
 
     public function type(

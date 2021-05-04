@@ -13,8 +13,8 @@ use Atlas\Mapper\NotLoaded;
 class EnrollmentRelated extends Related
 {
     #[ManyToOne]
-    protected NotLoaded|null|CourseRecord $course;
+    protected ?CourseRecord $course;
 
     #[ManyToOne]
-    protected NotLoaded|null|StudentRecord $student;
+    protected ?StudentRecord $student;
 }

@@ -26,8 +26,8 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
         $actual = $this->mapperLocator->get(Student::CLASS)->fetchRecord(
             ['student_fn' => 'Anna', 'student_ln' => 'Alpha'],
             [
-                'degree',
                 'gpa',
+                'degree',
                 'enrollments' => [
                     'course',
                 ],
@@ -42,8 +42,8 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
         $actual = $this->mapperLocator->get(Student::CLASS)->fetchRecordBy(
             ['student_fn' => 'Anna'],
             [
-                'degree',
                 'gpa',
+                'degree',
                 'enrollments' => [
                     'course',
                 ],
@@ -62,8 +62,8 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                 ['student_fn' => 'Clara', 'student_ln' => 'Clark'],
             ],
             [
-                'degree',
                 'gpa',
+                'degree',
                 'enrollments' => function ($q) {
                     $q->orderBy('course_subject', 'course_number');
                     $q->eager(['course']);
@@ -82,8 +82,8 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
         $actual = $this->mapperLocator->get(Student::CLASS)->fetchRecordSetBy(
             ['student_fn' => ['Anna', 'Betty', 'Clara']],
             [
-                'degree',
                 'gpa',
+                'degree',
                 'enrollments' => function ($q) {
                     $q->orderBy('course_subject', 'course_number');
                     $q->eager(['course']);
@@ -102,8 +102,8 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
             ->select()
             ->where('student_fn = ', 'Anna')
             ->eager([
-                'degree',
                 'gpa',
+                'degree',
                 'enrollments' => [
                     'course'
                 ],
@@ -119,8 +119,8 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
             ->select()
             ->where('student_fn < ', 'D')
             ->eager([
-                'degree',
                 'gpa',
+                'degree',
                 'enrollments' => function ($q) {
                     $q->orderBy('course_subject', 'course_number');
                     $q->eager(['course']);

@@ -14,5 +14,5 @@ class TagRelated extends Related
 {
     #[OneToMany]
     #[OnDelete('cascade')]
-    protected NotLoaded|TaggingRecordSet $taggings;
+    protected TaggingRecordSet $taggings;
 }

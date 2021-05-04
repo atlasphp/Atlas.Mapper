@@ -12,5 +12,5 @@ use Atlas\Mapper\NotLoaded;
 class CourseRelated extends Related
 {
     #[OneToMany]
-    protected NotLoaded|EnrollmentRecordSet $enrollments;
+    protected EnrollmentRecordSet $enrollments;
 }

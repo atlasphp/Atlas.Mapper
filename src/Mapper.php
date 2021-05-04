@@ -295,22 +295,12 @@ abstract class Mapper
 
     protected function newRelated(array $fields = []) : Related
     {
-        if ($this->related === null) {
-            $default = [];
-            foreach ($this->relationships as $name => $relationship) {
-                $default[$name] = NotLoaded::getFlyweight();
-            }
-            $relatedClass = get_class($this) . 'Related';
-            $this->related = new $relatedClass($default);
-        }
-
-        $related = clone $this->related;
-        $related->set($fields);
-        return $related;
+        $related = static::CLASS . 'Related';
+        return new $related($fields);
     }
 
     protected function getRecordClass(Row $row) : string
     {
-        return static::class . 'Record';
+        return static::CLASS . 'Record';
     }
 }

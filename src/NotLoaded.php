@@ -3,24 +3,16 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper;
 
-use EmptyIterator;
-use IteratorAggregate;
-
-final class NotLoaded implements IteratorAggregate
+final class NotLoaded
 {
-    static protected ?NotLoaded $flyweight = null;
+    static protected ?NotLoaded $instance = null;
 
-    static public function getFlyweight() : NotLoaded
+    static public function getInstance() : NotLoaded
     {
-        if (static::$flyweight === null) {
-            static::$flyweight = new NotLoaded();
+        if (static::$instance === null) {
+            static::$instance = new NotLoaded();
         }
 
-        return static::$flyweight;
-    }
-
-    public function getIterator() : EmptyIterator
-    {
-        return new EmptyIterator();
+        return static::$instance;
     }
 }

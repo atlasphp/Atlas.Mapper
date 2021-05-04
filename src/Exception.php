@@ -27,6 +27,11 @@ class Exception extends \Exception
         return new Exception("{$class}::\${$property} does not exist.");
     }
 
+    public static function notLoaded()
+    {
+        return new Exception("NOT LOADED");
+    }
+
     public static function mapperNotFound(string $class) : self
     {
         return new Exception("{$class} not found in mapper locator.");
