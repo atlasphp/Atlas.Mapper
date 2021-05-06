@@ -13,20 +13,8 @@ namespace Atlas\Mapper\Relationship;
 use Atlas\Mapper\Record;
 use SplObjectStorage;
 
-class OneToOneBidi extends OneToOne
+class ManyToOneBidi extends ManyToOne
 {
-    public function fixNativeRecord(Record $nativeRecord) : void
-    {
-        $foreignRecord = $nativeRecord->{$this->name};
-        if (! $foreignRecord instanceof Record) {
-            return;
-        }
-
-        foreach ($this->on as $nativeField => $foreignField) {
-            $nativeRecord->$nativeField = $foreignRecord->$foreignField;
-        }
-    }
-
     public function persistForeign(Record $nativeRecord, SplObjectStorage $tracker) : void
     {
         parent::persistForeign($nativeRecord, $tracker);

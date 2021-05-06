@@ -13,7 +13,7 @@ namespace Atlas\Mapper\Relationship;
 use Atlas\Mapper\Record;
 use SplObjectStorage;
 
-class OneToOneBidi extends OneToOne
+class OneToManyBidi extends OneToMany
 {
     public function fixNativeRecord(Record $nativeRecord) : void
     {
