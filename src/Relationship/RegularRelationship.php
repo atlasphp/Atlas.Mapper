@@ -204,4 +204,25 @@ abstract class RegularRelationship extends Relationship
         // are they equal?
         return $nativeVal == $foreignVal;
     }
+
+    protected function generateMatchHash(Record $record, array $colNames): string
+    {
+        if (empty($colNames)) {
+            return '';
+        }
+
+        $row = $record->getRow();
+        $matchData = [];
+        $numerics = [];
+        foreach ($colNames as $col) {
+            $value = $row->$col;
+            if (is_numeric($value)) {
+                $numerics[] = $col;
+            } elseif ($this->ignoreCase) {
+                $value = strtolower($value);
+            }
+            $matchData[] = $value;
+        }
+        return sha1(implode('', $matchData)) . sha1(implode('', $numerics));
+    }
 }

@@ -15,6 +15,33 @@ use SplObjectStorage;
 
 class OneToOne extends DeletableRelationship
 {
+    public function stitchIntoRecords(
+        array $nativeRecords,
+        callable $custom = null
+    ) : void
+    {
+        if (empty($nativeRecords)) {
+            return;
+        }
+
+        $foreignRecords = $this->fetchForeignRecords($nativeRecords, $custom);
+
+        $foreignRecordHashes = [];
+        $foreignMatchColumns = array_values($this->on);
+        foreach ($foreignRecords as $foreignRecord) {
+            $foreignHash = $this->generateMatchHash($foreignRecord, $foreignMatchColumns);
+            if (!isset($foreignRecordHashes[$foreignHash])) {
+                $foreignRecordHashes[$foreignHash] = $foreignRecord;
+            }
+        }
+
+        $nativeMatchColumns = array_keys($this->on);
+        foreach ($nativeRecords as $nativeRecord) {
+            $nativeHash = $this->generateMatchHash($nativeRecord, $nativeMatchColumns);
+            $nativeRecord->{$this->name} = $foreignRecordHashes[$nativeHash] ?? false;
+        }
+    }
+
     protected function stitchIntoRecord(
         Record $nativeRecord,
         array &$foreignRecords
