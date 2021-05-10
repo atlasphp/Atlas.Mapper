@@ -61,5 +61,7 @@ class OneToMany extends DeletableRelationship
         foreach ($foreignRecordSet as $foreignRecord) {
             $foreignMapper->persist($foreignRecord, $tracker);
         }
+
+        $foreignRecordSet->detachDeleted();
     }
 }
