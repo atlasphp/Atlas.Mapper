@@ -4,9 +4,15 @@
 - Add a "required" on one-to-one and many-to-one? Existing 1:1 and M:1 are
   really to-zero-or-one, and "required" is to-exactly-one. Maybe "always".
 
+- rework the attribute keys for Variant
+
+- put IgnoreCase in attribute constructors? can stay as separate method on relationships.
+
+- given SingleTableInheritance, should STI Records get their own Relateds?
+
 * * *
 
-'UNKNOWN' on MapperRelationships getType()
+'UNKNOWN' on Relationships getType()
 
 NotLoaded|null|Record kind of sucks.
 
