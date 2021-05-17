@@ -31,8 +31,6 @@ class MapperRelationships implements IteratorAggregate
         'afterNative' => [],
     ];
 
-    protected ?Related $prototypeRelated = null;
-
     public function getIterator()
     {
         return new ArrayIterator($this->relationships);
