@@ -22,4 +22,15 @@ abstract class RelationshipAttribute
         ReflectionProperty $prop,
         array $relationships
     ) : mixed;
+
+    public function getForeignMapperClass(string|ReflectionProperty $spec) : string
+    {
+        if ($spec instanceof ReflectionProperty) {
+            $spec = $this->getType($spec);
+        }
+
+        $parts = explode('\\', $spec);
+        array_pop($parts);
+        return implode('\\', $parts) . '\\' . end($parts);
+    }
 }

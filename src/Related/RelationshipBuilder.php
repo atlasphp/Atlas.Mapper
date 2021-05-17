@@ -19,14 +19,6 @@ use Atlas\Mapper\Exception;
 
 abstract class RelationshipBuilder extends RelationshipAttribute
 {
-    public function getForeignMapperClass(ReflectionProperty $prop) : string
-    {
-        $type = $this->getType($prop);
-        $parts = explode('\\', $type);
-        array_pop($parts);
-        return implode('\\', $parts) . '\\' . end($parts);
-    }
-
     protected function getType(ReflectionProperty $prop) : string
     {
         $type = $prop->getType()->getName();

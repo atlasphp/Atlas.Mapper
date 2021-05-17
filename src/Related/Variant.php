@@ -21,7 +21,7 @@ class Variant extends RelationshipAttribute
 
     public function __construct(
         protected mixed $value,
-        protected string $mapper,
+        protected string $class,
         protected array $on
     ) {
     }
@@ -36,7 +36,7 @@ class Variant extends RelationshipAttribute
     {
         $relationships[$name]->type(
             $this->value,
-            $this->mapper,
+            $this->getForeignMapperClass($this->class),
             $this->on
         );
 

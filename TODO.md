@@ -3,10 +3,7 @@
 
 - Add a "required" on one-to-one and many-to-one? Existing 1:1 and M:1 are
   really to-zero-or-one, and "required" is to-exactly-one. Maybe "always".
-
-- rework the attribute keys for Variant
-
-- put IgnoreCase in attribute constructors? can stay as separate method on relationships.
+  Or make the typehint the key: if ?Record, 0-or-1:1; if Record, exactly-1:1.
 
 - given SingleTableInheritance, should STI Records get their own Relateds?
 
