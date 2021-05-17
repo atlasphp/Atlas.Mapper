@@ -1,36 +1,30 @@
 <?php
 namespace Atlas\Mapper\DataSource\Thread;
 
-use Atlas\Mapper\Related\ManyToMany;
-use Atlas\Mapper\Related\ManyToOne;
-use Atlas\Mapper\Related\OneToMany;
-use Atlas\Mapper\Related\OneToOne;
-use Atlas\Mapper\Related\OnDelete;
 use Atlas\Mapper\DataSource\Author\AuthorRecord;
 use Atlas\Mapper\DataSource\Reply\ReplyRecordSet;
 use Atlas\Mapper\DataSource\Summary\SummaryRecord;
 use Atlas\Mapper\DataSource\Tag\TagRecordSet;
 use Atlas\Mapper\DataSource\Tagging\TaggingRecordSet;
 use Atlas\Mapper\Related;
-use Atlas\Mapper\NotLoaded;
 
 class ThreadRelated extends Related
 {
-    #[ManyToOne]
+    #[Related\ManyToOne]
     protected ?AuthorRecord $author;
 
-    #[OneToOne]
-    #[OnDelete('initDeleted')]
+    #[Related\OneToOne]
+    #[Related\OnDelete('initDeleted')]
     protected ?SummaryRecord $summary;
 
-    #[OneToMany]
-    #[OnDelete('setDelete')]
+    #[Related\OneToMany]
+    #[Related\OnDelete('setDelete')]
     protected ReplyRecordSet $replies;
 
-    #[OneToMany]
-    #[OnDelete('setNull')]
+    #[Related\OneToMany]
+    #[Related\OnDelete('setNull')]
     protected TaggingRecordSet $taggings;
 
-    #[ManyToMany(through: 'taggings')]
+    #[Related\ManyToMany(through: 'taggings')]
     protected TagRecordSet $tags;
 }
