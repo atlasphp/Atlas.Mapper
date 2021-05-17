@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace Atlas\Mapper;
 
 use ArrayIterator;
-use Atlas\Mapper\Attribute\RelationshipAttribute;
+use Atlas\Mapper\Related\RelationshipAttribute;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\MapperLocator;
 use Atlas\Mapper\Relationship\Relationship;

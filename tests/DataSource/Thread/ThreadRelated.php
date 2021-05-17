@@ -1,11 +1,11 @@
 <?php
 namespace Atlas\Mapper\DataSource\Thread;
 
-use Atlas\Mapper\Attribute\ManyToMany;
-use Atlas\Mapper\Attribute\ManyToOne;
-use Atlas\Mapper\Attribute\OneToMany;
-use Atlas\Mapper\Attribute\OneToOne;
-use Atlas\Mapper\Attribute\OnDelete;
+use Atlas\Mapper\Related\ManyToMany;
+use Atlas\Mapper\Related\ManyToOne;
+use Atlas\Mapper\Related\OneToMany;
+use Atlas\Mapper\Related\OneToOne;
+use Atlas\Mapper\Related\OnDelete;
 use Atlas\Mapper\DataSource\Author\AuthorRecord;
 use Atlas\Mapper\DataSource\Reply\ReplyRecordSet;
 use Atlas\Mapper\DataSource\Summary\SummaryRecord;

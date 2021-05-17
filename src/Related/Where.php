@@ -8,19 +8,22 @@
  */
 declare(strict_types=1);
 
-namespace Atlas\Mapper\Attribute;
+namespace Atlas\Mapper\Related;
 
 use Atlas\Mapper\MapperLocator;
-use Atlas\Mapper\Relationship;
 use Attribute;
 use ReflectionProperty;
 
-#[Attribute(Attribute::TARGET_PROPERTY)]
-class OneToOne extends RelationshipBuilder
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::IS_REPEATABLE)]
+class Where extends RelationshipAttribute
 {
+    public array $bindInline = [];
+
     public function __construct(
-        protected array $on = []
+        protected string $condition,
+        mixed ...$bindInline
     ) {
+        $this->bindInline = $bindInline;
     }
 
     public function __invoke(
@@ -31,12 +34,11 @@ class OneToOne extends RelationshipBuilder
         array $relationships
     ) : mixed
     {
-        return new Relationship\OneToOne(
-            $name,
-            $mapperLocator,
-            $nativeMapperClass,
-            $this->getForeignMapperClass($prop),
-            $this->getOn($nativeMapperClass),
+        $relationships[$name]->where(
+            $this->condition,
+            ...$this->bindInline
         );
+
+        return null;
     }
 }

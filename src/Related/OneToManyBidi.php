@@ -8,7 +8,7 @@
  */
 declare(strict_types=1);
 
-namespace Atlas\Mapper\Attribute;
+namespace Atlas\Mapper\Related;
 
 use Atlas\Mapper\MapperLocator;
 use Atlas\Mapper\Relationship;
@@ -16,7 +16,7 @@ use Attribute;
 use ReflectionProperty;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class OneToOneBidi extends RelationshipBuilder
+class OneToManyBidi extends RelationshipBuilder
 {
     public function __construct(
         protected array $on = []
@@ -31,7 +31,7 @@ class OneToOneBidi extends RelationshipBuilder
         array $relationships
     ) : mixed
     {
-        return new Relationship\OneToOneBidi(
+        return new Relationship\OneToManyBidi(
             $name,
             $mapperLocator,
             $nativeMapperClass,

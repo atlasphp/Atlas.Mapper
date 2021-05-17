@@ -8,7 +8,7 @@
  */
 declare(strict_types=1);
 
-namespace Atlas\Mapper\Attribute;
+namespace Atlas\Mapper\Related;
 
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\MapperLocator;

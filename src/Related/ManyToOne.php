@@ -8,15 +8,15 @@
  */
 declare(strict_types=1);
 
-namespace Atlas\Mapper\Attribute;
+namespace Atlas\Mapper\Related;
 
-use Attribute;
-use Atlas\Mapper\Relationship;
 use Atlas\Mapper\MapperLocator;
+use Atlas\Mapper\Relationship;
+use Attribute;
 use ReflectionProperty;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class OneToMany extends RelationshipBuilder
+class ManyToOne extends RelationshipBuilder
 {
     public function __construct(
         protected array $on = []
@@ -31,12 +31,14 @@ class OneToMany extends RelationshipBuilder
         array $relationships
     ) : mixed
     {
-        return new Relationship\OneToMany(
+        $foreignMapperClass = $this->getForeignMapperClass($prop);
+
+        return new Relationship\ManyToOne(
             $name,
             $mapperLocator,
             $nativeMapperClass,
-            $this->getForeignMapperClass($prop),
-            $this->getOn($nativeMapperClass),
+            $foreignMapperClass,
+            $this->getOn($foreignMapperClass),
         );
     }
 

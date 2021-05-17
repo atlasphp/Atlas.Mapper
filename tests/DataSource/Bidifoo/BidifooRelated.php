@@ -1,10 +1,10 @@
 <?php
 namespace Atlas\Mapper\DataSource\Bidifoo;
 
-use Atlas\Mapper\Attribute\ManyToMany;
-use Atlas\Mapper\Attribute\ManyToOne;
-use Atlas\Mapper\Attribute\OneToMany;
-use Atlas\Mapper\Attribute\OneToOneBidi;
+use Atlas\Mapper\Related\ManyToMany;
+use Atlas\Mapper\Related\ManyToOne;
+use Atlas\Mapper\Related\OneToMany;
+use Atlas\Mapper\Related\OneToOneBidi;
 use Atlas\Mapper\DataSource\Bidibar\BidibarRecord;
 use Atlas\Mapper\Related;
 use Atlas\Mapper\NotLoaded;

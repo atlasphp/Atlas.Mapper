@@ -8,24 +8,18 @@
  */
 declare(strict_types=1);
 
-namespace Atlas\Mapper\Attribute;
+namespace Atlas\Mapper\Related;
 
 use Atlas\Mapper\MapperLocator;
-use Attribute;
 use ReflectionProperty;
 
-#[Attribute(Attribute::TARGET_PROPERTY)]
-class IgnoreCase extends RelationshipAttribute
+abstract class RelationshipAttribute
 {
-    public function __invoke(
+    abstract public function __invoke(
         string $name,
         MapperLocator $mapperLocator,
         string $nativeMapperClass,
         ReflectionProperty $prop,
         array $relationships
-    ) : mixed
-    {
-        $relationships[$name]->ignoreCase();
-        return null;
-    }
+    ) : mixed;
 }

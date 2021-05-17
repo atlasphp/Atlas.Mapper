@@ -8,18 +8,17 @@
  */
 declare(strict_types=1);
 
-namespace Atlas\Mapper\Attribute;
+namespace Atlas\Mapper\Related;
 
 use Atlas\Mapper\MapperLocator;
-use Atlas\Mapper\Relationship;
 use Attribute;
 use ReflectionProperty;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class OneToManyBidi extends RelationshipBuilder
+class OnDelete extends RelationshipAttribute
 {
     public function __construct(
-        protected array $on = []
+        protected string $mode
     ) {
     }
 
@@ -31,12 +30,8 @@ class OneToManyBidi extends RelationshipBuilder
         array $relationships
     ) : mixed
     {
-        return new Relationship\OneToManyBidi(
-            $name,
-            $mapperLocator,
-            $nativeMapperClass,
-            $this->getForeignMapperClass($prop),
-            $this->getOn($nativeMapperClass),
-        );
+        $method = 'onDelete' . ucfirst($this->mode);
+        $relationships[$name]->$method();
+        return null;
     }
 }

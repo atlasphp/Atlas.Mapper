@@ -1,10 +1,10 @@
 <?php
 namespace Atlas\Mapper\DataSource\Comment;
 
-use Atlas\Mapper\Attribute\ManyToMany;
-use Atlas\Mapper\Attribute\ManyToOne;
-use Atlas\Mapper\Attribute\ManyToOneVariant;
-use Atlas\Mapper\Attribute\Variant;
+use Atlas\Mapper\Related\ManyToMany;
+use Atlas\Mapper\Related\ManyToOne;
+use Atlas\Mapper\Related\ManyToOneVariant;
+use Atlas\Mapper\Related\Variant;
 use Atlas\Mapper\DataSource\Page\Page;
 use Atlas\Mapper\DataSource\Post\Post;
 use Atlas\Mapper\DataSource\Video\Video;

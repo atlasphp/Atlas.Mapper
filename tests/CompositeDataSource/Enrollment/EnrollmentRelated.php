@@ -1,10 +1,10 @@
 <?php
 namespace Atlas\Mapper\CompositeDataSource\Enrollment;
 
-use Atlas\Mapper\Attribute\ManyToMany;
-use Atlas\Mapper\Attribute\ManyToOne;
-use Atlas\Mapper\Attribute\OneToMany;
-use Atlas\Mapper\Attribute\OneToOne;
+use Atlas\Mapper\Related\ManyToMany;
+use Atlas\Mapper\Related\ManyToOne;
+use Atlas\Mapper\Related\OneToMany;
+use Atlas\Mapper\Related\OneToOne;
 use Atlas\Mapper\CompositeDataSource\Course\CourseRecord;
 use Atlas\Mapper\CompositeDataSource\Student\StudentRecord;
 use Atlas\Mapper\Related;

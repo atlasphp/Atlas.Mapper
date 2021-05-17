@@ -1,12 +1,12 @@
 <?php
 namespace Atlas\Mapper\CompositeDataSource\Student;
 
-use Atlas\Mapper\Attribute\ManyToMany;
-use Atlas\Mapper\Attribute\ManyToOne;
-use Atlas\Mapper\Attribute\OneToMany;
-use Atlas\Mapper\Attribute\OneToOne;
-use Atlas\Mapper\Attribute\Where;
-use Atlas\Mapper\Attribute\IgnoreCase;
+use Atlas\Mapper\Related\ManyToMany;
+use Atlas\Mapper\Related\ManyToOne;
+use Atlas\Mapper\Related\OneToMany;
+use Atlas\Mapper\Related\OneToOne;
+use Atlas\Mapper\Related\Where;
+use Atlas\Mapper\Related\IgnoreCase;
 use Atlas\Mapper\Related;
 use Atlas\Mapper\NotLoaded;
 

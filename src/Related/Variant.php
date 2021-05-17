@@ -8,18 +8,21 @@
  */
 declare(strict_types=1);
 
-namespace Atlas\Mapper\Attribute;
+namespace Atlas\Mapper\Related;
 
 use Atlas\Mapper\MapperLocator;
-use Atlas\Mapper\Relationship;
 use Attribute;
 use ReflectionProperty;
 
-#[Attribute(Attribute::TARGET_PROPERTY)]
-class ManyToOne extends RelationshipBuilder
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::IS_REPEATABLE)]
+class Variant extends RelationshipAttribute
 {
+    public string $method = 'variant';
+
     public function __construct(
-        protected array $on = []
+        protected mixed $value,
+        protected string $mapper,
+        protected array $on
     ) {
     }
 
@@ -31,15 +34,12 @@ class ManyToOne extends RelationshipBuilder
         array $relationships
     ) : mixed
     {
-        $foreignMapperClass = $this->getForeignMapperClass($prop);
-
-        return new Relationship\ManyToOne(
-            $name,
-            $mapperLocator,
-            $nativeMapperClass,
-            $foreignMapperClass,
-            $this->getOn($foreignMapperClass),
+        $relationships[$name]->type(
+            $this->value,
+            $this->mapper,
+            $this->on
         );
-    }
 
+        return null;
+    }
 }
