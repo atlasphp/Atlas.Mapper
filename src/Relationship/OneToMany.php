@@ -25,7 +25,7 @@ class OneToMany extends DeletableRelationship
             return;
         }
 
-         $foreignRecords = $this->fetchForeignRecords($nativeRecords, $custom);
+        $foreignRecords = $this->fetchForeignRecords($nativeRecords, $custom);
 
         $foreignRecordHashes = [];
         $foreignMatchColumns = array_values($this->on);
