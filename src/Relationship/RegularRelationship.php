@@ -207,22 +207,14 @@ abstract class RegularRelationship extends Relationship
 
     protected function generateMatchHash(Record $record, array $colNames): string
     {
-        if (empty($colNames)) {
-            return '';
+        $row = $record->getRow();
+        $array = [];
+
+        foreach ($colNames as $col) {
+            $array[] = $row->$col;
         }
 
-        $row = $record->getRow();
-        $matchData = [];
-        $numerics = [];
-        foreach ($colNames as $col) {
-            $value = $row->$col;
-            if (is_numeric($value)) {
-                $numerics[] = $col;
-            } elseif ($this->ignoreCase) {
-                $value = strtolower($value);
-            }
-            $matchData[] = $value;
-        }
-        return sha1(implode('', $matchData)) . sha1(implode('', $numerics));
+        $sep = "|\x1F"; // a pipe, and ASCII 31 ("unit separator")
+        return $sep . implode($sep, $array). $sep;
     }
 }
