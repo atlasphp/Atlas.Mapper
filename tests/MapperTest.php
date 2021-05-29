@@ -447,8 +447,14 @@ ORDER BY
             'name' => 'New Name',
         ]);
 
-        $tag = $this->mapperLocator->get(Tag::CLASS)->newRecord([
-            'name' => 'New Tag',
+        $tags = $this->mapperLocator->get(Tag::CLASS)->newRecordSet();
+
+        $tags->appendNew([
+            'name' => 'New Tag 1',
+        ]);
+
+        $tags->appendNew([
+            'name' => 'New Tag 2',
         ]);
 
         $summary = $this->mapperLocator->get(Summary::CLASS)->newRecord([
@@ -464,22 +470,20 @@ ORDER BY
             'author' => $author,
             'summary' => $summary,
             'taggings' => $taggings,
-        ]);
-
-        $tagging = $thread->taggings->appendNew([
-            'thread' => $thread,
-            'tag' => $tag,
+            'tags' => $tags,
         ]);
 
         // persist the thread and all its relateds
         $this->mapperLocator->get(Thread::CLASS)->persist($thread);
 
-        $this->assertTrue($author->author_id > 0);
-        $this->assertTrue($tag->tag_id > 0);
+        $this->assertTrue($thread->author->author_id > 0);
+        $this->assertTrue($thread->tags[0]->tag_id > 0);
+        $this->assertTrue($thread->tags[1]->tag_id > 0);
         $this->assertTrue($thread->thread_id > 0);
         $this->assertSame($thread->author_id, $thread->author->author_id);
         $this->assertSame($thread->thread_id, $thread->summary->thread_id);
         $this->assertSame($thread->taggings[0]->thread_id, $thread->thread_id);
+        $this->assertSame($thread->taggings[1]->thread_id, $thread->thread_id);
     }
 
     public function testPersist_updateManyToOne()
