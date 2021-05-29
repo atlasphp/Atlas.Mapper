@@ -484,6 +484,12 @@ ORDER BY
         $this->assertSame($thread->thread_id, $thread->summary->thread_id);
         $this->assertSame($thread->taggings[0]->thread_id, $thread->thread_id);
         $this->assertSame($thread->taggings[1]->thread_id, $thread->thread_id);
+
+        // now detach the tags and re-persist
+        $thread->tags->detachAll();
+        $this->mapperLocator->get(Thread::CLASS)->persist($thread);
+        $this->assertCount(0, $thread->taggings);
+        $this->assertCount(0, $thread->tags);
     }
 
     public function testPersist_updateManyToOne()

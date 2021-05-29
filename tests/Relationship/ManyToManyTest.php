@@ -48,7 +48,6 @@ class ManyToManyTest extends RelationshipTest
             'tags'
         ]);
 
-
         $this->assertNotSame($before->taggings, $after->taggings);
         $expect = array (
             array (
