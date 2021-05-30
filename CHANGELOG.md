@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 1.3.3
+
+- Fixed #16: When persisting many-to-many relationship, call `setDelete()`
+  on all through relateds unless they match. Fixes issue with detaching all
+  related etc.
+
+- Fixed #17: Performance optimisations for large many-to-many datasets.
+
 ## 1.3.2
 
 - Fixed #15: Required parameter follows optional parameter
