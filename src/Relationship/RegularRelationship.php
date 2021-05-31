@@ -107,7 +107,7 @@ abstract class RegularRelationship extends Relationship
         }
 
         // invoke the callable for sub-relateds
-        $sub(new SubJoinEager(
+        $sub(new SubJoinRelated(
             $this->getForeignMapper()->getRelationships(),
             $select,
             $foreignAlias // current "foreign" alias becomes "native" one

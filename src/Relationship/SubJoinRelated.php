@@ -13,7 +13,7 @@ namespace Atlas\Mapper\Relationship;
 use Atlas\Mapper\MapperRelationships;
 use Atlas\Mapper\MapperSelect;
 
-class SubJoinEager
+class SubJoinRelated
 {
     public function __construct(
         protected MapperRelationships $relationships,

@@ -105,7 +105,7 @@ class MapperRelationships implements IteratorAggregate
         array $loadRelated = []
     ) : void
     {
-        foreach ($this->fixEager($loadRelated) as $name => $custom) {
+        foreach ($this->fixLoadRelated($loadRelated) as $name => $custom) {
             if (! isset($this->relationships[$name])) {
                 throw Exception::relationshipDoesNotExist($name);
             }
@@ -116,7 +116,7 @@ class MapperRelationships implements IteratorAggregate
         }
     }
 
-    protected function fixEager(array $spec) : array
+    protected function fixLoadRelated(array $spec) : array
     {
         $loadRelated = [];
         foreach ($spec as $key => $val) {
