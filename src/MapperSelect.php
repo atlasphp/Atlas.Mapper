@@ -33,9 +33,9 @@ abstract class MapperSelect extends TableSelect
 
     protected Mapper $mapper;
 
-    protected array $eager = [];
+    protected array $loadRelated = [];
 
-    public function joinEager(string $relatedName, callable $sub = null) : static
+    public function joinRelated(string $relatedName, callable $sub = null) : static
     {
         $this->mapper->getRelationships()->joinSelect(
             $this,
@@ -47,11 +47,11 @@ abstract class MapperSelect extends TableSelect
         return $this;
     }
 
-    public function eager(array $eager) : static
+    public function loadRelated(array $loadRelated) : static
     {
         $relationships = $this->mapper->getRelationships();
 
-        foreach ($eager as $key => $val) {
+        foreach ($loadRelated as $key => $val) {
             $relatedName = $key;
 
             if (is_int($key)) {
@@ -63,7 +63,7 @@ abstract class MapperSelect extends TableSelect
             }
         }
 
-        $this->eager = $eager;
+        $this->loadRelated = $loadRelated;
         return $this;
     }
 
@@ -74,13 +74,13 @@ abstract class MapperSelect extends TableSelect
             return null;
         }
 
-        return $this->mapper->turnRowIntoRecord($row, $this->eager);
+        return $this->mapper->turnRowIntoRecord($row, $this->loadRelated);
     }
 
     public function fetchRecords() : array
     {
         $rows = $this->fetchRows();
-        return $this->mapper->turnRowsIntoRecords($rows, $this->eager);
+        return $this->mapper->turnRowsIntoRecords($rows, $this->loadRelated);
     }
 
     public function fetchRecordSet() : RecordSet

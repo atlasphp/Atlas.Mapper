@@ -8,18 +8,18 @@ use Atlas\Mapper\Mapper;
 /**
  * @method EnrollmentTable getTable()
  * @method EnrollmentRelationships getRelationships()
- * @method EnrollmentRecord|null fetchRecord($primaryVal, array $eager = [])
- * @method EnrollmentRecord|null fetchRecordBy(array $whereEquals, array $eager = [])
- * @method EnrollmentRecord[] fetchRecords(array $primaryVals, array $eager = [])
- * @method EnrollmentRecord[] fetchRecordsBy(array $whereEquals, array $eager = [])
- * @method EnrollmentRecordSet fetchRecordSet(array $primaryVals, array $eager = [])
- * @method EnrollmentRecordSet fetchRecordSetBy(array $whereEquals, array $eager = [])
+ * @method EnrollmentRecord|null fetchRecord($primaryVal, array $loadRelated = [])
+ * @method EnrollmentRecord|null fetchRecordBy(array $whereEquals, array $loadRelated = [])
+ * @method EnrollmentRecord[] fetchRecords(array $primaryVals, array $loadRelated = [])
+ * @method EnrollmentRecord[] fetchRecordsBy(array $whereEquals, array $loadRelated = [])
+ * @method EnrollmentRecordSet fetchRecordSet(array $primaryVals, array $loadRelated = [])
+ * @method EnrollmentRecordSet fetchRecordSetBy(array $whereEquals, array $loadRelated = [])
  * @method EnrollmentSelect select(array $whereEquals = [])
  * @method EnrollmentRecord newRecord(array $fields = [])
  * @method EnrollmentRecord[] newRecords(array $fieldSets)
  * @method EnrollmentRecordSet newRecordSet(array $records = [])
- * @method EnrollmentRecord turnRowIntoRecord(Row $row, array $eager = [])
- * @method EnrollmentRecord[] turnRowsIntoRecords(array $rows, array $eager = [])
+ * @method EnrollmentRecord turnRowIntoRecord(Row $row, array $loadRelated = [])
+ * @method EnrollmentRecord[] turnRowsIntoRecords(array $rows, array $loadRelated = [])
  */
 class Enrollment extends Mapper
 {

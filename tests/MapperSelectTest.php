@@ -65,7 +65,7 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
         $this->expectExceptionMessage(
             "Relationship 'no_such_related' does not exist."
         );
-        $this->select->eager(['no_such_related']);
+        $this->select->loadRelated(['no_such_related']);
     }
 
     public function testJoinWithSubRelated()
@@ -74,9 +74,9 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
             ->get(Author::CLASS)
             ->select()
             ->columns('*')
-            ->joinEager('LEFT threads', function ($sub) {
-                $sub->joinEager('INNER taggings AS taggings_alias', function ($sub) {
-                    $sub->joinEager('tag');
+            ->joinRelated('LEFT threads', function ($sub) {
+                $sub->joinRelated('INNER taggings AS taggings_alias', function ($sub) {
+                    $sub->joinRelated('tag');
                 });
             });
 

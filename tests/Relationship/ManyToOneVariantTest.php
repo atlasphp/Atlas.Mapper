@@ -27,7 +27,7 @@ class ManyToOneVariantTest extends RelationshipTest
         $comments = $this->mapperLocator->get(Comment::CLASS)
             ->select()
             ->orderBy('comment_id')
-            ->eager(['commentable'])
+            ->loadRelated(['commentable'])
             ->limit(3)
             ->fetchRecords();
 
@@ -113,7 +113,7 @@ class ManyToOneVariantTest extends RelationshipTest
         $select = $this->mapperLocator->get(Comment::CLASS)->select();
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage('Cannot JOIN on variant relationships.');
-        $select->joinEager('LEFT commentable');
+        $select->joinRelated('LEFT commentable');
     }
 
     public function testWhere()

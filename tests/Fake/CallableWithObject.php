@@ -5,6 +5,6 @@ class CallableWithObject
 {
     public function replies($query)
     {
-        $query->eager(['author']);
+        $query->loadRelated(['author']);
     }
 }

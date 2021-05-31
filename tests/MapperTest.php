@@ -67,7 +67,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'author',
                 'summary',
                 'replies' => function ($select) {
-                    $select->eager(['author']);
+                    $select->loadRelated(['author']);
                 },
                 'taggings',
                 'tags',
@@ -100,7 +100,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'author',
                 'summary',
                 'replies' => function ($select) {
-                    $select->eager(['author']);
+                    $select->loadRelated(['author']);
                 },
                 'taggings',
                 'tags',
@@ -122,7 +122,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'author',
                 'summary',
                 'replies' => function ($select) {
-                    $select->eager(['author']);
+                    $select->loadRelated(['author']);
                 },
                 'taggings',
                 'tags',
@@ -142,7 +142,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'author',
                 'summary',
                 'replies' => function ($select) {
-                    $select->eager(['author']);
+                    $select->loadRelated(['author']);
                 },
                 'taggings',
                 'tags',
@@ -162,7 +162,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'author',
                 'summary',
                 'replies' => function ($select) {
-                    $select->eager(['author']);
+                    $select->loadRelated(['author']);
                 },
                 'taggings',
                 'tags',
@@ -183,7 +183,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'author',
                 'summary',
                 'replies' => function ($select) {
-                    $select->eager(['author']);
+                    $select->loadRelated(['author']);
                 },
                 'taggings',
                 'tags',
@@ -200,11 +200,11 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $actual = $this->mapperLocator->get(Thread::CLASS)->select()
             ->where('thread_id < ', 2)
-            ->eager([
+            ->loadRelated([
                 'author',
                 'summary',
                 'replies' => function ($select) {
-                    $select->eager(['author']);
+                    $select->loadRelated(['author']);
                 },
                 'taggings',
                 'tags',
@@ -218,11 +218,11 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $actual = $this->mapperLocator->get(Thread::CLASS)->select()
             ->where('thread_id < ', 2)
-            ->eager([
+            ->loadRelated([
                 'author',
                 'summary',
                 'replies' => function ($select) {
-                    $select->eager(['author']);
+                    $select->loadRelated(['author']);
                 },
                 'taggings',
                 'tags',
@@ -236,7 +236,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $actual = $this->mapperLocator->get(Thread::CLASS)->select()
             ->where('thread_id < ', 2)
-            ->eager([
+            ->loadRelated([
                 'author',
                 'summary',
                 'replies' => [
@@ -255,11 +255,11 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $actual = $this->mapperLocator->get(Thread::CLASS)->select()
             ->where('thread_id < ', 4)
-            ->eager([
+            ->loadRelated([
                 'author',
                 'summary',
                 'replies' => function ($select) {
-                    $select->eager(['author']);
+                    $select->loadRelated(['author']);
                 },
                 'taggings',
                 'tags',
@@ -390,7 +390,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $select = $this->mapperLocator->get(Thread::CLASS)->select()
             ->distinct()
-            ->joinEager('LEFT replies')
+            ->joinRelated('LEFT replies')
             ->orderBy('replies.reply_id DESC');
 
         $actual = $select->getStatement();
@@ -410,7 +410,7 @@ ORDER BY
     {
         $select = $this->mapperLocator->get(Thread::CLASS)->select()
             ->distinct()
-            ->joinEager('INNER replies')
+            ->joinRelated('INNER replies')
             ->orderBy('replies.reply_id DESC');
 
         $actual = $select->getStatement();

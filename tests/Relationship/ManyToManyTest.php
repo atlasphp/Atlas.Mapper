@@ -128,7 +128,7 @@ class ManyToManyTest extends RelationshipTest
         $actual = $this->mapperLocator->get(Thread::CLASS)
             ->select()
             ->columns('*')
-            ->joinEager('tags')
+            ->joinRelated('tags')
             ->getStatement();
 
         $expect = '

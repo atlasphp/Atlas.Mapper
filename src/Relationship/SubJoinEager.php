@@ -25,7 +25,7 @@ class SubJoinEager
         $this->nativeAlias = $nativeAlias;
     }
 
-    public function joinEager(string $relatedName, callable $sub = null) : void
+    public function joinRelated(string $relatedName, callable $sub = null) : void
     {
         $this->relationships->joinSelect(
             $this->select,

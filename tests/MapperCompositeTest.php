@@ -66,7 +66,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                 'degree',
                 'enrollments' => function ($q) {
                     $q->orderBy('course_subject', 'course_number');
-                    $q->eager(['course']);
+                    $q->loadRelated(['course']);
                 },
             ]
         )->getArrayCopy();
@@ -86,7 +86,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                 'degree',
                 'enrollments' => function ($q) {
                     $q->orderBy('course_subject', 'course_number');
-                    $q->eager(['course']);
+                    $q->loadRelated(['course']);
                 },
             ]
         )->getArrayCopy();
@@ -101,7 +101,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
         $actual = $this->mapperLocator->get(Student::CLASS)
             ->select()
             ->where('student_fn = ', 'Anna')
-            ->eager([
+            ->loadRelated([
                 'gpa',
                 'degree',
                 'enrollments' => [
@@ -118,12 +118,12 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
         $actual = $this->mapperLocator->get(Student::CLASS)
             ->select()
             ->where('student_fn < ', 'D')
-            ->eager([
+            ->loadRelated([
                 'gpa',
                 'degree',
                 'enrollments' => function ($q) {
                     $q->orderBy('course_subject', 'course_number');
-                    $q->eager(['course']);
+                    $q->loadRelated(['course']);
                 },
             ])
             ->fetchRecordSet()

@@ -51,7 +51,7 @@ abstract class Mapper
         return $this->relationships;
     }
 
-    public function fetchRecord(mixed $primaryVal, array $eager = []) : ?Record
+    public function fetchRecord(mixed $primaryVal, array $loadRelated = []) : ?Record
     {
         $serial = $this->identityMap->getSerial($primaryVal);
         $row = $this->identityMap->getRow($serial)
@@ -61,12 +61,12 @@ abstract class Mapper
             return null;
         }
 
-        return $this->turnRowIntoRecord($row, $eager);
+        return $this->turnRowIntoRecord($row, $loadRelated);
     }
 
     public function fetchRecordBy(
         array $whereEquals,
-        array $eager = []
+        array $loadRelated = []
     ) : ?Record
     {
         $row = $this->select($whereEquals)->fetchRow();
@@ -74,10 +74,10 @@ abstract class Mapper
             return null;
         }
 
-        return $this->turnRowIntoRecord($row, $eager);
+        return $this->turnRowIntoRecord($row, $loadRelated);
     }
 
-    public function fetchRecords(array $primaryVals, array $eager = []) : array
+    public function fetchRecords(array $primaryVals, array $loadRelated = []) : array
     {
         $rows = [];
         $missing = [];
@@ -96,7 +96,7 @@ abstract class Mapper
 
         // early return if all records were identity-mapped
         if (count($missing) == 0) {
-            return $this->turnRowsIntoRecords($rows, $eager);
+            return $this->turnRowsIntoRecords($rows, $loadRelated);
         }
 
         // fetch rows missing from identity map
@@ -111,30 +111,30 @@ abstract class Mapper
             unset($rows[$serial]);
         }
 
-        return $this->turnRowsIntoRecords($rows, $eager);
+        return $this->turnRowsIntoRecords($rows, $loadRelated);
     }
 
-    public function fetchRecordsBy(array $whereEquals, array $eager = []) : array
+    public function fetchRecordsBy(array $whereEquals, array $loadRelated = []) : array
     {
         $rows = $this->select($whereEquals)->fetchRows();
-        return $this->turnRowsIntoRecords($rows, $eager);
+        return $this->turnRowsIntoRecords($rows, $loadRelated);
     }
 
     public function fetchRecordSet(
         array $primaryVals,
-        array $eager = []
+        array $loadRelated = []
     ) : RecordSet
     {
-        $records = $this->fetchRecords($primaryVals, $eager);
+        $records = $this->fetchRecords($primaryVals, $loadRelated);
         return $this->newRecordSet($records);
     }
 
     public function fetchRecordSetBy(
         array $whereEquals,
-        array $eager = []
+        array $loadRelated = []
     ) : RecordSet
     {
-        $records = $this->fetchRecordsBy($whereEquals, $eager);
+        $records = $this->fetchRecordsBy($whereEquals, $loadRelated);
         return $this->newRecordSet($records);
     }
 
@@ -261,20 +261,20 @@ abstract class Mapper
         );
     }
 
-    public function turnRowIntoRecord(Row $row, array $eager = []) : Record
+    public function turnRowIntoRecord(Row $row, array $loadRelated = []) : Record
     {
         $record = $this->newRecordFromSelectedRow($row);
-        $this->relationships->stitchIntoRecords([$record], $eager);
+        $this->relationships->stitchIntoRecords([$record], $loadRelated);
         return $record;
     }
 
-    public function turnRowsIntoRecords(array $rows, array $eager = []) : array
+    public function turnRowsIntoRecords(array $rows, array $loadRelated = []) : array
     {
         $records = [];
         foreach ($rows as $row) {
             $records[] = $this->newRecordFromSelectedRow($row);
         }
-        $this->relationships->stitchIntoRecords($records, $eager);
+        $this->relationships->stitchIntoRecords($records, $loadRelated);
         return $records;
     }
 

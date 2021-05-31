@@ -102,10 +102,10 @@ class MapperRelationships implements IteratorAggregate
 
     public function stitchIntoRecords(
         array $nativeRecords,
-        array $eager = []
+        array $loadRelated = []
     ) : void
     {
-        foreach ($this->fixEager($eager) as $name => $custom) {
+        foreach ($this->fixEager($loadRelated) as $name => $custom) {
             if (! isset($this->relationships[$name])) {
                 throw Exception::relationshipDoesNotExist($name);
             }
@@ -118,19 +118,19 @@ class MapperRelationships implements IteratorAggregate
 
     protected function fixEager(array $spec) : array
     {
-        $eager = [];
+        $loadRelated = [];
         foreach ($spec as $key => $val) {
             if (is_int($key)) {
-                $eager[$val] = null;
+                $loadRelated[$val] = null;
             } elseif (is_array($val) && ! is_callable($val)) {
-                $eager[$key] = function ($select) use ($val) {
-                    $select->eager($val);
+                $loadRelated[$key] = function ($select) use ($val) {
+                    $select->loadRelated($val);
                 };
             } else {
-                $eager[$key] = $val;
+                $loadRelated[$key] = $val;
             }
         }
-        return $eager;
+        return $loadRelated;
     }
 
     public function fixNativeRecord(Record $nativeRecord) : void
