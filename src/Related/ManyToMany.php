@@ -12,7 +12,7 @@ namespace Atlas\Mapper\Related;
 
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\MapperLocator;
-use Atlas\Mapper\MapperRelationships;
+use Atlas\Mapper\Relationship\MapperRelationships;
 use Atlas\Mapper\Relationship;
 use Attribute;
 use ReflectionProperty;

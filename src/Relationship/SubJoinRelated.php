@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Mapper\MapperRelationships;
+use Atlas\Mapper\Relationship\MapperRelationships;
 use Atlas\Mapper\MapperSelect;
 
 class SubJoinRelated

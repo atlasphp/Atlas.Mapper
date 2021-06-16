@@ -13,7 +13,7 @@ namespace Atlas\Mapper;
 use Atlas\Mapper\Identity\IdentityComposite;
 use Atlas\Mapper\Identity\IdentityMap;
 use Atlas\Mapper\Identity\IdentitySimple;
-use Atlas\Mapper\Relationships;
+use Atlas\Mapper\Relationship\MapperRelationships;
 use Atlas\Table\Row;
 use Atlas\Table\Table;
 use SplObjectStorage;

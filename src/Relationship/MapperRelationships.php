@@ -8,12 +8,14 @@
  */
 declare(strict_types=1);
 
-namespace Atlas\Mapper;
+namespace Atlas\Mapper\Relationship;
 
 use ArrayIterator;
 use Atlas\Mapper\Related\RelationshipAttribute;
 use Atlas\Mapper\Exception;
+use Atlas\Mapper\Record;
 use Atlas\Mapper\MapperLocator;
+use Atlas\Mapper\MapperSelect;
 use Atlas\Mapper\Relationship\Relationship;
 use IteratorAggregate;
 use ReflectionClass;

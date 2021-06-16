@@ -12,6 +12,7 @@ namespace Atlas\Mapper;
 
 use Atlas\Pdo\ConnectionLocator;
 use Atlas\Table\TableLocator;
+use Atlas\Mapper\Relationship\MapperRelationships;
 
 class MapperLocator
 {
