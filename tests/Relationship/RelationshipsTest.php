@@ -7,7 +7,7 @@ use Atlas\Mapper\Exception;
 use Atlas\Mapper\Fake\FakeRelatedBad;
 use Atlas\Mapper\MapperLocator;
 
-class MapperRelationshipsTest extends \PHPUnit\Framework\TestCase
+class RelationshipsTest extends \PHPUnit\Framework\TestCase
 {
     public function test()
     {
@@ -17,6 +17,6 @@ class MapperRelationshipsTest extends \PHPUnit\Framework\TestCase
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage("Relationship 'id' conflicts with existing column name.");
 
-        new MapperRelationships($mapperLocator, Employee::CLASS, FakeRelatedBad::CLASS);
+        new Relationships($mapperLocator, Employee::CLASS, FakeRelatedBad::CLASS);
     }
 }

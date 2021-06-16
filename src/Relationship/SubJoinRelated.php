@@ -10,13 +10,13 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Mapper\Relationship\MapperRelationships;
+use Atlas\Mapper\Relationship\Relationships;
 use Atlas\Mapper\MapperSelect;
 
 class SubJoinRelated
 {
     public function __construct(
-        protected MapperRelationships $relationships,
+        protected Relationships $relationships,
         protected MapperSelect $select,
         protected string $nativeAlias
     ) {

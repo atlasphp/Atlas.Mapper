@@ -12,7 +12,7 @@ namespace Atlas\Mapper;
 
 use Atlas\Pdo\ConnectionLocator;
 use Atlas\Table\TableLocator;
-use Atlas\Mapper\Relationship\MapperRelationships;
+use Atlas\Mapper\Relationship\Relationships;
 
 class MapperLocator
 {
@@ -69,7 +69,7 @@ class MapperLocator
         $events = "{$mapperClass}Events";
         return new $mapperClass(
             $this->tableLocator->get($table),
-            new MapperRelationships($this, $mapperClass, $mapperClass . 'Related'),
+            new Relationships($this, $mapperClass, $mapperClass . 'Related'),
             ($this->factory)($events)
         );
     }

@@ -12,7 +12,7 @@ namespace Atlas\Mapper\Related;
 
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\MapperLocator;
-use Atlas\Mapper\Relationship\MapperRelationships;
+use Atlas\Mapper\Relationship\Relationships;
 use Atlas\Mapper\Relationship;
 use Attribute;
 use ReflectionProperty;
@@ -80,7 +80,7 @@ class ManyToMany extends RelationshipBuilder
         );
     }
 
-    protected function getThrough(MapperRelationships $throughForeignRelationships, string $mapperClass) : ?string
+    protected function getThrough(Relationships $throughForeignRelationships, string $mapperClass) : ?string
     {
         foreach ($throughForeignRelationships as $relatedName => $relationship) {
             if (! $relationship instanceof Relationship\ManyToOne) {

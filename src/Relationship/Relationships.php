@@ -22,7 +22,7 @@ use ReflectionClass;
 use ReflectionProperty;
 use SplObjectStorage;
 
-class MapperRelationships implements IteratorAggregate
+class Relationships implements IteratorAggregate
 {
     protected array $nativeTableColumns;
 

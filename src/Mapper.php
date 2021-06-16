@@ -13,7 +13,7 @@ namespace Atlas\Mapper;
 use Atlas\Mapper\Identity\IdentityComposite;
 use Atlas\Mapper\Identity\IdentityMap;
 use Atlas\Mapper\Identity\IdentitySimple;
-use Atlas\Mapper\Relationship\MapperRelationships;
+use Atlas\Mapper\Relationship\Relationships;
 use Atlas\Table\Row;
 use Atlas\Table\Table;
 use SplObjectStorage;
@@ -28,7 +28,7 @@ abstract class Mapper
 
     public function __construct(
         protected Table $table,
-        protected MapperRelationships $relationships,
+        protected Relationships $relationships,
         protected MapperEvents $mapperEvents
     ) {
         $this->recordSetClass = static::class . 'RecordSet';
@@ -46,7 +46,7 @@ abstract class Mapper
         return $this->table;
     }
 
-    public function getRelationships() : MapperRelationships
+    public function getRelationships() : Relationships
     {
         return $this->relationships;
     }
