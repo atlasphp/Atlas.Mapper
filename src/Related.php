@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Atlas\Mapper;
 
 use Atlas\Mapper\Exception;
+use Atlas\Mapper\Related\NotLoaded;
 use SplObjectStorage;
 
 abstract class Related

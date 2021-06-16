@@ -11,8 +11,6 @@
 
 'UNKNOWN' on Relationships getType()
 
-NotLoaded|null|Record kind of sucks.
-
 OnDeleteInitDeleted nees to be renamed.
 
 How to use constants (or something else) for OnDelete?

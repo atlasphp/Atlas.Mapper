@@ -13,9 +13,9 @@ namespace Atlas\Mapper\Relationship;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\MapperLocator;
 use Atlas\Mapper\MapperSelect;
-use Atlas\Mapper\NotLoaded;
 use Atlas\Mapper\Record;
 use Atlas\Mapper\RecordSet;
+use Atlas\Mapper\Related\NotLoaded;
 use SplObjectStorage;
 
 class ManyToMany extends RegularRelationship

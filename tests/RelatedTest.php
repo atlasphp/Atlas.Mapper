@@ -2,9 +2,10 @@
 namespace Atlas\Mapper;
 
 use Atlas\Mapper\Exception;
-use Atlas\Mapper\Fake\FakeRelated;
 use Atlas\Mapper\Fake\FakeRecord;
+use Atlas\Mapper\Fake\FakeRelated;
 use Atlas\Mapper\Fake\FakeRow;
+use Atlas\Mapper\Related\NotLoaded;
 
 class RelatedTest extends \PHPUnit\Framework\TestCase
 {

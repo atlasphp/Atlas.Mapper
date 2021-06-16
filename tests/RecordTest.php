@@ -2,6 +2,7 @@
 namespace Atlas\Mapper;
 
 use Atlas\Mapper\Exception;
+use Atlas\Mapper\Related\NotLoaded;
 use Atlas\Mapper\Fake\FakeRecord;
 use Atlas\Mapper\Fake\FakeRow;
 use Atlas\Mapper\Fake\FakeRelated;

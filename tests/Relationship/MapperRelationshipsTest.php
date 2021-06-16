@@ -1,9 +1,10 @@
 <?php
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Mapper\Fake\FakeRelatedBad;
 use Atlas\Mapper\DataSource\Employee\Employee;
 use Atlas\Mapper\DataSourceFixture;
+use Atlas\Mapper\Exception;
+use Atlas\Mapper\Fake\FakeRelatedBad;
 use Atlas\Mapper\MapperLocator;
 
 class MapperRelationshipsTest extends \PHPUnit\Framework\TestCase
