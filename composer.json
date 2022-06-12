@@ -13,8 +13,7 @@
     ],
     "require": {
         "php": "^8.0",
-        "atlas/table": "2.x-dev",
-        "phpstan/phpstan": "0.12.x-dev"
+        "atlas/table": "2.x-dev"
     },
     "autoload": {
         "psr-4": {
@@ -23,7 +22,8 @@
     },
     "require-dev": {
         "pds/skeleton": "^1.0",
-        "phpunit/phpunit": "^9.0"
+        "phpunit/phpunit": "^9.0",
+        "phpstan/phpstan": "^1.0"
     },
     "autoload-dev": {
         "psr-4": {
