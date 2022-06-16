@@ -35,6 +35,11 @@ abstract class Relationship
         return $this;
     }
 
+    public function getForeignMapperClass() : string
+    {
+        return $this->foreignMapperClass;
+    }
+
     abstract public function joinSelect(
         MapperSelect $select,
         string $join,
