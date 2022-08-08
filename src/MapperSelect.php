@@ -14,20 +14,20 @@ use Atlas\Table\TableSelect;
 
 abstract class MapperSelect extends TableSelect
 {
-    protected $mapper;
-
-    protected $with = [];
-
-    public function setMapper(Mapper $mapper)
+    static public function new(mixed $arg, mixed ...$args) : static
     {
-        if (isset($this->mapper)) {
-            throw Exception::mapperAlreadySet();
-        }
-
-        $this->mapper = $mapper;
+        /** @var Mapper */
+        $mapper = array_pop($args);
+        $select = parent::new($arg, ...$args);
+        $select->mapper = $mapper;
+        return $select;
     }
 
-    public function joinWith(string $relatedName, callable $sub = null) : self
+    protected $mapper;
+
+    protected $loadRelated = [];
+
+    public function joinRelated(string $relatedName, callable $sub = null) : self
     {
         $this->mapper->getRelationships()->joinSelect(
             $this,
@@ -39,11 +39,11 @@ abstract class MapperSelect extends TableSelect
         return $this;
     }
 
-    public function with(array $with) : self
+    public function loadRelated(array $loadRelated) : self
     {
-        // make sure that all with() are on relateds that actually exist
+        // make sure that all loadRelated() are on relateds that actually exist
         $fields = array_keys($this->mapper->getRelationships()->getFields());
-        foreach ($with as $key => $val) {
+        foreach ($loadRelated as $key => $val) {
             $related = $key;
             if (is_int($key)) {
                 $related = $val;
@@ -52,7 +52,7 @@ abstract class MapperSelect extends TableSelect
                 throw Exception::relationshipDoesNotExist($related);
             }
         }
-        $this->with = $with;
+        $this->loadRelated = $loadRelated;
         return $this;
     }
 
@@ -63,13 +63,13 @@ abstract class MapperSelect extends TableSelect
             return null;
         }
 
-        return $this->mapper->turnRowIntoRecord($row, $this->with);
+        return $this->mapper->turnRowIntoRecord($row, $this->loadRelated);
     }
 
     public function fetchRecords() : array
     {
         $rows = $this->fetchRows();
-        return $this->mapper->turnRowsIntoRecords($rows, $this->with);
+        return $this->mapper->turnRowsIntoRecords($rows, $this->loadRelated);
     }
 
     public function fetchRecordSet() : RecordSet

@@ -51,13 +51,13 @@ abstract class DeletableRelationship extends RegularRelationship
     ) : void
     {
         $nativeRow = $nativeRecord->getRow();
-        if ($nativeRow->getStatus() !== $nativeRow::DELETED) {
+        if ($nativeRow->getLastAction() !== $nativeRow::DELETE) {
             return;
         }
 
         if ($this->onDelete === static::INIT_DELETED) {
             $foreignRow = $foreignRecord->getRow();
-            $foreignRow->init($foreignRow::DELETED);
+            $foreignRow->setLastAction($foreignRow::DELETE);
             return;
         }
 

@@ -108,9 +108,9 @@ abstract class Record implements JsonSerializable
         $this->row->setDelete($delete);
     }
 
-    public function getAction() : string
+    public function getAction() : ?string
     {
-        return $this->row->getAction();
+        return $this->row->getNextAction();
     }
 
     private function assertHas($field) : string

@@ -5,19 +5,19 @@ use Atlas\Mapper\Record;
 use Atlas\Mapper\RecordSet;
 use Atlas\Pdo\Connection;
 use Atlas\Pdo\Profiler;
-use Atlas\Testing\Assertions;
-use Atlas\Testing\DataSource\Author\Author;
-use Atlas\Testing\DataSource\Reply\Reply;
-use Atlas\Testing\DataSource\Reply\ReplyRecord;
-use Atlas\Testing\DataSource\Reply\ReplyRecordSet;
-use Atlas\Testing\DataSourceFixture;
-use Atlas\Testing\DataSource\Summary\Summary;
-use Atlas\Testing\DataSource\Summary\SummaryTable;
-use Atlas\Testing\DataSource\Tag\Tag;
-use Atlas\Testing\DataSource\Tagging\Tagging;
-use Atlas\Testing\DataSource\Thread\Thread;
-use Atlas\Testing\DataSource\Thread\ThreadRecord;
-use Atlas\Testing\DataSource\Thread\ThreadRecordSet;
+use Atlas\Mapper\Assertions;
+use Atlas\Mapper\DataSource\Author\Author;
+use Atlas\Mapper\DataSource\Reply\Reply;
+use Atlas\Mapper\DataSource\Reply\ReplyRecord;
+use Atlas\Mapper\DataSource\Reply\ReplyRecordSet;
+use Atlas\Mapper\DataSourceFixture;
+use Atlas\Mapper\DataSource\Summary\Summary;
+use Atlas\Mapper\DataSource\Summary\SummaryTable;
+use Atlas\Mapper\DataSource\Tag\Tag;
+use Atlas\Mapper\DataSource\Tagging\Tagging;
+use Atlas\Mapper\DataSource\Thread\Thread;
+use Atlas\Mapper\DataSource\Thread\ThreadRecord;
+use Atlas\Mapper\DataSource\Thread\ThreadRecordSet;
 
 class MapperTest extends \PHPUnit\Framework\TestCase
 {
@@ -27,7 +27,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
     // The $expect* properties are at the end, because they are so long
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $connection = (new DataSourceFixture())->exec();
         $this->mapperLocator = MapperLocator::new($connection);
@@ -67,7 +67,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'author',
                 'summary',
                 'replies' => function ($select) {
-                    $select->with(['author']);
+                    $select->loadRelated(['author']);
                 },
                 'taggings',
                 'tags',
@@ -100,7 +100,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'author',
                 'summary',
                 'replies' => function ($select) {
-                    $select->with(['author']);
+                    $select->loadRelated(['author']);
                 },
                 'taggings',
                 'tags',
@@ -122,7 +122,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'author',
                 'summary',
                 'replies' => function ($select) {
-                    $select->with(['author']);
+                    $select->loadRelated(['author']);
                 },
                 'taggings',
                 'tags',
@@ -142,7 +142,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'author',
                 'summary',
                 'replies' => function ($select) {
-                    $select->with(['author']);
+                    $select->loadRelated(['author']);
                 },
                 'taggings',
                 'tags',
@@ -162,7 +162,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'author',
                 'summary',
                 'replies' => function ($select) {
-                    $select->with(['author']);
+                    $select->loadRelated(['author']);
                 },
                 'taggings',
                 'tags',
@@ -183,7 +183,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
                 'author',
                 'summary',
                 'replies' => function ($select) {
-                    $select->with(['author']);
+                    $select->loadRelated(['author']);
                 },
                 'taggings',
                 'tags',
@@ -200,11 +200,11 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $actual = $this->mapperLocator->get(Thread::CLASS)->select()
             ->where('thread_id < ', 2)
-            ->with([
+            ->loadRelated([
                 'author',
                 'summary',
                 'replies' => function ($select) {
-                    $select->with(['author']);
+                    $select->loadRelated(['author']);
                 },
                 'taggings',
                 'tags',
@@ -218,11 +218,11 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $actual = $this->mapperLocator->get(Thread::CLASS)->select()
             ->where('thread_id < ', 2)
-            ->with([
+            ->loadRelated([
                 'author',
                 'summary',
                 'replies' => function ($select) {
-                    $select->with(['author']);
+                    $select->loadRelated(['author']);
                 },
                 'taggings',
                 'tags',
@@ -236,7 +236,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $actual = $this->mapperLocator->get(Thread::CLASS)->select()
             ->where('thread_id < ', 2)
-            ->with([
+            ->loadRelated([
                 'author',
                 'summary',
                 'replies' => [
@@ -255,11 +255,11 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $actual = $this->mapperLocator->get(Thread::CLASS)->select()
             ->where('thread_id < ', 4)
-            ->with([
+            ->loadRelated([
                 'author',
                 'summary',
                 'replies' => function ($select) {
-                    $select->with(['author']);
+                    $select->loadRelated(['author']);
                 },
                 'taggings',
                 'tags',
@@ -390,10 +390,10 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $select = $this->mapperLocator->get(Thread::CLASS)->select()
             ->distinct()
-            ->joinWith('LEFT replies')
+            ->joinRelated('LEFT replies')
             ->orderBy('replies.reply_id DESC');
 
-        $actual = $select->getStatement();
+        $actual = $select->getQueryString();
 
         $expect = 'SELECT DISTINCT
 
@@ -410,10 +410,10 @@ ORDER BY
     {
         $select = $this->mapperLocator->get(Thread::CLASS)->select()
             ->distinct()
-            ->joinWith('INNER replies')
+            ->joinRelated('INNER replies')
             ->orderBy('replies.reply_id DESC');
 
-        $actual = $select->getStatement();
+        $actual = $select->getQueryString();
 
         $expect = 'SELECT DISTINCT
 

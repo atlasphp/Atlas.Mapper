@@ -172,7 +172,7 @@ abstract class RecordSet implements
         $records = [];
         foreach ($this->records as $i => $record) {
             $row = $record->getRow();
-            if ($row->getStatus() === $row::DELETED) {
+            if ($row->getLastAction() === $row::DELETE) {
                 unset($this->records[$i]);
                 $records[$i] = $record;
             }

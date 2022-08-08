@@ -13,14 +13,14 @@ class RecordSetTest extends \PHPUnit\Framework\TestCase
     protected $record;
     protected $recordSet;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->row = new FakeRow([
             'id' => '1',
             'foo' => 'bar',
             'baz' => 'dib',
         ]);
-        $this->row->init($this->row::SELECTED);
+        $this->row->setLastAction($this->row::SELECT);
 
         $this->related = new Related([
             'zim' => $this->getMockBuilder(Record::CLASS)->disableOriginalConstructor()->getMock(),
@@ -172,7 +172,7 @@ class RecordSetTest extends \PHPUnit\Framework\TestCase
             $this->assertFalse($record->getAction() == FakeRow::DELETE);
             if ($i % 2) {
                 $row = $record->getRow();
-                $row->init($row::DELETED);
+                $row->setLastAction($row::DELETE);
             }
         }
 

@@ -15,33 +15,30 @@ use Atlas\Table\TableLocator;
 
 class MapperLocator
 {
-    protected $tableLocator;
-
-    protected $mappers = [];
+    protected $instances = [];
 
     protected $factory;
 
-    public static function new(...$args) : MapperLocator
+    static public function new(mixed ...$args) : MapperLocator
     {
         return new MapperLocator(
             new TableLocator(
-                ConnectionLocator::new(...$args),
-                new MapperQueryFactory()
+                ConnectionLocator::new(...$args)
             )
         );
     }
 
     public function __construct(
-        TableLocator $tableLocator,
+        protected TableLocator $tableLocator,
         callable $factory = null
     ) {
-        $this->tableLocator = $tableLocator;
-        $this->factory = $factory;
-        if ($this->factory === null) {
-            $this->factory = function ($class) {
+        if ($factory === null) {
+            $factory = function ($class) {
                 return new $class();
             };
         }
+
+        $this->factory = $factory;
     }
 
     public function has(string $mapperClass) : bool
@@ -55,11 +52,11 @@ class MapperLocator
             throw Exception::mapperNotFound($mapperClass);
         }
 
-        if (! isset($this->mappers[$mapperClass])) {
-            $this->mappers[$mapperClass] = $this->newMapper($mapperClass);
+        if (! isset($this->instances[$mapperClass])) {
+            $this->instances[$mapperClass] = $this->newMapper($mapperClass);
         }
 
-        return $this->mappers[$mapperClass];
+        return $this->instances[$mapperClass];
     }
 
     public function getTableLocator() : TableLocator

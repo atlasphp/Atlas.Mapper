@@ -156,10 +156,10 @@ abstract class MapperRelationships
 
     public function stitchIntoRecords(
         array $nativeRecords,
-        array $with = []
+        array $loadRelated = []
     ) : void
     {
-        foreach ($this->fixWith($with) as $relatedName => $custom) {
+        foreach ($this->fixLoadRelated($loadRelated) as $relatedName => $custom) {
             if (! isset($this->relationships[$relatedName])) {
                 throw Exception::relationshipDoesNotExist($relatedName);
             }
@@ -207,21 +207,21 @@ abstract class MapperRelationships
         return $relationship;
     }
 
-    protected function fixWith(array $spec) : array
+    protected function fixLoadRelated(array $spec) : array
     {
-        $with = [];
+        $loadRelated = [];
         foreach ($spec as $key => $val) {
             if (is_int($key)) {
-                $with[$val] = null;
+                $loadRelated[$val] = null;
             } elseif (is_array($val) && ! is_callable($val)) {
-                $with[$key] = function ($select) use ($val) {
-                    $select->with($val);
+                $loadRelated[$key] = function ($select) use ($val) {
+                    $select->loadRelated($val);
                 };
             } else {
-                $with[$key] = $val;
+                $loadRelated[$key] = $val;
             }
         }
-        return $with;
+        return $loadRelated;
     }
 
     public function fixNativeRecord(Record $nativeRecord) : void

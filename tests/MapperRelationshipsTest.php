@@ -2,8 +2,8 @@
 namespace Atlas\Mapper;
 
 use Atlas\Mapper\Fake\FakeMapperRelationships;
-use Atlas\Testing\DataSource\Employee\Employee;
-use Atlas\Testing\DataSourceFixture;
+use Atlas\Mapper\DataSource\Employee\Employee;
+use Atlas\Mapper\DataSourceFixture;
 
 class MapperRelationshipsTest extends \PHPUnit\Framework\TestCase
 {

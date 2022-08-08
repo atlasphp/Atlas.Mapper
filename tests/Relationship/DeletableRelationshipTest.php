@@ -1,11 +1,11 @@
 <?php
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Testing\DataSource\Author\Author;
-use Atlas\Testing\DataSource\Summary\Summary;
-use Atlas\Testing\DataSource\Tag\Tag;
-use Atlas\Testing\DataSource\Tagging\Tagging;
-use Atlas\Testing\DataSource\Thread\Thread;
+use Atlas\Mapper\DataSource\Author\Author;
+use Atlas\Mapper\DataSource\Summary\Summary;
+use Atlas\Mapper\DataSource\Tag\Tag;
+use Atlas\Mapper\DataSource\Tagging\Tagging;
+use Atlas\Mapper\DataSource\Thread\Thread;
 
 class DeletableRelationshipTest extends RelationshipTest
 {
@@ -24,7 +24,7 @@ class DeletableRelationshipTest extends RelationshipTest
         $tagMapper->delete($tag);
         foreach ($tag->taggings as $tagging) {
             $row = $tagging->getRow();
-            $this->assertSame($row::DELETED, $row->getStatus());
+            $this->assertSame($row::DELETE, $row->getLastAction());
         }
 
         $this->assertEquals(0, $taggingMapper
@@ -42,7 +42,7 @@ class DeletableRelationshipTest extends RelationshipTest
         $threadMapper->delete($thread);
 
         $row = $thread->summary->getRow();
-        $this->assertSame($row::DELETED, $row->getStatus());
+        $this->assertSame($row::DELETE, $row->getLastAction());
     }
 
     public function testSetDelete()
@@ -53,8 +53,8 @@ class DeletableRelationshipTest extends RelationshipTest
         $threadMapper->delete($thread);
         foreach ($thread->replies as $reply) {
             $row = $reply->getRow();
-            $this->assertSame($row::SELECTED, $row->getStatus());
-            $this->assertSame($row::DELETE, $row->getAction());
+            $this->assertSame($row::SELECT, $row->getLastAction());
+            $this->assertSame($row::DELETE, $row->getNextAction());
         }
     }
 

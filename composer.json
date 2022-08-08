@@ -12,8 +12,8 @@
         }
     ],
     "require": {
-        "php": ">=7.1.0",
-        "atlas/table": "~1.0"
+        "php": "^8.0",
+        "atlas/table": "2.x-dev"
     },
     "autoload": {
         "psr-4": {
@@ -21,13 +21,20 @@
         }
     },
     "require-dev": {
-        "atlas/testing": "~1.0",
-        "pds/skeleton": "~1.0",
-        "phpunit/phpunit": "~7.0"
+        "pds/skeleton": "^1.0",
+        "phpunit/phpunit": "^9.0"
     },
     "autoload-dev": {
         "psr-4": {
             "Atlas\\Mapper\\": "tests/"
         }
+    },
+    "scripts": {
+        "test": "./vendor/bin/phpunit",
+        "stan": "./vendor/bin/phpstan analyze -c phpstan.neon src",
+        "testan": "composer test && composer stan"
+    },
+    "suggest": {
+        "atlas/skeleton": "A command-line tool to build skeleton classes."
     }
 }

@@ -13,7 +13,7 @@ namespace Atlas\Mapper\Relationship;
 use Atlas\Mapper\MapperRelationships;
 use Atlas\Mapper\MapperSelect;
 
-class SubJoinWith
+class SubJoinRelated
 {
     protected $relationships;
 
@@ -29,7 +29,7 @@ class SubJoinWith
         $this->nativeAlias = $nativeAlias;
     }
 
-    public function joinWith($relatedName, callable $sub = null) : void
+    public function joinRelated($relatedName, callable $sub = null) : void
     {
         $this->relationships->joinSelect(
             $this->select,

@@ -1,8 +1,8 @@
 <?php
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Testing\DataSource\Bidibar\Bidibar;
-use Atlas\Testing\DataSource\Bidifoo\Bidifoo;
+use Atlas\Mapper\DataSource\Bidibar\Bidibar;
+use Atlas\Mapper\DataSource\Bidifoo\Bidifoo;
 
 class OneToOneBidiTest extends RelationshipTest
 {
@@ -24,13 +24,13 @@ class OneToOneBidiTest extends RelationshipTest
 
         // bidibar will have been inserted
         $row = $bidibar->getRow();
-        $this->assertSame($row::INSERTED, $row->getStatus());
+        $this->assertSame($row::INSERT, $row->getLastAction());
         $this->assertEquals(2, $bidibar->bidibar_id);
         $this->assertEquals(1, $bidibar->bidifoo_id);
 
         // bidifoo will have been updated after insert
         $row = $bidifoo->getRow();
-        $this->assertSame($row::UPDATED, $row->getStatus());
+        $this->assertSame($row::UPDATE, $row->getLastAction());
         $this->assertEquals(1, $bidifoo->bidifoo_id);
         $this->assertEquals(2, $bidifoo->bidibar_id);
 
