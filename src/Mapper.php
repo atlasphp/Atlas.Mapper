@@ -18,6 +18,14 @@ use SplObjectStorage;
 
 abstract class Mapper
 {
+    static public function classFrom(string $spec)
+    {
+        // DataSource\Foo\BarRecord => DataSource\Foo\Foo
+        $parts = explode('\\', $spec);
+        array_pop($parts);
+        return implode('\\', $parts) . '\\' . end($parts);
+    }
+
     protected $table;
 
     protected $relationships;

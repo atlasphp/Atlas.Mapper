@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper;
 
+use Atlas\Mapper\Define\RefinementAttribute;
+use Atlas\Mapper\Define\RelationshipAttribute;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\MapperLocator;
 use Atlas\Mapper\Record;
@@ -20,40 +22,100 @@ use Atlas\Mapper\Relationship\OneToMany;
 use Atlas\Mapper\Relationship\OneToOne;
 use Atlas\Mapper\Relationship\OneToOneBidi;
 use Atlas\Mapper\Relationship\Relationship;
+use ReflectionClass;
+use ReflectionNamedType;
+use ReflectionProperty;
 use SplObjectStorage;
 
 abstract class MapperRelationships
 {
-    protected $mapperLocator;
+    protected $__mapperLocator;
 
-    protected $nativeMapperClass;
+    protected $__nativeMapperClass;
 
-    protected $nativeTableColumns;
+    protected $__nativeTableColumns;
 
-    protected $relationships = [];
+    protected $__relationships = [];
 
-    protected $fields = [];
+    protected $__fields = [];
 
-    protected $persistBeforeNative = [];
+    protected $__persistBeforeNative = [];
 
-    protected $persistAfterNative = [];
+    protected $__persistAfterNative = [];
 
-    protected $prototypeRelated = null;
+    protected $__prototypeRelated = null;
 
     public function __construct(
         MapperLocator $mapperLocator,
         string $nativeMapperClass
     ) {
-        $this->mapperLocator = $mapperLocator;
-        $this->nativeMapperClass = $nativeMapperClass;
+        $this->__mapperLocator = $mapperLocator;
+        $this->__nativeMapperClass = $nativeMapperClass;
 
-        $nativeTableClass = $this->nativeMapperClass . 'Table';
-        $this->nativeTableColumns = $nativeTableClass::COLUMN_NAMES;
+        $nativeTableClass = $this->__nativeMapperClass . 'Table';
+        $this->__nativeTableColumns = $nativeTableClass::COLUMN_NAMES;
 
         $this->define();
     }
 
-    abstract protected function define();
+    protected function define()
+    {
+        $rc = new ReflectionClass($this);
+        $props = $rc->getProperties();
+
+        foreach ($props as $prop) {
+            $this->defineFromProperty($prop);
+        }
+    }
+
+    /**
+     * you have to be REALLY ATTENTIVE to the typehints. if you typo the hint,
+     * it WILL NOT define the relationship, silently, and then fail when you
+     * try to use the related field.
+     *
+     * @todo better (or any!) error messaging on this
+     */
+    protected function defineFromProperty(ReflectionProperty $prop)
+    {
+        $attrs = $prop->getAttributes();
+
+        while ($attr = array_shift($attrs)) {
+            if (is_subclass_of($attr->getName(), RelationshipAttribute::CLASS)) {
+                $this->defineFromRelationshipAttribute($prop, $attr->newInstance(), $attrs);
+            }
+        }
+    }
+
+    /**
+     * @todo this will not handle union types AT ALL
+     *
+     * @todo UNKNOWN is awful
+     */
+    protected function defineFromRelationshipAttribute(
+        ReflectionProperty $prop,
+        RelationshipAttribute $attr,
+        array $otherAttrs
+    ) : void
+    {
+        $relatedName = $prop->getName();
+
+        $type = $prop->getType();
+        $foreignMapperClass = $type instanceof ReflectionNamedType
+            ? Mapper::classFrom($type->getName())
+            : 'UNKNOWN';
+
+        $parts = explode('\\', get_class($attr));
+        $method = lcfirst(end($parts));
+        $args = $attr->args($foreignMapperClass);
+        $relationship = $this->$method($relatedName, ...$args);
+
+        foreach ($otherAttrs as $otherAttr) {
+            if (is_subclass_of($otherAttr->getName(), RefinementAttribute::CLASS)) {
+                $otherAttr = $otherAttr->newInstance();
+                $otherAttr($relationship);
+            }
+        }
+    }
 
     protected function oneToOne(
         string $relatedName,
@@ -146,12 +208,12 @@ abstract class MapperRelationships
 
     public function get(string $relatedName) : Relationship
     {
-        return $this->relationships[$relatedName];
+        return $this->__relationships[$relatedName];
     }
 
     public function getFields() : array
     {
-        return $this->fields;
+        return $this->__fields;
     }
 
     public function stitchIntoRecords(
@@ -160,10 +222,10 @@ abstract class MapperRelationships
     ) : void
     {
         foreach ($this->fixLoadRelated($loadRelated) as $relatedName => $custom) {
-            if (! isset($this->relationships[$relatedName])) {
+            if (! isset($this->__relationships[$relatedName])) {
                 throw Exception::relationshipDoesNotExist($relatedName);
             }
-            $this->relationships[$relatedName]->stitchIntoRecords(
+            $this->__relationships[$relatedName]->stitchIntoRecords(
                 $nativeRecords,
                 $custom
             );
@@ -181,20 +243,20 @@ abstract class MapperRelationships
     {
         $this->assertRelatedName($relatedName);
 
-        $this->fields[$relatedName] = null;
+        $this->__fields[$relatedName] = null;
 
         $args = [
             $relatedName,
-            $this->mapperLocator,
-            $this->nativeMapperClass,
+            $this->__mapperLocator,
+            $this->__nativeMapperClass,
             $foreignSpec
         ];
 
         if ($throughRelatedName !== null) {
-            if (! isset($this->relationships[$throughRelatedName])) {
+            if (! isset($this->__relationships[$throughRelatedName])) {
                 throw Exception::relationshipDoesNotExist($throughRelatedName);
             }
-            $args[] = $this->relationships[$throughRelatedName];
+            $args[] = $this->__relationships[$throughRelatedName];
         }
 
         if (! empty($on)) {
@@ -202,8 +264,9 @@ abstract class MapperRelationships
         }
 
         $relationship = new $relationshipClass(...$args);
+        $persistencePriority = '__' . $persistencePriority;
         $this->{$persistencePriority}[] = $relationship;
-        $this->relationships[$relatedName] = $relationship;
+        $this->__relationships[$relatedName] = $relationship;
         return $relationship;
     }
 
@@ -226,14 +289,14 @@ abstract class MapperRelationships
 
     public function fixNativeRecord(Record $nativeRecord) : void
     {
-        foreach ($this->relationships as $relationship) {
+        foreach ($this->__relationships as $relationship) {
             $relationship->fixNativeRecord($nativeRecord);
         }
     }
 
     public function fixForeignRecord(Record $nativeRecord) : void
     {
-        foreach ($this->relationships as $relationship) {
+        foreach ($this->__relationships as $relationship) {
             $relationship->fixForeignRecord($nativeRecord);
         }
     }
@@ -243,7 +306,7 @@ abstract class MapperRelationships
         SplObjectStorage $tracker
     ) : void
     {
-        foreach ($this->persistBeforeNative as $relationship) {
+        foreach ($this->__persistBeforeNative as $relationship) {
             $relationship->persistForeign($nativeRecord, $tracker);
         }
     }
@@ -253,18 +316,18 @@ abstract class MapperRelationships
         SplObjectStorage $tracker
     ) : void
     {
-        foreach ($this->persistAfterNative as $relationship) {
+        foreach ($this->__persistAfterNative as $relationship) {
             $relationship->persistForeign($nativeRecord, $tracker);
         }
     }
 
     public function newRelated(array $fields = []) : Related
     {
-        if ($this->prototypeRelated === null) {
-            $this->prototypeRelated = new Related($this->fields);
+        if ($this->__prototypeRelated === null) {
+            $this->__prototypeRelated = new Related($this->__fields);
         }
 
-        $newRelated = clone $this->prototypeRelated;
+        $newRelated = clone $this->__prototypeRelated;
         $newRelated->set($fields);
         return $newRelated;
     }
@@ -312,11 +375,11 @@ abstract class MapperRelationships
 
     protected function assertRelatedName(string $relatedName) : void
     {
-        if (isset($this->relationships[$relatedName])) {
+        if (isset($this->__relationships[$relatedName])) {
             throw Exception::relatedNameConflict($relatedName, 'relationship');
         }
 
-        if (in_array($relatedName, $this->nativeTableColumns)) {
+        if (in_array($relatedName, $this->__nativeTableColumns)) {
             throw Exception::relatedNameConflict($relatedName, 'column');
         }
     }

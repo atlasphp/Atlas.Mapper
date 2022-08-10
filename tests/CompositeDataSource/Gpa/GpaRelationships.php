@@ -5,7 +5,7 @@ use Atlas\Mapper\MapperRelationships;
 
 class GpaRelationships extends MapperRelationships
 {
-    protected function define()
-    {
-    }
+    // protected function define()
+    // {
+    // }
 }
