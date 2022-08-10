@@ -1,13 +1,14 @@
 <?php
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Mapper\Exception;
-use Atlas\Mapper\MapperLocator;
+use Atlas\Mapper\Assertions;
 use Atlas\Mapper\DataSource\Author\Author;
-use Atlas\Mapper\DataSource\Thread\Thread;
 use Atlas\Mapper\DataSource\Tag\Tag;
 use Atlas\Mapper\DataSource\Tagging\Tagging;
-use Atlas\Mapper\Assertions;
+use Atlas\Mapper\DataSource\Thread\Thread;
+use Atlas\Mapper\Exception;
+use Atlas\Mapper\MapperLocator;
+use Atlas\Mapper\Relationship\NotLoaded;
 
 class ManyToManyTest extends RelationshipTest
 {
@@ -54,22 +55,22 @@ class ManyToManyTest extends RelationshipTest
                 'tagging_id' => '2',
                 'thread_id' => '1',
                 'tag_id' => '2',
-                'thread' => NULL,
-                'tag' => NULL,
+                'thread' => NotLoaded::getInstance(),
+                'tag' => NotLoaded::getInstance(),
             ),
             array (
                 'tagging_id' => '3',
                 'thread_id' => '1',
                 'tag_id' => '3',
-                'thread' => NULL,
-                'tag' => NULL,
+                'thread' => NotLoaded::getInstance(),
+                'tag' => NotLoaded::getInstance(),
             ),
             array (
                 'tagging_id' => '58',
                 'thread_id' => '1',
                 'tag_id' => '5',
-                'thread' => NULL,
-                'tag' => NULL,
+                'thread' => NotLoaded::getInstance(),
+                'tag' => NotLoaded::getInstance(),
             ),
         );
         $actual = $after->taggings->getArrayCopy();
@@ -80,17 +81,17 @@ class ManyToManyTest extends RelationshipTest
             array (
                 'tag_id' => '2',
                 'name' => 'bar',
-                'taggings' => NULL,
+                'taggings' => NotLoaded::getInstance(),
             ),
             array (
                 'tag_id' => '3',
                 'name' => 'baz',
-                'taggings' => NULL,
+                'taggings' => NotLoaded::getInstance(),
             ),
             array (
                 'tag_id' => '5',
                 'name' => 'zim',
-                'taggings' => NULL,
+                'taggings' => NotLoaded::getInstance(),
             ),
         );
         $actual = $after->tags->getArrayCopy();

@@ -45,8 +45,8 @@ class OneToOne extends DeletableRelationship
     protected function stitchIntoRecord(
         Record $nativeRecord,
         array &$foreignRecords
-    ) : void {
-        $nativeRecord->{$this->name} = NotLoaded::getInstance();
+    ) : void
+    {
         foreach ($foreignRecords as $index => $foreignRecord) {
             if ($this->recordsMatch($nativeRecord, $foreignRecord)) {
                 $nativeRecord->{$this->name} = $foreignRecord;

@@ -2,6 +2,8 @@
 namespace Atlas\Mapper;
 
 use Atlas\Mapper\Exception;
+use Atlas\Mapper\Fake\FakeRelated;
+use Atlas\Mapper\Relationship\NotLoaded;
 
 class RelatedTest extends \PHPUnit\Framework\TestCase
 {
@@ -13,7 +15,7 @@ class RelatedTest extends \PHPUnit\Framework\TestCase
     {
         $this->zim = $this->getMockBuilder(Record::CLASS)->disableOriginalConstructor()->getMock();
         $this->irk = $this->getMockBuilder(RecordSet::CLASS)->disableOriginalConstructor()->getMock();
-        $this->related = new Related([
+        $this->related = new FakeRelated([
             'zim' => $this->zim,
             'irk' => $this->irk,
         ]);
@@ -65,7 +67,7 @@ class RelatedTest extends \PHPUnit\Framework\TestCase
     {
         // related
         unset($this->related->zim);
-        $this->assertNull($this->related->zim);
+        $this->assertInstanceOf(NotLoaded::CLASS, $this->related->zim);
 
         // missing
         $this->expectException(
@@ -82,15 +84,6 @@ class RelatedTest extends \PHPUnit\Framework\TestCase
 
         // missing
         $this->assertFalse($this->related->has('noSuchForeign'));
-    }
-
-    public function testInvalidModify()
-    {
-        $this->expectException(
-            'Atlas\Mapper\Exception',
-            'Expected type null, false, empty array, Record, or RecordSet; got stdClass instead.'
-        );
-        $this->related->zim = (object) [];
     }
 
     public function testGetFields()

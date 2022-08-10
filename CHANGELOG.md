@@ -20,3 +20,9 @@ No releases yet.
 
 - Now using instance of NotLoaded instead of `false` to indicate a related field
   was not eager-loaded
+
+- Now `null` means "requested but not found", and NotLoaded means "no request for eager loading"
+
+- Relationship definitions are now on the {Type}Related class, not the {Type}Relationship class,
+  and MapperRelationships is now all-purpose for all relateds.
+

@@ -27,40 +27,38 @@ use ReflectionNamedType;
 use ReflectionProperty;
 use SplObjectStorage;
 
-abstract class MapperRelationships
+class MapperRelationships
 {
-    protected $__mapperLocator;
+    protected $mapperLocator;
 
-    protected $__nativeMapperClass;
+    protected $nativeMapperClass;
 
-    protected $__nativeTableColumns;
+    protected $nativeTableColumns;
 
-    protected $__relationships = [];
+    protected $relationships = [];
 
-    protected $__fields = [];
+    protected $fields = [];
 
-    protected $__persistBeforeNative = [];
+    protected $persistBeforeNative = [];
 
-    protected $__persistAfterNative = [];
+    protected $persistAfterNative = [];
 
-    protected $__prototypeRelated = null;
+    protected $prototypeRelated = null;
 
     public function __construct(
         MapperLocator $mapperLocator,
         string $nativeMapperClass
     ) {
-        $this->__mapperLocator = $mapperLocator;
-        $this->__nativeMapperClass = $nativeMapperClass;
+        $this->mapperLocator = $mapperLocator;
+        $this->nativeMapperClass = $nativeMapperClass;
 
-        $nativeTableClass = $this->__nativeMapperClass . 'Table';
-        $this->__nativeTableColumns = $nativeTableClass::COLUMN_NAMES;
+        $relatedClass = $nativeMapperClass . 'Related';
+        $this->prototypeRelated = new $relatedClass();
 
-        $this->define();
-    }
+        $nativeTableClass = $this->nativeMapperClass . 'Table';
+        $this->nativeTableColumns = $nativeTableClass::COLUMN_NAMES;
 
-    protected function define()
-    {
-        $rc = new ReflectionClass($this);
+        $rc = new ReflectionClass($this->prototypeRelated);
         $props = $rc->getProperties();
 
         foreach ($props as $prop) {
@@ -69,7 +67,7 @@ abstract class MapperRelationships
     }
 
     /**
-     * you have to be REALLY ATTENTIVE to the typehints. if you typo the hint,
+     * you have to be REALLY ATTENTIVE to the attributes. if you typo the attr,
      * it WILL NOT define the relationship, silently, and then fail when you
      * try to use the related field.
      *
@@ -81,7 +79,7 @@ abstract class MapperRelationships
 
         while ($attr = array_shift($attrs)) {
             if (is_subclass_of($attr->getName(), RelationshipAttribute::CLASS)) {
-                $this->defineFromRelationshipAttribute($prop, $attr->newInstance(), $attrs);
+                $this->defineFromPropertyAttribute($prop, $attr->newInstance(), $attrs);
             }
         }
     }
@@ -91,7 +89,7 @@ abstract class MapperRelationships
      *
      * @todo UNKNOWN is awful
      */
-    protected function defineFromRelationshipAttribute(
+    protected function defineFromPropertyAttribute(
         ReflectionProperty $prop,
         RelationshipAttribute $attr,
         array $otherAttrs
@@ -208,12 +206,12 @@ abstract class MapperRelationships
 
     public function get(string $relatedName) : Relationship
     {
-        return $this->__relationships[$relatedName];
+        return $this->relationships[$relatedName];
     }
 
     public function getFields() : array
     {
-        return $this->__fields;
+        return $this->fields;
     }
 
     public function stitchIntoRecords(
@@ -222,10 +220,10 @@ abstract class MapperRelationships
     ) : void
     {
         foreach ($this->fixLoadRelated($loadRelated) as $relatedName => $custom) {
-            if (! isset($this->__relationships[$relatedName])) {
+            if (! isset($this->relationships[$relatedName])) {
                 throw Exception::relationshipDoesNotExist($relatedName);
             }
-            $this->__relationships[$relatedName]->stitchIntoRecords(
+            $this->relationships[$relatedName]->stitchIntoRecords(
                 $nativeRecords,
                 $custom
             );
@@ -243,20 +241,20 @@ abstract class MapperRelationships
     {
         $this->assertRelatedName($relatedName);
 
-        $this->__fields[$relatedName] = null;
+        $this->fields[$relatedName] = null;
 
         $args = [
             $relatedName,
-            $this->__mapperLocator,
-            $this->__nativeMapperClass,
+            $this->mapperLocator,
+            $this->nativeMapperClass,
             $foreignSpec
         ];
 
         if ($throughRelatedName !== null) {
-            if (! isset($this->__relationships[$throughRelatedName])) {
+            if (! isset($this->relationships[$throughRelatedName])) {
                 throw Exception::relationshipDoesNotExist($throughRelatedName);
             }
-            $args[] = $this->__relationships[$throughRelatedName];
+            $args[] = $this->relationships[$throughRelatedName];
         }
 
         if (! empty($on)) {
@@ -264,9 +262,8 @@ abstract class MapperRelationships
         }
 
         $relationship = new $relationshipClass(...$args);
-        $persistencePriority = '__' . $persistencePriority;
         $this->{$persistencePriority}[] = $relationship;
-        $this->__relationships[$relatedName] = $relationship;
+        $this->relationships[$relatedName] = $relationship;
         return $relationship;
     }
 
@@ -289,14 +286,14 @@ abstract class MapperRelationships
 
     public function fixNativeRecord(Record $nativeRecord) : void
     {
-        foreach ($this->__relationships as $relationship) {
+        foreach ($this->relationships as $relationship) {
             $relationship->fixNativeRecord($nativeRecord);
         }
     }
 
     public function fixForeignRecord(Record $nativeRecord) : void
     {
-        foreach ($this->__relationships as $relationship) {
+        foreach ($this->relationships as $relationship) {
             $relationship->fixForeignRecord($nativeRecord);
         }
     }
@@ -306,7 +303,7 @@ abstract class MapperRelationships
         SplObjectStorage $tracker
     ) : void
     {
-        foreach ($this->__persistBeforeNative as $relationship) {
+        foreach ($this->persistBeforeNative as $relationship) {
             $relationship->persistForeign($nativeRecord, $tracker);
         }
     }
@@ -316,18 +313,14 @@ abstract class MapperRelationships
         SplObjectStorage $tracker
     ) : void
     {
-        foreach ($this->__persistAfterNative as $relationship) {
+        foreach ($this->persistAfterNative as $relationship) {
             $relationship->persistForeign($nativeRecord, $tracker);
         }
     }
 
     public function newRelated(array $fields = []) : Related
     {
-        if ($this->__prototypeRelated === null) {
-            $this->__prototypeRelated = new Related($this->__fields);
-        }
-
-        $newRelated = clone $this->__prototypeRelated;
+        $newRelated = clone $this->prototypeRelated;
         $newRelated->set($fields);
         return $newRelated;
     }
@@ -375,11 +368,11 @@ abstract class MapperRelationships
 
     protected function assertRelatedName(string $relatedName) : void
     {
-        if (isset($this->__relationships[$relatedName])) {
+        if (isset($this->relationships[$relatedName])) {
             throw Exception::relatedNameConflict($relatedName, 'relationship');
         }
 
-        if (in_array($relatedName, $this->__nativeTableColumns)) {
+        if (in_array($relatedName, $this->nativeTableColumns)) {
             throw Exception::relatedNameConflict($relatedName, 'column');
         }
     }

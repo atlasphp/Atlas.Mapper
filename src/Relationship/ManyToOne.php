@@ -30,7 +30,6 @@ class ManyToOne extends RegularRelationship
         array &$foreignRecords
     ) : void
     {
-        $nativeRecord->{$this->name} = NotLoaded::getInstance();
         foreach ($foreignRecords as $foreignRecord) {
             if ($this->recordsMatch($nativeRecord, $foreignRecord)) {
                 $nativeRecord->{$this->name} = $foreignRecord;

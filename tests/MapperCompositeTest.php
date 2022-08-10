@@ -8,6 +8,7 @@ use Atlas\Mapper\CompositeDataSource\Enrollment\Enrollment;
 use Atlas\Mapper\CompositeDataSource\Gpa\Gpa;
 use Atlas\Mapper\CompositeDataSource\Student\Student;
 use Atlas\Mapper\CompositeDataSourceFixture;
+use Atlas\Mapper\Relationship\NotLoaded;
 
 class MapperCompositeTest extends \PHPUnit\Framework\TestCase
 {
@@ -34,7 +35,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
             ]
         )->getArrayCopy();
 
-        $this->assertSame($this->expectRecord, $actual);
+        $this->assertSame($this->expectRecord(), $actual);
     }
 
     public function testFetchRecordBy()
@@ -50,7 +51,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
             ]
         )->getArrayCopy();
 
-        $this->assertSame($this->expectRecord, $actual);
+        $this->assertSame($this->expectRecord(), $actual);
     }
 
     public function testFetchRecordSet()
@@ -71,7 +72,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
             ]
         )->getArrayCopy();
 
-        foreach ($this->expectRecordSet as $i => $expect) {
+        foreach ($this->expectRecordSet() as $i => $expect) {
             $this->assertSame($expect, $actual[$i], "record $i not the same");
         }
     }
@@ -91,7 +92,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
             ]
         )->getArrayCopy();
 
-        foreach ($this->expectRecordSet as $i => $expect) {
+        foreach ($this->expectRecordSet() as $i => $expect) {
             $this->assertSame($expect, $actual[$i], "record $i not the same");
         }
     }
@@ -110,7 +111,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
             ])
             ->fetchRecord();
 
-        $this->assertSame($this->expectRecord, $actual->getArrayCopy());
+        $this->assertSame($this->expectRecord(), $actual->getArrayCopy());
     }
 
     public function testSelect_fetchRecordSet()
@@ -129,7 +130,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
             ->fetchRecordSet()
             ->getArrayCopy();
 
-        foreach ($this->expectRecordSet as $i => $expect) {
+        foreach ($this->expectRecordSet() as $i => $expect) {
             $this->assertSame($expect, $actual[$i], "record $i not the same");
         }
     }
@@ -217,15 +218,15 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                 'course_number' => '100',
                 'grade' => '65',
                 'points' => '1',
-                'course' => NULL,
-                'student' => NULL,
+                'course' => NotLoaded::getInstance(),
+                'student' => NotLoaded::getInstance(),
             ]
         ];
 
         $this->assertSame($expect, $actual);
     }
 
-    protected $expectRecord = [
+    protected function expectRecord() { return [
         'student_fn' => 'Anna',
         'student_ln' => 'Alpha',
         'degree_type' => 'BA',
@@ -239,7 +240,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
             'degree_type' => 'ba',
             'degree_subject' => 'engl',
             'title' => 'Bachelor of Arts, English',
-            'students' => NULL,
+            'students' => NotLoaded::getInstance(),
         ],
         'enrollments' => [
             0 => [
@@ -253,9 +254,9 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                     'course_subject' => 'ENGL',
                     'course_number' => '100',
                     'title' => 'Composition',
-                    'enrollments' => NULL,
+                    'enrollments' => NotLoaded::getInstance(),
                 ],
-                'student' => NULL,
+                'student' => NotLoaded::getInstance(),
             ],
             1 => [
                 'student_fn' => 'Anna',
@@ -268,9 +269,9 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                     'course_subject' => 'HIST',
                     'course_number' => '100',
                     'title' => 'World History',
-                    'enrollments' => NULL,
+                    'enrollments' => NotLoaded::getInstance(),
                 ],
-                'student' => NULL,
+                'student' => NotLoaded::getInstance(),
             ],
             2 => [
                 'student_fn' => 'Anna',
@@ -283,15 +284,15 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                     'course_subject' => 'MATH',
                     'course_number' => '100',
                     'title' => 'Algebra',
-                    'enrollments' => NULL,
+                    'enrollments' => NotLoaded::getInstance(),
                 ],
-                'student' => NULL,
+                'student' => NotLoaded::getInstance(),
             ],
         ],
-        'engl_enrollments' => NULL,
-    ];
+        'engl_enrollments' => NotLoaded::getInstance(),
+    ];}
 
-    protected $expectRecordSet = [
+    protected function expectRecordSet() { return [
         0 => [
             'student_fn' => 'Anna',
             'student_ln' => 'Alpha',
@@ -306,7 +307,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                 'degree_type' => 'ba',
                 'degree_subject' => 'engl',
                 'title' => 'Bachelor of Arts, English',
-                'students' => NULL,
+                'students' => NotLoaded::getInstance(),
             ],
             'enrollments' => [
                 0 => [
@@ -320,9 +321,9 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                         'course_subject' => 'ENGL',
                         'course_number' => '100',
                         'title' => 'Composition',
-                        'enrollments' => NULL,
+                        'enrollments' => NotLoaded::getInstance(),
                     ],
-                    'student' => NULL,
+                    'student' => NotLoaded::getInstance(),
                 ],
                 1 => [
                     'student_fn' => 'Anna',
@@ -335,9 +336,9 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                         'course_subject' => 'HIST',
                         'course_number' => '100',
                         'title' => 'World History',
-                        'enrollments' => NULL,
+                        'enrollments' => NotLoaded::getInstance(),
                     ],
-                    'student' => NULL,
+                    'student' => NotLoaded::getInstance(),
                 ],
                 2 => [
                     'student_fn' => 'Anna',
@@ -350,12 +351,12 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                         'course_subject' => 'MATH',
                         'course_number' => '100',
                         'title' => 'Algebra',
-                        'enrollments' => NULL,
+                        'enrollments' => NotLoaded::getInstance(),
                     ],
-                    'student' => NULL,
+                    'student' => NotLoaded::getInstance(),
                 ],
             ],
-            'engl_enrollments' => NULL,
+            'engl_enrollments' => NotLoaded::getInstance(),
         ],
         1 => [
             'student_fn' => 'Betty',
@@ -371,7 +372,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                 'degree_type' => 'ma',
                 'degree_subject' => 'hist',
                 'title' => 'Master of Arts, History',
-                'students' => NULL,
+                'students' => NotLoaded::getInstance(),
             ],
             'enrollments' => [
                 0 => [
@@ -385,9 +386,9 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                         'course_subject' => 'ENGL',
                         'course_number' => '200',
                         'title' => 'Creative Writing',
-                        'enrollments' => NULL,
+                        'enrollments' => NotLoaded::getInstance(),
                     ],
-                    'student' => NULL,
+                    'student' => NotLoaded::getInstance(),
                 ],
                 1 => [
                     'student_fn' => 'Betty',
@@ -400,9 +401,9 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                         'course_subject' => 'HIST',
                         'course_number' => '100',
                         'title' => 'World History',
-                        'enrollments' => NULL,
+                        'enrollments' => NotLoaded::getInstance(),
                     ],
-                    'student' => NULL,
+                    'student' => NotLoaded::getInstance(),
                 ],
                 2 => [
                     'student_fn' => 'Betty',
@@ -415,12 +416,12 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                         'course_subject' => 'MATH',
                         'course_number' => '100',
                         'title' => 'Algebra',
-                        'enrollments' => NULL,
+                        'enrollments' => NotLoaded::getInstance(),
                     ],
-                    'student' => NULL,
+                    'student' => NotLoaded::getInstance(),
                 ],
             ],
-            'engl_enrollments' => NULL,
+            'engl_enrollments' => NotLoaded::getInstance(),
         ],
         2 => [
             'student_fn' => 'Clara',
@@ -436,7 +437,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                 'degree_type' => 'bs',
                 'degree_subject' => 'math',
                 'title' => 'Bachelor of Science, Mathematics',
-                'students' => NULL,
+                'students' => NotLoaded::getInstance(),
             ],
             'enrollments' => [
                 0 => [
@@ -450,9 +451,9 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                         'course_subject' => 'ENGL',
                         'course_number' => '200',
                         'title' => 'Creative Writing',
-                        'enrollments' => NULL,
+                        'enrollments' => NotLoaded::getInstance(),
                     ],
-                    'student' => NULL,
+                    'student' => NotLoaded::getInstance(),
                 ],
                 1 => [
                     'student_fn' => 'Clara',
@@ -465,9 +466,9 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                         'course_subject' => 'HIST',
                         'course_number' => '200',
                         'title' => 'US History',
-                        'enrollments' => NULL,
+                        'enrollments' => NotLoaded::getInstance(),
                     ],
-                    'student' => NULL,
+                    'student' => NotLoaded::getInstance(),
                 ],
                 2 => [
                     'student_fn' => 'Clara',
@@ -480,12 +481,12 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
                         'course_subject' => 'MATH',
                         'course_number' => '100',
                         'title' => 'Algebra',
-                        'enrollments' => NULL,
+                        'enrollments' => NotLoaded::getInstance(),
                     ],
-                    'student' => NULL,
+                    'student' => NotLoaded::getInstance(),
                 ],
             ],
-            'engl_enrollments' => NULL,
+            'engl_enrollments' => NotLoaded::getInstance(),
         ],
-    ];
+    ];}
 }

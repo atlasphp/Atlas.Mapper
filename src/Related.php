@@ -16,56 +16,75 @@ use SplObjectStorage;
 
 class Related
 {
-    private $fields = [];
+    private array $__LOADED = [];
 
     public function __construct(array $fields = [])
     {
+        $loaded = get_class_vars(get_class($this));
+        unset($loaded['__LOADED']);
+
+        foreach ($loaded as $field => $value) {
+            $this->__LOADED[$field] = false;
+        }
+
         foreach ($fields as $field => $value) {
-            $this->modify($field, $value);
+            $this->__set($field, $value);
         }
     }
 
     public function __get(string $field)
     {
         $this->assertHas($field);
-        return $this->fields[$field];
+
+        return $this->__LOADED[$field]
+            ? $this->$field
+            : NotLoaded::getInstance();
     }
 
     public function __set(string $field, $value) : void
     {
         $this->assertHas($field);
-        $this->modify($field, $value);
+        $this->$field = $value;
+        $this->__LOADED[$field] = true;
     }
 
     public function __isset(string $field) : bool
     {
         $this->assertHas($field);
-        return isset($this->fields[$field]);
+
+        return $this->__LOADED[$field]
+            ? isset($this->$field)
+            : false;
     }
 
     public function __unset(string $field) : void
     {
         $this->assertHas($field);
-        $this->fields[$field] = null;
+        unset($this->$field);
+        $this->__LOADED[$field] = false;
     }
 
     public function getFields() : array
     {
-        return $this->fields;
+        foreach ($this->__LOADED as $field => $flag) {
+            $fields[$field] = $this->__get($field);
+        }
+
+        return $fields;
     }
 
     public function set(array $fieldsValues = []) : void
     {
         foreach ($fieldsValues as $field => $value) {
             if ($this->has($field)) {
-                $this->modify($field, $value);
+                $this->__set($field, $value);
             }
         }
     }
 
     public function has(string $field) : bool
     {
-        return array_key_exists($field, $this->fields);
+        return isset($this->__LOADED[$field]);
     }
 
     public function getArrayCopy(SplObjectStorage $tracker = null) : array
@@ -77,31 +96,18 @@ class Related
         if (! $tracker->contains($this)) {
             $tracker[$this] = [];
             $array = [];
-            foreach ($this->fields as $field => $foreign) {
-                $array[$field] = $foreign;
-                if ($foreign) {
-                    $array[$field] = $foreign->getArrayCopy($tracker);
+            foreach ($this->__LOADED as $field => $flag) {
+                $value = $this->__get($field);
+                if ($value instanceof Record || $value instanceof RecordSet) {
+                    $value = $value->getArrayCopy($tracker);
                 }
+
+                $array[$field] = $value;
             }
             $tracker[$this] = $array;
         }
 
         return $tracker[$this];
-    }
-
-    protected function modify(string $field, $value) : void
-    {
-        $valid = $value === null
-            || $value instanceof NotLoaded
-            || $value instanceof Record
-            || $value instanceof RecordSet;
-
-        if (! $valid) {
-            $expect = 'null, NotLoaded, Record, or RecordSet';
-            throw Exception::invalidType($expect, $value);
-        }
-
-        $this->fields[$field] = $value;
     }
 
     protected function assertHas(string $field) : void

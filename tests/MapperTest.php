@@ -1,16 +1,11 @@
 <?php
 namespace Atlas\Mapper;
 
-use Atlas\Mapper\Record;
-use Atlas\Mapper\RecordSet;
-use Atlas\Pdo\Connection;
-use Atlas\Pdo\Profiler;
 use Atlas\Mapper\Assertions;
 use Atlas\Mapper\DataSource\Author\Author;
 use Atlas\Mapper\DataSource\Reply\Reply;
 use Atlas\Mapper\DataSource\Reply\ReplyRecord;
 use Atlas\Mapper\DataSource\Reply\ReplyRecordSet;
-use Atlas\Mapper\DataSourceFixture;
 use Atlas\Mapper\DataSource\Summary\Summary;
 use Atlas\Mapper\DataSource\Summary\SummaryTable;
 use Atlas\Mapper\DataSource\Tag\Tag;
@@ -18,6 +13,12 @@ use Atlas\Mapper\DataSource\Tagging\Tagging;
 use Atlas\Mapper\DataSource\Thread\Thread;
 use Atlas\Mapper\DataSource\Thread\ThreadRecord;
 use Atlas\Mapper\DataSource\Thread\ThreadRecordSet;
+use Atlas\Mapper\DataSourceFixture;
+use Atlas\Mapper\Record;
+use Atlas\Mapper\RecordSet;
+use Atlas\Mapper\Relationship\NotLoaded;
+use Atlas\Pdo\Connection;
+use Atlas\Pdo\Profiler;
 
 class MapperTest extends \PHPUnit\Framework\TestCase
 {
@@ -79,7 +80,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(RecordSet::CLASS, $actual->replies);
         $this->assertInstanceOf(RecordSet::CLASS, $actual->taggings);
 
-        $this->assertSame($this->expectRecord, $actual->getArrayCopy());
+        $this->assertSame($this->expectRecord(), $actual->getArrayCopy());
 
         // did the rows identity-map?
         $again = $this->mapperLocator->get(Thread::CLASS)->fetchRecord(1);
@@ -107,7 +108,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             ]
         );
 
-        $this->assertSame($this->expectRecord, $actual->getArrayCopy());
+        $this->assertSame($this->expectRecord(), $actual->getArrayCopy());
 
         // did the rows identity-map?
         $again = $this->mapperLocator->get(Thread::CLASS)->fetchRecord(1);
@@ -129,7 +130,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             ]
         )->getArrayCopy();
 
-        foreach ($this->expectRecordSet as $i => $expect) {
+        foreach ($this->expectRecordSet() as $i => $expect) {
             $this->assertSame($expect, $actual[$i], "record $i not the same");
         }
     }
@@ -149,7 +150,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             ]
         )->getArrayCopy();
 
-        foreach ($this->expectRecordSet as $i => $expect) {
+        foreach ($this->expectRecordSet() as $i => $expect) {
             $this->assertSame($expect, $actual[$i], "record $i not the same");
         }
     }
@@ -169,7 +170,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             ]
         );
 
-        foreach ($this->expectRecordSet as $i => $expect) {
+        foreach ($this->expectRecordSet() as $i => $expect) {
             $array = $actual[$i]->getArrayCopy();
             $this->assertSame($expect, $array, "record $i not the same");
         }
@@ -190,7 +191,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             ]
         );
 
-        foreach ($this->expectRecordSet as $i => $expect) {
+        foreach ($this->expectRecordSet() as $i => $expect) {
             $array = $actual[$i]->getArrayCopy();
             $this->assertSame($expect, $array, "record $i not the same");
         }
@@ -211,7 +212,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             ])
             ->fetchRecord();
 
-        $this->assertSame($this->expectRecord, $actual->getArrayCopy());
+        $this->assertSame($this->expectRecord(), $actual->getArrayCopy());
     }
 
     public function testSelect_fetchRecordNestedArrayWith()
@@ -229,7 +230,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             ])
             ->fetchRecord();
 
-        $this->assertSame($this->expectRecord, $actual->getArrayCopy());
+        $this->assertSame($this->expectRecord(), $actual->getArrayCopy());
     }
 
     public function testSelect_fetchRecordCallableArrayWith()
@@ -248,7 +249,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             ])
             ->fetchRecord();
 
-        $this->assertSame($this->expectRecord, $actual->getArrayCopy());
+        $this->assertSame($this->expectRecord(), $actual->getArrayCopy());
     }
 
     public function testSelect_fetchRecordSet()
@@ -267,7 +268,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             ->fetchRecordSet()
             ->getArrayCopy();
 
-        foreach ($this->expectRecordSet as $i => $expect) {
+        foreach ($this->expectRecordSet() as $i => $expect) {
             $this->assertSame($expect, $actual[$i], "record $i not the same");
         }
     }
@@ -542,7 +543,7 @@ ORDER BY
         $this->assertEquals(1, $thread->summary->thread_id); // foreign key
     }
 
-    protected $expectRecord = [
+    protected function expectRecord() { return [
         'thread_id' => '1',
         'author_id' => '1',
         'subject' => 'Thread subject 1',
@@ -550,15 +551,15 @@ ORDER BY
         'author' => [
             'author_id' => '1',
             'name' => 'Anna',
-            'replies' => NULL,
-            'threads' => NULL,
+            'replies' => NotLoaded::getInstance(),
+            'threads' => NotLoaded::getInstance(),
         ],
         'summary' => [
             'summary_id' => '1',
             'thread_id' => '1',
             'reply_count' => '5',
             'view_count' => '0',
-            'thread' => NULL,
+            'thread' => NotLoaded::getInstance(),
         ],
         'replies' => [
             0 => [
@@ -569,8 +570,8 @@ ORDER BY
                 'author' => [
                     'author_id' => '2',
                     'name' => 'Betty',
-                    'replies' => NULL,
-                    'threads' => NULL,
+                    'replies' => NotLoaded::getInstance(),
+                    'threads' => NotLoaded::getInstance(),
                 ],
             ],
             1 => [
@@ -581,8 +582,8 @@ ORDER BY
                 'author' => [
                     'author_id' => '3',
                     'name' => 'Clara',
-                    'replies' => NULL,
-                    'threads' => NULL,
+                    'replies' => NotLoaded::getInstance(),
+                    'threads' => NotLoaded::getInstance(),
                 ],
             ],
             2 => [
@@ -593,8 +594,8 @@ ORDER BY
                 'author' => [
                     'author_id' => '4',
                     'name' => 'Donna',
-                    'replies' => NULL,
-                    'threads' => NULL,
+                    'replies' => NotLoaded::getInstance(),
+                    'threads' => NotLoaded::getInstance(),
                 ],
             ],
             3 => [
@@ -605,8 +606,8 @@ ORDER BY
                 'author' => [
                     'author_id' => '5',
                     'name' => 'Edna',
-                    'replies' => NULL,
-                    'threads' => NULL,
+                    'replies' => NotLoaded::getInstance(),
+                    'threads' => NotLoaded::getInstance(),
                 ],
             ],
             4 => [
@@ -617,8 +618,8 @@ ORDER BY
                 'author' => [
                     'author_id' => '6',
                     'name' => 'Fiona',
-                    'replies' => NULL,
-                    'threads' => NULL,
+                    'replies' => NotLoaded::getInstance(),
+                    'threads' => NotLoaded::getInstance(),
                 ],
             ],
         ],
@@ -627,44 +628,44 @@ ORDER BY
                 'tagging_id' => '1',
                 'thread_id' => '1',
                 'tag_id' => '1',
-                'thread' => NULL,
-                'tag' => NULL,
+                'thread' => NotLoaded::getInstance(),
+                'tag' => NotLoaded::getInstance(),
             ],
             1 => [
                 'tagging_id' => '2',
                 'thread_id' => '1',
                 'tag_id' => '2',
-                'thread' => NULL,
-                'tag' => NULL,
+                'thread' => NotLoaded::getInstance(),
+                'tag' => NotLoaded::getInstance(),
             ],
             2 => [
                 'tagging_id' => '3',
                 'thread_id' => '1',
                 'tag_id' => '3',
-                'thread' => NULL,
-                'tag' => NULL,
+                'thread' => NotLoaded::getInstance(),
+                'tag' => NotLoaded::getInstance(),
             ],
         ],
         'tags' => [
             [
                 'tag_id' => '1',
                 'name' => 'foo',
-                'taggings' => NULL,
+                'taggings' => NotLoaded::getInstance(),
             ],
             [
                 'tag_id' => '2',
                 'name' => 'bar',
-                'taggings' => NULL,
+                'taggings' => NotLoaded::getInstance(),
             ],
             [
                 'tag_id' => '3',
                 'name' => 'baz',
-                'taggings' => NULL,
+                'taggings' => NotLoaded::getInstance(),
             ],
         ],
-    ];
+    ];}
 
-    protected $expectRecordSet = [
+    protected function expectRecordSet() { return [
         0 => [
             'thread_id' => '1',
             'author_id' => '1',
@@ -673,15 +674,15 @@ ORDER BY
             'author' => [
                 'author_id' => '1',
                 'name' => 'Anna',
-                'replies' => NULL,
-                'threads' => NULL,
+                'replies' => NotLoaded::getInstance(),
+                'threads' => NotLoaded::getInstance(),
             ],
             'summary' => [
                 'summary_id' => '1',
                 'thread_id' => '1',
                 'reply_count' => '5',
                 'view_count' => '0',
-                'thread' => NULL,
+                'thread' => NotLoaded::getInstance(),
             ],
             'replies' => [
                 0 => [
@@ -693,8 +694,8 @@ ORDER BY
                     [
                         'author_id' => '2',
                         'name' => 'Betty',
-                        'replies' => NULL,
-                        'threads' => NULL,
+                        'replies' => NotLoaded::getInstance(),
+                        'threads' => NotLoaded::getInstance(),
                     ],
                 ],
                 1 => [
@@ -706,8 +707,8 @@ ORDER BY
                     [
                         'author_id' => '3',
                         'name' => 'Clara',
-                        'replies' => NULL,
-                        'threads' => NULL,
+                        'replies' => NotLoaded::getInstance(),
+                        'threads' => NotLoaded::getInstance(),
                     ],
                 ],
                 2 => [
@@ -719,8 +720,8 @@ ORDER BY
                     [
                         'author_id' => '4',
                         'name' => 'Donna',
-                        'replies' => NULL,
-                        'threads' => NULL,
+                        'replies' => NotLoaded::getInstance(),
+                        'threads' => NotLoaded::getInstance(),
                     ],
                 ],
                 3 => [
@@ -732,8 +733,8 @@ ORDER BY
                     [
                         'author_id' => '5',
                         'name' => 'Edna',
-                        'replies' => NULL,
-                        'threads' => NULL,
+                        'replies' => NotLoaded::getInstance(),
+                        'threads' => NotLoaded::getInstance(),
                     ],
                 ],
                 4 => [
@@ -745,8 +746,8 @@ ORDER BY
                     [
                         'author_id' => '6',
                         'name' => 'Fiona',
-                        'replies' => NULL,
-                        'threads' => NULL,
+                        'replies' => NotLoaded::getInstance(),
+                        'threads' => NotLoaded::getInstance(),
                     ],
                 ],
             ],
@@ -755,39 +756,39 @@ ORDER BY
                     'tagging_id' => '1',
                     'thread_id' => '1',
                     'tag_id' => '1',
-                    'thread' => NULL,
-                    'tag' => NULL
+                    'thread' => NotLoaded::getInstance(),
+                    'tag' => NotLoaded::getInstance(),
                 ],
                 1 => [
                     'tagging_id' => '2',
                     'thread_id' => '1',
                     'tag_id' => '2',
-                    'thread' => NULL,
-                    'tag' => NULL
+                    'thread' => NotLoaded::getInstance(),
+                    'tag' => NotLoaded::getInstance(),
                 ],
                 2 => [
                     'tagging_id' => '3',
                     'thread_id' => '1',
                     'tag_id' => '3',
-                    'thread' => NULL,
-                    'tag' => NULL
+                    'thread' => NotLoaded::getInstance(),
+                    'tag' => NotLoaded::getInstance(),
                 ],
             ],
             'tags' => [
                 [
                     'tag_id' => '1',
                     'name' => 'foo',
-                    'taggings' => NULL,
+                    'taggings' => NotLoaded::getInstance(),
                 ],
                 [
                     'tag_id' => '2',
                     'name' => 'bar',
-                    'taggings' => NULL,
+                    'taggings' => NotLoaded::getInstance(),
                 ],
                 [
                     'tag_id' => '3',
                     'name' => 'baz',
-                    'taggings' => NULL,
+                    'taggings' => NotLoaded::getInstance(),
                 ],
             ],
         ],
@@ -799,15 +800,15 @@ ORDER BY
             'author' => [
                 'author_id' => '2',
                 'name' => 'Betty',
-                'replies' => NULL,
-                'threads' => NULL,
+                'replies' => NotLoaded::getInstance(),
+                'threads' => NotLoaded::getInstance(),
             ],
             'summary' => [
                 'summary_id' => '2',
                 'thread_id' => '2',
                 'reply_count' => '5',
                 'view_count' => '0',
-                'thread' => NULL,
+                'thread' => NotLoaded::getInstance(),
             ],
             'replies' => [
                 0 => [
@@ -819,8 +820,8 @@ ORDER BY
                     [
                         'author_id' => '3',
                         'name' => 'Clara',
-                        'replies' => NULL,
-                        'threads' => NULL,
+                        'replies' => NotLoaded::getInstance(),
+                        'threads' => NotLoaded::getInstance(),
                     ],
                 ],
                 1 => [
@@ -832,8 +833,8 @@ ORDER BY
                     [
                         'author_id' => '4',
                         'name' => 'Donna',
-                        'replies' => NULL,
-                        'threads' => NULL,
+                        'replies' => NotLoaded::getInstance(),
+                        'threads' => NotLoaded::getInstance(),
                     ],
                 ],
                 2 => [
@@ -845,8 +846,8 @@ ORDER BY
                     [
                         'author_id' => '5',
                         'name' => 'Edna',
-                        'replies' => NULL,
-                        'threads' => NULL,
+                        'replies' => NotLoaded::getInstance(),
+                        'threads' => NotLoaded::getInstance(),
                     ],
                 ],
                 3 => [
@@ -858,8 +859,8 @@ ORDER BY
                     [
                         'author_id' => '6',
                         'name' => 'Fiona',
-                        'replies' => NULL,
-                        'threads' => NULL,
+                        'replies' => NotLoaded::getInstance(),
+                        'threads' => NotLoaded::getInstance(),
                     ],
                 ],
                 4 => [
@@ -871,8 +872,8 @@ ORDER BY
                     [
                         'author_id' => '7',
                         'name' => 'Gina',
-                        'replies' => NULL,
-                        'threads' => NULL,
+                        'replies' => NotLoaded::getInstance(),
+                        'threads' => NotLoaded::getInstance(),
                     ],
                 ],
             ],
@@ -881,39 +882,39 @@ ORDER BY
                     'tagging_id' => '4',
                     'thread_id' => '2',
                     'tag_id' => '2',
-                    'thread' => NULL,
-                    'tag' => NULL
+                    'thread' => NotLoaded::getInstance(),
+                    'tag' => NotLoaded::getInstance(),
                 ],
                 1 => [
                     'tagging_id' => '5',
                     'thread_id' => '2',
                     'tag_id' => '3',
-                    'thread' => NULL,
-                    'tag' => NULL,
+                    'thread' => NotLoaded::getInstance(),
+                    'tag' => NotLoaded::getInstance(),
                 ],
                 2 => [
                     'tagging_id' => '6',
                     'thread_id' => '2',
                     'tag_id' => '4',
-                    'thread' => NULL,
-                    'tag' => NULL,
+                    'thread' => NotLoaded::getInstance(),
+                    'tag' => NotLoaded::getInstance(),
                 ],
             ],
             'tags' => [
                 [
                     'tag_id' => '2',
                     'name' => 'bar',
-                    'taggings' => NULL,
+                    'taggings' => NotLoaded::getInstance(),
                 ],
                 [
                     'tag_id' => '3',
                     'name' => 'baz',
-                    'taggings' => NULL,
+                    'taggings' => NotLoaded::getInstance(),
                 ],
                 [
                     'tag_id' => '4',
                     'name' => 'dib',
-                    'taggings' => NULL,
+                    'taggings' => NotLoaded::getInstance(),
                 ],
             ],
         ],
@@ -925,15 +926,15 @@ ORDER BY
             'author' => [
                 'author_id' => '3',
                 'name' => 'Clara',
-                'replies' => NULL,
-                'threads' => NULL,
+                'replies' => NotLoaded::getInstance(),
+                'threads' => NotLoaded::getInstance(),
             ],
             'summary' => [
                 'summary_id' => '3',
                 'thread_id' => '3',
                 'reply_count' => '5',
                 'view_count' => '0',
-                'thread' => NULL,
+                'thread' => NotLoaded::getInstance(),
             ],
             'replies' => [
                 0 => [
@@ -945,8 +946,8 @@ ORDER BY
                     [
                         'author_id' => '4',
                         'name' => 'Donna',
-                        'replies' => NULL,
-                        'threads' => NULL,
+                        'replies' => NotLoaded::getInstance(),
+                        'threads' => NotLoaded::getInstance(),
                     ],
                 ],
                 1 => [
@@ -958,8 +959,8 @@ ORDER BY
                     [
                         'author_id' => '5',
                         'name' => 'Edna',
-                        'replies' => NULL,
-                        'threads' => NULL,
+                        'replies' => NotLoaded::getInstance(),
+                        'threads' => NotLoaded::getInstance(),
                     ],
                 ],
                 2 => [
@@ -971,8 +972,8 @@ ORDER BY
                     [
                         'author_id' => '6',
                         'name' => 'Fiona',
-                        'replies' => NULL,
-                        'threads' => NULL,
+                        'replies' => NotLoaded::getInstance(),
+                        'threads' => NotLoaded::getInstance(),
                     ],
                 ],
                 3 => [
@@ -984,8 +985,8 @@ ORDER BY
                     [
                         'author_id' => '7',
                         'name' => 'Gina',
-                        'replies' => NULL,
-                        'threads' => NULL,
+                        'replies' => NotLoaded::getInstance(),
+                        'threads' => NotLoaded::getInstance(),
                     ],
                 ],
                 4 => [
@@ -997,13 +998,13 @@ ORDER BY
                     [
                         'author_id' => '8',
                         'name' => 'Hanna',
-                        'replies' => NULL,
-                        'threads' => NULL,
+                        'replies' => NotLoaded::getInstance(),
+                        'threads' => NotLoaded::getInstance(),
                     ],
                 ],
             ],
             'taggings' => [],
             'tags' => [],
         ],
-    ];
+    ];}
 }
