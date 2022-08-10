@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Atlas\Mapper;
 
 use Atlas\Mapper\Exception;
+use Atlas\Mapper\Relationship\NotLoaded;
 use SplObjectStorage;
 
 class Related
@@ -91,12 +92,12 @@ class Related
     protected function modify(string $field, $value) : void
     {
         $valid = $value === null
-            || $value === false
+            || $value instanceof NotLoaded
             || $value instanceof Record
             || $value instanceof RecordSet;
 
         if (! $valid) {
-            $expect = 'null, false, Record, or RecordSet';
+            $expect = 'null, NotLoaded, Record, or RecordSet';
             throw Exception::invalidType($expect, $value);
         }
 

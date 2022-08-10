@@ -16,3 +16,7 @@ No releases yet.
 
     - rename `SubJoinWith` to `SubJoinRelated`
 
+- Moved away from MapperRelationships::define() to using Define attributes
+
+- Now using instance of NotLoaded instead of `false` to indicate a related field
+  was not eager-loaded
