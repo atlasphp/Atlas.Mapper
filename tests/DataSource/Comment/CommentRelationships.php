@@ -16,7 +16,7 @@ class CommentRelationships extends MapperRelationships
     #[Define\Variant('page', PageRecord::CLASS, ['related_id' => 'page_id'])]
     #[Define\Variant('post', PostRecord::CLASS, ['related_id' => 'post_id'])]
     #[Define\Variant('video', VideoRecord::CLASS, ['related_id' => 'video_id'])]
-    protected mixed $commentable;
+    protected null|PageRecord|PostRecord|VideoRecord $commentable;
 
     // protected function define()
     // {
