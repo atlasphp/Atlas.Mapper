@@ -52,11 +52,11 @@ class MapperRelationships
         $this->mapperLocator = $mapperLocator;
         $this->nativeMapperClass = $nativeMapperClass;
 
-        $relatedClass = $nativeMapperClass . 'Related';
-        $this->prototypeRelated = new $relatedClass();
-
         $nativeTableClass = $this->nativeMapperClass . 'Table';
         $this->nativeTableColumns = $nativeTableClass::COLUMN_NAMES;
+
+        $relatedClass = $nativeMapperClass . 'Related';
+        $this->prototypeRelated = new $relatedClass();
 
         $rc = new ReflectionClass($this->prototypeRelated);
         $props = $rc->getProperties();
@@ -125,7 +125,6 @@ class MapperRelationships
             $relatedName,
             OneToOne::CLASS,
             $foreignMapperClass,
-            'persistAfterNative',
             $on
         );
     }
@@ -140,7 +139,6 @@ class MapperRelationships
             $relatedName,
             OneToOneBidi::CLASS,
             $foreignMapperClass,
-            'persistAfterNative',
             $on
         );
     }
@@ -155,7 +153,6 @@ class MapperRelationships
             $relatedName,
             OneToMany::CLASS,
             $foreignMapperClass,
-            'persistAfterNative',
             $on
         );
     }
@@ -170,7 +167,6 @@ class MapperRelationships
             $relatedName,
             ManyToOne::CLASS,
             $foreignMapperClass,
-            'persistBeforeNative',
             $on
         );
     }
@@ -184,7 +180,6 @@ class MapperRelationships
             $relatedName,
             ManyToOneVariant::CLASS,
             $referenceCol,
-            'persistBeforeNative'
         );
     }
 
@@ -198,7 +193,6 @@ class MapperRelationships
             $relatedName,
             ManyToMany::CLASS,
             $foreignMapperClass,
-            'persistBeforeNative',
             $on,
             $throughRelatedName
         );
@@ -234,7 +228,6 @@ class MapperRelationships
         string $relatedName,
         string $relationshipClass,
         string $foreignSpec,
-        string $persistencePriority,
         array $on = [],
         string $throughRelatedName = null
     ) : Relationship
@@ -262,6 +255,7 @@ class MapperRelationships
         }
 
         $relationship = new $relationshipClass(...$args);
+        $persistencePriority = $relationship::PERSISTENCE_PRIORITY;
         $this->{$persistencePriority}[] = $relationship;
         $this->relationships[$relatedName] = $relationship;
         return $relationship;

@@ -19,6 +19,8 @@ use SplObjectStorage;
 
 class ManyToMany extends RegularRelationship
 {
+    public const PERSISTENCE_PRIORITY = self::BEFORE_NATIVE;
+
     protected $throughName;
 
     protected $throughRelationship;

@@ -18,6 +18,8 @@ use SplObjectStorage;
 
 class ManyToOneVariant extends Relationship
 {
+    public const PERSISTENCE_PRIORITY = self::BEFORE_NATIVE;
+
     protected $name;
 
     protected $mapperLocator;

@@ -17,6 +17,10 @@ use SplObjectStorage;
 
 abstract class Relationship
 {
+    public const BEFORE_NATIVE = 'persistBeforeNative';
+
+    public const AFTER_NATIVE = 'persistAfterNative';
+
     protected $foreignMapperClass;
 
     protected $ignoreCase = false;

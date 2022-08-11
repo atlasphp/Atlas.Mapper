@@ -16,6 +16,8 @@ use SplObjectStorage;
 
 class OneToMany extends DeletableRelationship
 {
+    public const PERSISTENCE_PRIORITY = self::AFTER_NATIVE;
+
     public function stitchIntoRecords(
         array $nativeRecords,
         callable $custom = null

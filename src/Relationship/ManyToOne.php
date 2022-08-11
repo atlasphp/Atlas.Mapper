@@ -15,6 +15,8 @@ use SplObjectStorage;
 
 class ManyToOne extends RegularRelationship
 {
+    public const PERSISTENCE_PRIORITY = self::BEFORE_NATIVE;
+
     protected function getDefaultOn() : array
     {
         $on = [];
