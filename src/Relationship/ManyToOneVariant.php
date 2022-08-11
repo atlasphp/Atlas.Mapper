@@ -10,7 +10,9 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\Relationship;
 
+use Atlas\Mapper\Define\Variant;
 use Atlas\Mapper\Exception;
+use Atlas\Mapper\Mapper;
 use Atlas\Mapper\MapperLocator;
 use Atlas\Mapper\MapperSelect;
 use Atlas\Mapper\Record;
@@ -42,24 +44,24 @@ class ManyToOneVariant extends Relationship
         $this->typeCol = $typeCol;
     }
 
-    public function type(
-        string $typeVal,
-        string $foreignMapperClass,
-        array $on
-    ) : self
+    public function type(Variant $attr) : self
+        // string $typeVal,
+        // string $foreignMapperClass,
+        // array $on
+    // ) : self
     {
         $variant = new ManyToOne(
             $this->name,
             $this->mapperLocator,
             $this->nativeMapperClass,
-            $foreignMapperClass,
-            $on
+            Mapper::classFrom($attr->class),
+            $attr->on
         );
 
         $variant->where = $this->where;
         $variant->ignoreCase = $this->ignoreCase;
 
-        $this->variants[$typeVal] = $variant;
+        $this->variants[$attr->value] = $variant;
         return $this;
     }
 

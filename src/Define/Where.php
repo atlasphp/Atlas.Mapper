@@ -19,7 +19,7 @@ class Where extends RefinementAttribute
     public array $bindInline = [];
 
     public function __construct(
-        protected string $condition,
+        public string $condition,
         mixed ...$bindInline
     ) {
         $this->bindInline = $bindInline;

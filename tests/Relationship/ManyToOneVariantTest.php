@@ -1,12 +1,6 @@
 <?php
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Mapper\MapperLocator;
-use Atlas\Mapper\Exception;
-use Atlas\Mapper\Record;
-use Atlas\Mapper\RecordSet;
-use Atlas\Pdo\Connection;
-use Atlas\Pdo\Profiler;
 use Atlas\Mapper\Assertions;
 use Atlas\Mapper\DataSource\Comment\Comment;
 use Atlas\Mapper\DataSource\Comment\CommentRecord;
@@ -14,9 +8,16 @@ use Atlas\Mapper\DataSource\Page\Page;
 use Atlas\Mapper\DataSource\Page\PageRecord;
 use Atlas\Mapper\DataSource\Post\Post;
 use Atlas\Mapper\DataSource\Post\PostRecord;
-use Atlas\Mapper\DataSourceFixture;
 use Atlas\Mapper\DataSource\Video\Video;
 use Atlas\Mapper\DataSource\Video\VideoRecord;
+use Atlas\Mapper\DataSourceFixture;
+use Atlas\Mapper\Define\Variant;
+use Atlas\Mapper\Exception;
+use Atlas\Mapper\MapperLocator;
+use Atlas\Mapper\Record;
+use Atlas\Mapper\RecordSet;
+use Atlas\Pdo\Connection;
+use Atlas\Pdo\Profiler;
 
 class ManyToOneVariantTest extends RelationshipTest
 {
@@ -130,16 +131,16 @@ class ManyToOneVariantTest extends RelationshipTest
 
         // default condition
         $relationship
-            ->type('page', Page::CLASS, ['related_id' => 'page_id']);
+            ->type(new Variant('page', Page::CLASS, ['related_id' => 'page_id']));
 
         // additional condition
         $relationship
-            ->type('post', Post::CLASS, ['related_id' => 'post_id'])
+            ->type(new Variant('post', Post::CLASS, ['related_id' => 'post_id']))
             ->where('bar = 2');
 
         // different additional condition
         $relationship
-            ->type('video', Post::CLASS, ['related_id' => 'video_id'])
+            ->type(new Variant('video', Post::CLASS, ['related_id' => 'video_id']))
             ->where('baz = 3');
 
         // brittle assertions
@@ -180,11 +181,11 @@ class ManyToOneVariantTest extends RelationshipTest
 
         // flag should apply
         $relationship
-            ->type('page', Page::CLASS, ['related_id' => 'page_id']);
+            ->type(new Variant('page', Page::CLASS, ['related_id' => 'page_id']));
 
         // different flag
         $relationship
-            ->type('post', Post::CLASS, ['related_id' => 'post_id'])
+            ->type(new Variant('post', Post::CLASS, ['related_id' => 'post_id']))
             ->ignoreCase(false);
 
         // brittle assertions

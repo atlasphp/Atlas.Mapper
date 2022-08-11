@@ -224,6 +224,12 @@ class MapperRelationships
         }
     }
 
+    /**
+     * @todo Get construction setups out of here, and into either the
+     * attribute or the realtinoship itself. the tricky part is with
+     * many-to-many, because it needs all the relationships to look for
+     * the 'through' relationship name.
+     */
     protected function set(
         string $relatedName,
         string $relationshipClass,

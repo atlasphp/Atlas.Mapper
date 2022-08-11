@@ -18,18 +18,14 @@ use Attribute;
 class Variant extends RefinementAttribute
 {
     public function __construct(
-        protected mixed $value,
-        protected string $class,
+        public mixed $value,
+        public string $class,
         public array $on
     ) {
     }
 
     public function __invoke(Relationship $relationship) : void
     {
-        $relationship->type(
-            $this->value,
-            Mapper::classFrom($this->class),
-            $this->on
-        );
+        $relationship->type($this);
     }
 }
