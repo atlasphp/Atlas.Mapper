@@ -42,7 +42,7 @@ abstract class MapperSelect extends TableSelect
     public function loadRelated(array $loadRelated) : self
     {
         // make sure that all loadRelated() are on relateds that actually exist
-        $fields = array_keys($this->mapper->getRelationships()->getFields());
+        $fields = $this->mapper->getRelationships()->getRelationshipLocator()->getNames();
         foreach ($loadRelated as $key => $val) {
             $related = $key;
             if (is_int($key)) {

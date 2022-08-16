@@ -14,7 +14,6 @@ use Atlas\Mapper\Define\RelationshipAttribute;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\Mapper;
 use Atlas\Mapper\MapperLocator;
-use Atlas\Mapper\MapperRelationships;
 use Atlas\Mapper\MapperSelect;
 use Atlas\Mapper\Record;
 use Atlas\Mapper\RecordSet;
@@ -42,24 +41,24 @@ class ManyToMany extends RegularRelationship
         MapperLocator $mapperLocator,
         string $nativeMapperClass,
         string $foreignMapperClass,
-        MapperRelationships $otherRelationships
+        RelationshipLocator $relationshipLocator
     ) {
         $this->throughName = $attribute->through;
 
-        if (! $otherRelationships->has($this->throughName)) {
+        if (! $relationshipLocator->has($this->throughName)) {
             throw Exception::relationshipDoesNotExist($this->throughName);
         }
 
-        $this->throughRelationship = $otherRelationships->get($this->throughName);
+        $this->throughRelationship = $relationshipLocator->get($this->throughName);
 
         $throughForeignMapper = $this->throughRelationship->getForeignMapper();
         $this->throughRecordSet = $throughForeignMapper->newRecordSet();
 
-        $throughForeignRelationships = $throughForeignMapper->getRelationships();
-        $relatedNames = array_keys($throughForeignRelationships->getFields());
+        $throughForeignRelationshipLocator = $throughForeignMapper->getRelationships()->getRelationshipLocator();
+        $relatedNames = $throughForeignRelationshipLocator->getNames();
 
         foreach ($relatedNames as $relatedName) {
-            $relationship = $throughForeignRelationships->get($relatedName);
+            $relationship = $throughForeignRelationshipLocator->get($relatedName);
             if (! $relationship instanceof ManyToOne) {
                 continue;
             }
@@ -106,7 +105,7 @@ class ManyToMany extends RegularRelationship
             $mapperLocator,
             $nativeMapperClass,
             $foreignMapperClass,
-            $otherRelationships
+            $relationshipLocator
         );
     }
 

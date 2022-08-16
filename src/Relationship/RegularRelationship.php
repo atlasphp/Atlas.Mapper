@@ -14,7 +14,6 @@ use Atlas\Mapper\Define\RelationshipAttribute;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\Mapper;
 use Atlas\Mapper\MapperLocator;
-use Atlas\Mapper\MapperRelationships;
 use Atlas\Mapper\MapperSelect;
 use Atlas\Mapper\Record;
 use Atlas\Mapper\RecordSet;
@@ -44,7 +43,7 @@ abstract class RegularRelationship extends Relationship
         MapperLocator $mapperLocator,
         string $nativeMapperClass,
         string $foreignMapperClass,
-        MapperRelationships $otherRelationships
+        RelationshipLocator $relationshipLocator
     ) {
         if (! class_exists($foreignMapperClass)) {
             throw Exception::classDoesNotExist($foreignMapperClass);

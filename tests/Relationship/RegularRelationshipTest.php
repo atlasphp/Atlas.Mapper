@@ -1,23 +1,31 @@
 <?php
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Mapper\Define;
-use Atlas\Mapper\Exception;
-use Atlas\Mapper\Fake\FakeMapperRelationships;
-use Atlas\Mapper\Fake\FakeRegularRelationship;
 use Atlas\Mapper\DataSource\Author\Author;
 use Atlas\Mapper\DataSource\Thread\Thread;
+use Atlas\Mapper\Define;
+use Atlas\Mapper\Exception;
+use Atlas\Mapper\Fake\FakeRegularRelationship;
+use Atlas\Mapper\Fake\FakeRelationshipLocator;
+use Atlas\Mapper\MapperRelationships;
 
 class RegularRelationshipTest extends RelationshipTest
 {
-    protected $fakeMapperRelationships;
+    protected $fakeRelationshipLocator;
+
+    protected $mapperRelationships;
 
     protected function setUp() : void
     {
         parent::setUp();
-        $this->fakeMapperRelationships = new FakeMapperRelationships(
+
+        $this->fakeRelationshipLocator = new FakeRelationshipLocator(
             $this->mapperLocator,
             Thread::CLASS
+        );
+
+        $this->mapperRelationships = new MapperRelationships(
+            $this->fakeRelationshipLocator
         );
     }
 
@@ -31,7 +39,7 @@ class RegularRelationshipTest extends RelationshipTest
             $this->mapperLocator,
             Thread::CLASS,
             'NoSuchClass',
-            $this->fakeMapperRelationships,
+            $this->fakeRelationshipLocator,
         );
     }
 
@@ -43,7 +51,7 @@ class RegularRelationshipTest extends RelationshipTest
             $this->mapperLocator,
             Thread::CLASS,
             Author::CLASS,
-            $this->fakeMapperRelationships,
+            $this->fakeRelationshipLocator,
         );
         $this->assertFalse($fake->valuesMatch('1', 'a'));
     }
@@ -56,7 +64,7 @@ class RegularRelationshipTest extends RelationshipTest
             $this->mapperLocator,
             Thread::CLASS,
             Author::CLASS,
-            $this->fakeMapperRelationships,
+            $this->fakeRelationshipLocator,
         );
         $this->assertSame([], $fake->fetchForeignRecords([], null));
     }

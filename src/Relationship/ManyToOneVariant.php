@@ -14,7 +14,6 @@ use Atlas\Mapper\Define;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\Mapper;
 use Atlas\Mapper\MapperLocator;
-use Atlas\Mapper\MapperRelationships;
 use Atlas\Mapper\MapperSelect;
 use Atlas\Mapper\Record;
 use ReflectionProperty;
@@ -34,7 +33,7 @@ class ManyToOneVariant extends Relationship
 
     protected $variants = [];
 
-    protected MapperRelationships $otherRelationships;
+    protected RelationshipLocator $relationshipLocator;
 
     public function __construct(
         string $name,
@@ -42,13 +41,13 @@ class ManyToOneVariant extends Relationship
         MapperLocator $mapperLocator,
         string $nativeMapperClass,
         string $foreignMapperClass,
-        MapperRelationships $otherRelationships
+        RelationshipLocator $relationshipLocator
     ) {
         $this->name = $name;
         $this->mapperLocator = $mapperLocator;
         $this->nativeMapperClass = $nativeMapperClass;
         $this->typeCol = $attribute->column;
-        $this->otherRelationships = $otherRelationships;
+        $this->relationshipLocator = $relationshipLocator;
     }
 
     public function type(Define\Variant $attr) : self
@@ -59,7 +58,7 @@ class ManyToOneVariant extends Relationship
             $this->mapperLocator,
             $this->nativeMapperClass,
             Mapper::classFrom($attr->class),
-            $this->otherRelationships,
+            $this->relationshipLocator,
         );
 
         $variant->where = $this->where;

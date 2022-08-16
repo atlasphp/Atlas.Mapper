@@ -104,6 +104,7 @@ class ManyToOneVariantTest extends RelationshipTest
         $relationship = $this->mapperLocator
             ->get(Comment::CLASS)
             ->getRelationships()
+            ->getRelationshipLocator()
             ->get('commentable');
 
         $nativeRecords = [];
@@ -127,7 +128,7 @@ class ManyToOneVariantTest extends RelationshipTest
             $this->mapperLocator,
             Comment::CLASS,
             'UNKNOWN',
-            new FakeMapperRelationships($this->mapperLocator, Comment::CLASS),
+            new RelationshipLocator($this->mapperLocator, Comment::CLASS),
         );
 
         // should apply as a default to all types
@@ -179,7 +180,7 @@ class ManyToOneVariantTest extends RelationshipTest
             $this->mapperLocator,
             Comment::CLASS,
             'UNKNOWN',
-            new FakeMapperRelationships($this->mapperLocator, Comment::CLASS),
+            new RelationshipLocator($this->mapperLocator, Comment::CLASS),
         );
 
         // should apply as a default to all types

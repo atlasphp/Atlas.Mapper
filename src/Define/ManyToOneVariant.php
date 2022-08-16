@@ -10,11 +10,14 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\Define;
 
+use Atlas\Mapper\Relationship;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class ManyToOneVariant extends RelationshipAttribute
 {
+    public $class = Relationship\ManyToOneVariant::CLASS;
+
     public function __construct(
         public string $column
     ) {

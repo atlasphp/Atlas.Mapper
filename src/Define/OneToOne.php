@@ -10,11 +10,14 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\Define;
 
+use Atlas\Mapper\Relationship;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class OneToOne extends RelationshipAttribute
 {
+    public $class = Relationship\OneToOne::CLASS;
+
     public function __construct(
         public array $on = []
     ) {

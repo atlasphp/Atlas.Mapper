@@ -12,4 +12,5 @@ namespace Atlas\Mapper\Define;
 
 abstract class RelationshipAttribute
 {
+    public $class = 'UNKNOWN';
 }
