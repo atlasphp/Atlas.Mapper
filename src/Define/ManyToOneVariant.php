@@ -19,11 +19,4 @@ class ManyToOneVariant extends RelationshipAttribute
         public string $column
     ) {
     }
-
-    public function args(string $foreignMapperClass) : array
-    {
-        return [
-            $this->column,
-        ];
-    }
 }

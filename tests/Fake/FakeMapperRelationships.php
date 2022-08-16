@@ -5,9 +5,8 @@ use Atlas\Mapper\MapperRelationships;
 
 class FakeMapperRelationships extends MapperRelationships
 {
-    protected function define()
+    public function setFake($name, $relationship)
     {
-        // intentionally blow up
-        $this->oneToOne('id', 'Foo');
+        $this->relationships[$name] = $relationship;
     }
 }

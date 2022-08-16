@@ -27,6 +27,9 @@ use ReflectionNamedType;
 use ReflectionProperty;
 use SplObjectStorage;
 
+/**
+ * @todo Split into a RelationshipLocator and a separate MapperRelationships handler?
+ */
 class MapperRelationships
 {
     protected $mapperLocator;
@@ -59,53 +62,35 @@ class MapperRelationships
         $this->prototypeRelated = new $relatedClass();
 
         $rc = new ReflectionClass($this->prototypeRelated);
-        $props = $rc->getProperties();
+        $properties = $rc->getProperties();
 
-        foreach ($props as $prop) {
-            $this->defineFromProperty($prop);
+        foreach ($properties as $property) {
+            $this->defineFromProperty($property);
         }
     }
 
-    /**
-     * you have to be REALLY ATTENTIVE to the attributes. if you typo the attr,
-     * it WILL NOT define the relationship, silently, and then fail when you
-     * try to use the related field.
-     *
-     * @todo better (or any!) error messaging on this
-     */
-    protected function defineFromProperty(ReflectionProperty $prop)
+    protected function defineFromProperty(ReflectionProperty $property)
     {
-        $attrs = $prop->getAttributes();
+        $attributes = $property->getAttributes();
 
-        while ($attr = array_shift($attrs)) {
-            if (is_subclass_of($attr->getName(), RelationshipAttribute::CLASS)) {
-                $this->defineFromPropertyAttribute($prop, $attr->newInstance(), $attrs);
+        while ($attribute = array_shift($attributes)) {
+            if (is_subclass_of($attribute->getName(), RelationshipAttribute::CLASS)) {
+                $this->defineFromPropertyAttribute($property, $attribute->newInstance(), $attributes);
             }
         }
     }
 
-    /**
-     * @todo this will not handle union types AT ALL
-     *
-     * @todo UNKNOWN is awful
-     */
     protected function defineFromPropertyAttribute(
-        ReflectionProperty $prop,
-        RelationshipAttribute $attr,
+        ReflectionProperty $property,
+        RelationshipAttribute $attribute,
         array $otherAttrs
     ) : void
     {
-        $relatedName = $prop->getName();
+        $relatedName = $property->getName();
 
-        $type = $prop->getType();
-        $foreignMapperClass = $type instanceof ReflectionNamedType
-            ? Mapper::classFrom($type->getName())
-            : 'UNKNOWN';
-
-        $parts = explode('\\', get_class($attr));
+        $parts = explode('\\', get_class($attribute));
         $method = lcfirst(end($parts));
-        $args = $attr->args($foreignMapperClass);
-        $relationship = $this->$method($relatedName, ...$args);
+        $relationship = $this->$method($relatedName, $property, $attribute);
 
         foreach ($otherAttrs as $otherAttr) {
             if (is_subclass_of($otherAttr->getName(), RefinementAttribute::CLASS)) {
@@ -117,85 +102,90 @@ class MapperRelationships
 
     protected function oneToOne(
         string $relatedName,
-        string $foreignMapperClass,
-        array $on = []
+        ReflectionProperty $property,
+        RelationshipAttribute $attribute,
     ) : OneToOne
     {
         return $this->set(
             $relatedName,
             OneToOne::CLASS,
-            $foreignMapperClass,
-            $on
+            $property,
+            $attribute,
         );
     }
 
     protected function oneToOneBidi(
         string $relatedName,
-        string $foreignMapperClass,
-        array $on = []
+        ReflectionProperty $property,
+        RelationshipAttribute $attribute,
     ) : OneToOneBidi
     {
         return $this->set(
             $relatedName,
             OneToOneBidi::CLASS,
-            $foreignMapperClass,
-            $on
+            $property,
+            $attribute,
         );
     }
 
     protected function oneToMany(
         string $relatedName,
-        string $foreignMapperClass,
-        array $on = []
+        ReflectionProperty $property,
+        RelationshipAttribute $attribute,
     ) : OneToMany
     {
         return $this->set(
             $relatedName,
             OneToMany::CLASS,
-            $foreignMapperClass,
-            $on
+            $property,
+            $attribute,
         );
     }
 
     protected function manyToOne(
         string $relatedName,
-        string $foreignMapperClass,
-        array $on = []
+        ReflectionProperty $property,
+        RelationshipAttribute $attribute,
     ) : ManyToOne
     {
         return $this->set(
             $relatedName,
             ManyToOne::CLASS,
-            $foreignMapperClass,
-            $on
+            $property,
+            $attribute,
         );
     }
 
     protected function manyToOneVariant(
         string $relatedName,
-        string $referenceCol
+        ReflectionProperty $property,
+        RelationshipAttribute $attribute,
     ) : ManyToOneVariant
     {
         return $this->set(
             $relatedName,
             ManyToOneVariant::CLASS,
-            $referenceCol,
+            $property,
+            $attribute,
         );
     }
 
     protected function manyToMany(
         string $relatedName,
-        string $foreignMapperClass,
-        string $throughRelatedName,
-        array $on = []
+        ReflectionProperty $property,
+        RelationshipAttribute $attribute,
     ) {
         return $this->set(
             $relatedName,
             ManyToMany::CLASS,
-            $foreignMapperClass,
-            $on,
-            $throughRelatedName
+            $property,
+            $attribute,
         );
+    }
+
+    public function has(string $relatedName) : bool
+    {
+        return isset($this->relationships[$relatedName]);
     }
 
     public function get(string $relatedName) : Relationship
@@ -224,43 +214,29 @@ class MapperRelationships
         }
     }
 
-    /**
-     * @todo Get construction setups out of here, and into either the
-     * attribute or the realtinoship itself. the tricky part is with
-     * many-to-many, because it needs all the relationships to look for
-     * the 'through' relationship name.
-     */
     protected function set(
         string $relatedName,
         string $relationshipClass,
-        string $foreignSpec,
-        array $on = [],
-        string $throughRelatedName = null
+        ReflectionProperty $property,
+        RelationshipAttribute $attribute,
     ) : Relationship
     {
         $this->assertRelatedName($relatedName);
-
         $this->fields[$relatedName] = null;
 
-        $args = [
+        $type = $property->getType();
+        $foreignMapperClass = $type instanceof ReflectionNamedType
+            ? Mapper::classFrom($type->getName())
+            : 'UNKNOWN';
+
+        $relationship = new $relationshipClass(
             $relatedName,
+            $attribute,
             $this->mapperLocator,
             $this->nativeMapperClass,
-            $foreignSpec
-        ];
-
-        if ($throughRelatedName !== null) {
-            if (! isset($this->relationships[$throughRelatedName])) {
-                throw Exception::relationshipDoesNotExist($throughRelatedName);
-            }
-            $args[] = $this->relationships[$throughRelatedName];
-        }
-
-        if (! empty($on)) {
-            $args[] = $on;
-        }
-
-        $relationship = new $relationshipClass(...$args);
+            $foreignMapperClass,
+            $this
+        );
         $persistencePriority = $relationship::PERSISTENCE_PRIORITY;
         $this->{$persistencePriority}[] = $relationship;
         $this->relationships[$relatedName] = $relationship;

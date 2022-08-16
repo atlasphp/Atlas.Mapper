@@ -22,13 +22,4 @@ class ManyToMany extends RelationshipAttribute
         // public ?string $throughForeign = null, // the foreign field on the through related
     ) {
     }
-
-    public function args(string $foreignMapperClass) : array
-    {
-        return [
-            $foreignMapperClass,
-            $this->through,
-            $this->on,
-        ];
-    }
 }

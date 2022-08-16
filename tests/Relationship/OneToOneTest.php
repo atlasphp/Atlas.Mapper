@@ -1,6 +1,8 @@
 <?php
 namespace Atlas\Mapper\Relationship;
 
+use Atlas\Mapper\Define;
+use Atlas\Mapper\Fake\FakeMapperRelationships;
 use Atlas\Mapper\DataSource\Summary\Summary;
 use Atlas\Mapper\DataSource\Thread\Thread;
 
@@ -10,9 +12,11 @@ class OneToOneTest extends RelationshipTest
     {
         $rel = new OneToOne(
             'summary',
+            new Define\OneToOne(),
             $this->mapperLocator,
             Thread::CLASS,
-            Summary::CLASS
+            Summary::CLASS,
+            new FakeMapperRelationships($this->mapperLocator, Thread::CLASS)
         );
 
         $threads = [];

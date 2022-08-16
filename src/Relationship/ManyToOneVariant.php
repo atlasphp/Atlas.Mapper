@@ -10,12 +10,14 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Mapper\Define\Variant;
+use Atlas\Mapper\Define;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\Mapper;
 use Atlas\Mapper\MapperLocator;
+use Atlas\Mapper\MapperRelationships;
 use Atlas\Mapper\MapperSelect;
 use Atlas\Mapper\Record;
+use ReflectionProperty;
 use SplObjectStorage;
 
 class ManyToOneVariant extends Relationship
@@ -32,30 +34,32 @@ class ManyToOneVariant extends Relationship
 
     protected $variants = [];
 
+    protected MapperRelationships $otherRelationships;
+
     public function __construct(
         string $name,
+        Define\ManyToOneVariant $attribute,
         MapperLocator $mapperLocator,
         string $nativeMapperClass,
-        string $typeCol
+        string $foreignMapperClass,
+        MapperRelationships $otherRelationships
     ) {
         $this->name = $name;
         $this->mapperLocator = $mapperLocator;
         $this->nativeMapperClass = $nativeMapperClass;
-        $this->typeCol = $typeCol;
+        $this->typeCol = $attribute->column;
+        $this->otherRelationships = $otherRelationships;
     }
 
-    public function type(Variant $attr) : self
-        // string $typeVal,
-        // string $foreignMapperClass,
-        // array $on
-    // ) : self
+    public function type(Define\Variant $attr) : self
     {
         $variant = new ManyToOne(
             $this->name,
+            new Define\ManyToOne(on: $attr->on),
             $this->mapperLocator,
             $this->nativeMapperClass,
             Mapper::classFrom($attr->class),
-            $attr->on
+            $this->otherRelationships,
         );
 
         $variant->where = $this->where;

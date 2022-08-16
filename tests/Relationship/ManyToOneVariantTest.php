@@ -12,7 +12,9 @@ use Atlas\Mapper\DataSource\Video\Video;
 use Atlas\Mapper\DataSource\Video\VideoRecord;
 use Atlas\Mapper\DataSourceFixture;
 use Atlas\Mapper\Define\Variant;
+use Atlas\Mapper\Define;
 use Atlas\Mapper\Exception;
+use Atlas\Mapper\Fake\FakeMapperRelationships;
 use Atlas\Mapper\MapperLocator;
 use Atlas\Mapper\Record;
 use Atlas\Mapper\RecordSet;
@@ -121,9 +123,11 @@ class ManyToOneVariantTest extends RelationshipTest
     {
         $relationship = new ManyToOneVariant(
             'foo',
+            new Define\ManyToOneVariant(column: 'related_type'),
             $this->mapperLocator,
-            COmment::CLASS,
-            'related_type'
+            Comment::CLASS,
+            'UNKNOWN',
+            new FakeMapperRelationships($this->mapperLocator, Comment::CLASS),
         );
 
         // should apply as a default to all types
@@ -171,9 +175,11 @@ class ManyToOneVariantTest extends RelationshipTest
     {
         $relationship = new ManyToOneVariant(
             'foo',
+            new Define\ManyToOneVariant(column: 'related_type'),
             $this->mapperLocator,
             Comment::CLASS,
-            'related_type'
+            'UNKNOWN',
+            new FakeMapperRelationships($this->mapperLocator, Comment::CLASS),
         );
 
         // should apply as a default to all types

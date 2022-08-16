@@ -12,5 +12,4 @@ namespace Atlas\Mapper\Define;
 
 abstract class RelationshipAttribute
 {
-    abstract public function args(string $foreignMapperClass) : array;
 }

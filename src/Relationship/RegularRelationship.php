@@ -10,12 +10,16 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\Relationship;
 
+use Atlas\Mapper\Define\RelationshipAttribute;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\Mapper;
 use Atlas\Mapper\MapperLocator;
+use Atlas\Mapper\MapperRelationships;
 use Atlas\Mapper\MapperSelect;
 use Atlas\Mapper\Record;
 use Atlas\Mapper\RecordSet;
+use ReflectionNamedType;
+use ReflectionProperty;
 use SplObjectStorage;
 
 abstract class RegularRelationship extends Relationship
@@ -36,10 +40,11 @@ abstract class RegularRelationship extends Relationship
 
     public function __construct(
         string $name,
+        RelationshipAttribute $attribute,
         MapperLocator $mapperLocator,
         string $nativeMapperClass,
         string $foreignMapperClass,
-        array $on = []
+        MapperRelationships $otherRelationships
     ) {
         if (! class_exists($foreignMapperClass)) {
             throw Exception::classDoesNotExist($foreignMapperClass);
@@ -56,21 +61,17 @@ abstract class RegularRelationship extends Relationship
         $nativeTable = $this->nativeMapperClass . 'Table';
         $this->nativeTableName = $nativeTable::NAME;
 
-        $this->setOn($on);
+        $this->on = $attribute->on;
+
+        if (empty($this->on)) {
+            $this->on = $this->getDefaultOn();
+        }
+
         if (count($this->on) == 1) {
             $this->foreignStrategy = new ForeignSimple($this->foreignTableName, $this->on);
         } else {
             $this->foreignStrategy = new ForeignComposite($this->foreignTableName, $this->on);
         }
-    }
-
-    protected function setOn(array $on) : void
-    {
-        if (empty($on)) {
-            $on = $this->getDefaultOn();
-        }
-
-        $this->on = $on;
     }
 
     protected function getDefaultOn() : array

@@ -10,11 +10,16 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\Relationship;
 
+use Atlas\Mapper\Define\RelationshipAttribute;
 use Atlas\Mapper\Exception;
+use Atlas\Mapper\Mapper;
 use Atlas\Mapper\MapperLocator;
+use Atlas\Mapper\MapperRelationships;
 use Atlas\Mapper\MapperSelect;
 use Atlas\Mapper\Record;
 use Atlas\Mapper\RecordSet;
+use ReflectionNamedType;
+use ReflectionProperty;
 use SplObjectStorage;
 
 class ManyToMany extends RegularRelationship
@@ -33,20 +38,26 @@ class ManyToMany extends RegularRelationship
 
     public function __construct(
         string $name,
+        RelationshipAttribute $attribute,
         MapperLocator $mapperLocator,
         string $nativeMapperClass,
         string $foreignMapperClass,
-        OneToMany $throughRelationship,
-        array $on = []
+        MapperRelationships $otherRelationships
     ) {
-        $this->throughRelationship = $throughRelationship;
-        $this->throughName = $throughRelationship->name;
+        $this->throughName = $attribute->through;
 
-        $throughForeignMapper = $throughRelationship->getForeignMapper();
+        if (! $otherRelationships->has($this->throughName)) {
+            throw Exception::relationshipDoesNotExist($this->throughName);
+        }
+
+        $this->throughRelationship = $otherRelationships->get($this->throughName);
+
+        $throughForeignMapper = $this->throughRelationship->getForeignMapper();
         $this->throughRecordSet = $throughForeignMapper->newRecordSet();
 
         $throughForeignRelationships = $throughForeignMapper->getRelationships();
         $relatedNames = array_keys($throughForeignRelationships->getFields());
+
         foreach ($relatedNames as $relatedName) {
             $relationship = $throughForeignRelationships->get($relatedName);
             if (! $relationship instanceof ManyToOne) {
@@ -65,8 +76,8 @@ class ManyToMany extends RegularRelationship
                 && $relationship->foreignMapperClass === $foreignMapperClass
             ) {
                 $this->throughForeignRelatedName = $relatedName;
-                if (empty($on)) {
-                    $on = $relationship->on;
+                if (empty($attribute->on)) {
+                    $attribute->on = $relationship->on;
                 }
             }
         }
@@ -91,10 +102,11 @@ class ManyToMany extends RegularRelationship
 
         parent::__construct(
             $name,
+            $attribute,
             $mapperLocator,
             $nativeMapperClass,
             $foreignMapperClass,
-            $on
+            $otherRelationships
         );
     }
 

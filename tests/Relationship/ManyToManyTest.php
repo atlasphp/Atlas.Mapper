@@ -6,7 +6,9 @@ use Atlas\Mapper\DataSource\Author\Author;
 use Atlas\Mapper\DataSource\Tag\Tag;
 use Atlas\Mapper\DataSource\Tagging\Tagging;
 use Atlas\Mapper\DataSource\Thread\Thread;
+use Atlas\Mapper\Define;
 use Atlas\Mapper\Exception;
+use Atlas\Mapper\Fake\FakeMapperRelationships;
 use Atlas\Mapper\MapperLocator;
 use Atlas\Mapper\Relationship\NotLoaded;
 
@@ -186,12 +188,19 @@ class ManyToManyTest extends RelationshipTest
 
     public function testMissingThroughNativeRelated()
     {
-        $through = new OneToMany(
-            'thread_taggings',
+        $fakeMapperRelationships = new FakeMapperRelationships(
             $this->mapperLocator,
             Thread::CLASS,
-            Tagging::CLASS
         );
+
+        $fakeMapperRelationships->setFake('thread_taggings', new OneToMany(
+            'thread_taggings',
+            new Define\OneToMany(),
+            $this->mapperLocator,
+            Thread::CLASS,
+            Tagging::CLASS,
+            $fakeMapperRelationships,
+        ));
 
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage(
@@ -202,21 +211,29 @@ class ManyToManyTest extends RelationshipTest
 
         $mtm = new ManyToMany(
             'tag_authors',
+            new Define\ManyToMany(through: 'thread_taggings'),
             $this->mapperLocator,
             Author::CLASS,
             Tag::CLASS,
-            $through
+            $fakeMapperRelationships
         );
     }
 
     public function testMissingThroughForeignRelated()
     {
-        $through = new OneToMany(
-            'thread_taggings',
+        $fakeMapperRelationships = new FakeMapperRelationships(
             $this->mapperLocator,
             Thread::CLASS,
-            Tagging::CLASS
         );
+
+        $fakeMapperRelationships->setFake('thread_taggings', new OneToMany(
+            'thread_taggings',
+            new Define\OneToMany(),
+            $this->mapperLocator,
+            Thread::CLASS,
+            Tagging::CLASS,
+            $fakeMapperRelationships,
+        ));
 
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage(
@@ -227,10 +244,11 @@ class ManyToManyTest extends RelationshipTest
 
         $mtm = new ManyToMany(
             'tag_authors',
+            new Define\ManyToMany(through: 'thread_taggings'),
             $this->mapperLocator,
             Tag::CLASS,
             Author::CLASS,
-            $through
+            $fakeMapperRelationships
         );
     }
 }

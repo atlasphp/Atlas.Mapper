@@ -19,12 +19,4 @@ class ManyToOneBidi extends RelationshipAttribute
         public array $on = []
     ) {
     }
-
-    public function args(string $foreignMapperClass) : array
-    {
-        return [
-            $foreignMapperClass,
-            $this->on,
-        ];
-    }
 }
