@@ -71,9 +71,31 @@ class RelationshipLocator implements IteratorAggregate
         array $otherAttrs
     ) : void
     {
-        $relationship = $this->set($property, $attribute);
+        $relationshipClass = $attribute->class;
 
-        // should these go into the Relationship for self-setup?
+        $name = $property->getName();
+
+        if (in_array($name, $this->nativeTableClass::COLUMN_NAMES)) {
+            throw Exception::nameConflict($name, 'column');
+        }
+
+        $type = $property->getType();
+        $foreignMapperClass = $type instanceof ReflectionNamedType
+            ? Mapper::classFrom($type->getName())
+            : 'UNKNOWN';
+
+        $relationship = new $relationshipClass(
+            $name,
+            $attribute,
+            $this->mapperLocator,
+            $this->nativeMapperClass,
+            $foreignMapperClass,
+            $this
+        );
+
+        $this->instances[$name] = $relationship;
+        $this->persist[$relationship::PERSISTENCE_PRIORITY][] = $relationship;
+
         foreach ($otherAttrs as $otherAttr) {
             if (is_subclass_of(
                 $otherAttr->getName(),
@@ -115,35 +137,35 @@ class RelationshipLocator implements IteratorAggregate
         return array_keys($this->instances);
     }
 
-    protected function set(
-        ReflectionProperty $property,
-        RelationshipAttribute $attribute,
-    ) : Relationship
+    public function listRelatedSpec(string $relatedSpec) : array
     {
-        $relationshipClass = $attribute->class;
+        $relatedSpec = trim($relatedSpec);
 
-        $name = $property->getName();
-
-        if (in_array($name, $this->nativeTableClass::COLUMN_NAMES)) {
-            throw Exception::nameConflict($name, 'column');
+        // extract the foreign alias
+        $foreignAlias = '';
+        $pos = stripos($relatedSpec, ' AS ');
+        if ($pos !== false) {
+            $foreignAlias = trim(substr($relatedSpec, $pos + 4));
+            $relatedSpec = trim(substr($relatedSpec, 0, $pos));
         }
 
-        $type = $property->getType();
-        $foreignMapperClass = $type instanceof ReflectionNamedType
-            ? Mapper::classFrom($type->getName())
-            : 'UNKNOWN';
+        // extract the join type
+        $join = 'JOIN';
+        $pos = strpos($relatedSpec, ' ');
+        if ($pos !== false) {
+            $join = trim(substr($relatedSpec, 0, $pos));
+            $relatedSpec = trim(substr($relatedSpec, $pos));
+        }
 
-        $relationship = new $relationshipClass(
-            $name,
-            $attribute,
-            $this->mapperLocator,
-            $this->nativeMapperClass,
-            $foreignMapperClass,
-            $this
-        );
+        // fix the foreign alias
+        if ($foreignAlias === '') {
+            $foreignAlias = $relatedSpec;
+        }
 
-        $this->instances[$name] = $relationship;
-        $this->persist[$relationship::PERSISTENCE_PRIORITY][] = $relationship;
-        return $relationship;
+        return [
+            $relatedSpec,
+            $join,
+            $foreignAlias,
+        ];
     }
 }

@@ -108,7 +108,7 @@ abstract class RegularRelationship extends Relationship
         array &$foreignRecords
     ) : void;
 
-    public function joinSelect(
+    public function appendJoin(
         MapperSelect $select,
         string $join,
         string $nativeAlias,
@@ -140,7 +140,7 @@ abstract class RegularRelationship extends Relationship
 
         // invoke the callable for sub-relateds
         $sub(new SubJoinRelated(
-            $this->getForeignMapper()->getRelationships(),
+            $this->getForeignMapper()->getRelationshipLocator(),
             $select,
             $foreignAlias // current "foreign" alias becomes "native" one
         ));

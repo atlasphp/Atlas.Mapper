@@ -54,7 +54,7 @@ class ManyToMany extends RegularRelationship
         $throughForeignMapper = $this->throughRelationship->getForeignMapper();
         $this->throughRecordSet = $throughForeignMapper->newRecordSet();
 
-        $throughForeignRelationshipLocator = $throughForeignMapper->getRelationships()->getRelationshipLocator();
+        $throughForeignRelationshipLocator = $throughForeignMapper->getRelationshipLocator();
         $relatedNames = $throughForeignRelationshipLocator->getNames();
 
         foreach ($relatedNames as $relatedName) {
@@ -109,7 +109,7 @@ class ManyToMany extends RegularRelationship
         );
     }
 
-    public function joinSelect(
+    public function appendJoin(
         MapperSelect $select,
         string $join,
         string $nativeAlias, // threads
@@ -117,14 +117,15 @@ class ManyToMany extends RegularRelationship
         callable $sub = null
     ) : void
     {
-        $this->throughRelationship->joinSelect(
+        $this->throughRelationship->appendJoin(
             $select,
             $join,
             $nativeAlias,
-            $this->throughName
+            $this->throughName,
+            // no $sub here
         );
 
-        parent::joinSelect(
+        parent::appendJoin(
             $select,
             $join,
             $this->throughName,

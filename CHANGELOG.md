@@ -26,3 +26,4 @@ No releases yet.
 - Relationship definitions are now on the {Type}Related class, not the {Type}Relationship class,
   and MapperRelationships is now all-purpose for all relateds.
 
+- Remove MapperRelationships entirely in favor of new RelationshipLocator

@@ -90,7 +90,7 @@ class ManyToOneVariant extends Relationship
         return $this;
     }
 
-    public function joinSelect(
+    public function appendJoin(
         MapperSelect $select,
         string $join,
         string $nativeAlias,

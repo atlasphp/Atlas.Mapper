@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Atlas\Mapper;
 
 use Atlas\Mapper\Identity;
+use Atlas\Mapper\Relationship\RelationshipLocator;
 use Atlas\Table\Row;
 use Atlas\Table\Table;
 use SplObjectStorage;
@@ -27,7 +28,7 @@ abstract class Mapper
 
     protected $table;
 
-    protected $mapperRelationships;
+    protected $relationshipLocator;
 
     protected $mapperEvents;
 
@@ -37,11 +38,11 @@ abstract class Mapper
 
     public function __construct(
         Table $table,
-        MapperRelationships $mapperRelationships,
+        RelationshipLocator $relationshipLocator,
         MapperEvents $mapperEvents
     ) {
         $this->table = $table;
-        $this->mapperRelationships = $mapperRelationships;
+        $this->relationshipLocator = $relationshipLocator;
         $this->mapperEvents = $mapperEvents;
 
         $this->recordSetClass = static::CLASS . 'RecordSet';
@@ -59,9 +60,9 @@ abstract class Mapper
         return $this->table;
     }
 
-    public function getRelationships() : MapperRelationships
+    public function getRelationshipLocator() : RelationshipLocator
     {
-        return $this->mapperRelationships;
+        return $this->relationshipLocator;
     }
 
     public function fetchRecord($primaryVal, array $loadRelated = []) : ?Record
@@ -168,12 +169,12 @@ abstract class Mapper
     {
         $row = $record->getRow();
         $this->mapperEvents->beforeInsert($this, $record);
-        $this->mapperRelationships->fixNativeRecord($record);
+        $this->fixNativeRecord($record);
         $insert = $this->table->insertRowPrepare($row);
         $this->mapperEvents->modifyInsert($this, $record, $insert);
         $pdoStatement = $this->table->insertRowPerform($row, $insert);
         $this->identityMap->setRow($row);
-        $this->mapperRelationships->fixForeignRecord($record);
+        $this->fixForeignRecord($record);
         $this->mapperEvents->afterInsert(
             $this,
             $record,
@@ -186,11 +187,11 @@ abstract class Mapper
     {
         $row = $record->getRow();
         $this->mapperEvents->beforeUpdate($this, $record);
-        $this->mapperRelationships->fixNativeRecord($record);
+        $this->fixNativeRecord($record);
         $update = $this->table->updateRowPrepare($row);
         $this->mapperEvents->modifyUpdate($this, $record, $update);
         $pdoStatement = $this->table->updateRowPerform($row, $update);
-        $this->mapperRelationships->fixForeignRecord($record);
+        $this->fixForeignRecord($record);
         if ($pdoStatement === null) {
             return;
         }
@@ -206,11 +207,11 @@ abstract class Mapper
     {
         $row = $record->getRow();
         $this->mapperEvents->beforeDelete($this, $record);
-        $this->mapperRelationships->fixNativeRecord($record);
+        $this->fixNativeRecord($record);
         $delete = $this->table->deleteRowPrepare($row);
         $this->mapperEvents->modifyDelete($this, $record, $delete);
         $pdoStatement = $this->table->deleteRowPerform($row, $delete);
-        $this->mapperRelationships->fixForeignRecord($record);
+        $this->fixForeignRecord($record);
         $this->mapperEvents->afterDelete(
             $this,
             $record,
@@ -234,16 +235,22 @@ abstract class Mapper
 
         $tracker->attach($record);
 
-        $this->mapperRelationships->persistBeforeNative($record, $tracker);
-        $this->mapperRelationships->fixNativeRecord($record);
+        foreach ($this->relationshipLocator->getPersistBeforeNative() as $relationship) {
+            $relationship->persistForeign($record, $tracker);
+        }
 
+        $this->fixNativeRecord($record);
         $method = $record->getAction();
+
         if ($method !== null) {
             $this->$method($record);
         }
 
-        $this->mapperRelationships->fixForeignRecord($record);
-        $this->mapperRelationships->persistAfterNative($record, $tracker);
+        $this->fixForeignRecord($record);
+
+        foreach ($this->relationshipLocator->getPersistAfterNative() as $relationship) {
+            $relationship->persistForeign($record, $tracker);
+        }
     }
 
     public function newRecord(array $fields = []) : Record
@@ -274,7 +281,7 @@ abstract class Mapper
     public function turnRowIntoRecord(Row $row, array $loadRelated = []) : Record
     {
         $record = $this->newRecordFromSelectedRow($row);
-        $this->mapperRelationships->stitchIntoRecords([$record], $loadRelated);
+        $this->stitchIntoRecords([$record], $loadRelated);
         return $record;
     }
 
@@ -284,7 +291,7 @@ abstract class Mapper
         foreach ($rows as $row) {
             $records[] = $this->newRecordFromSelectedRow($row);
         }
-        $this->mapperRelationships->stitchIntoRecords($records, $loadRelated);
+        $this->stitchIntoRecords($records, $loadRelated);
         return $records;
     }
 
@@ -314,5 +321,52 @@ abstract class Mapper
     protected function getRecordClass(Row $row) : string
     {
         return static::CLASS . 'Record';
+    }
+
+    protected function fixNativeRecord(Record $nativeRecord) : void
+    {
+        foreach ($this->relationshipLocator as $relationship) {
+            $relationship->fixNativeRecord($nativeRecord);
+        }
+    }
+
+    protected function fixForeignRecord(Record $nativeRecord) : void
+    {
+        foreach ($this->relationshipLocator as $relationship) {
+            $relationship->fixForeignRecord($nativeRecord);
+        }
+    }
+
+    protected function stitchIntoRecords(
+        array $nativeRecords,
+        array $loadRelated = []
+    ) : void
+    {
+        foreach ($this->fixLoadRelated($loadRelated) as $relatedName => $custom) {
+            if (! $this->relationshipLocator->has($relatedName)) {
+                throw Exception::relationshipDoesNotExist($relatedName);
+            }
+            $this->relationshipLocator->get($relatedName)->stitchIntoRecords(
+                $nativeRecords,
+                $custom
+            );
+        }
+    }
+
+    protected function fixLoadRelated(array $spec) : array
+    {
+        $loadRelated = [];
+        foreach ($spec as $key => $val) {
+            if (is_int($key)) {
+                $loadRelated[$val] = null;
+            } elseif (is_array($val) && ! is_callable($val)) {
+                $loadRelated[$key] = function ($select) use ($val) {
+                    $select->loadRelated($val);
+                };
+            } else {
+                $loadRelated[$key] = $val;
+            }
+        }
+        return $loadRelated;
     }
 }

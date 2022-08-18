@@ -103,7 +103,6 @@ class ManyToOneVariantTest extends RelationshipTest
     {
         $relationship = $this->mapperLocator
             ->get(Comment::CLASS)
-            ->getRelationships()
             ->getRelationshipLocator()
             ->get('commentable');
 

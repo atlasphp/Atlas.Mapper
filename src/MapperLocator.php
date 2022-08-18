@@ -72,11 +72,9 @@ class MapperLocator
 
         return new $mapperClass(
             $this->tableLocator->get($table),
-            new MapperRelationships(
-                new RelationshipLocator(
-                    $this,
-                    $mapperClass,
-                )
+            new RelationshipLocator(
+                $this,
+                $mapperClass,
             ),
             ($this->factory)($events)
         );

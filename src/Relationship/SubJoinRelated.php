@@ -15,26 +15,31 @@ use Atlas\Mapper\MapperSelect;
 
 class SubJoinRelated
 {
-    protected $relationships;
+    protected $relationshipLocator;
 
     protected $select;
 
+    protected $nativeAlias;
+
     public function __construct(
-        MapperRelationships $relationships,
+        RelationshipLocator $relationshipLocator,
         MapperSelect $select,
         string $nativeAlias
     ) {
-        $this->relationships = $relationships;
+        $this->relationshipLocator = $relationshipLocator;
         $this->select = $select;
         $this->nativeAlias = $nativeAlias;
     }
 
-    public function joinRelated($relatedName, callable $sub = null) : void
+    public function joinRelated($relatedSpec, callable $sub = null) : void
     {
-        $this->relationships->joinSelect(
+        list($relatedName, $join, $foreignAlias) = $this->relationshipLocator->listRelatedSpec($relatedSpec);
+
+        $this->relationshipLocator->get($relatedName)->appendJoin(
             $this->select,
+            $join,
             $this->nativeAlias,
-            $relatedName,
+            $foreignAlias,
             $sub
         );
     }

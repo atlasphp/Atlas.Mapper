@@ -27,12 +27,17 @@ abstract class MapperSelect extends TableSelect
 
     protected $loadRelated = [];
 
-    public function joinRelated(string $relatedName, callable $sub = null) : self
+    public function joinRelated(string $relatedSpec, callable $sub = null) : self
     {
-        $this->mapper->getRelationships()->joinSelect(
+        $relationshipLocator = $this->mapper->getRelationshipLocator();
+
+        list($relatedName, $join, $foreignAlias) = $relationshipLocator->listRelatedSpec($relatedSpec);
+
+        $relationshipLocator->get($relatedName)->appendJoin(
             $this,
+            $join,
             $this->table::NAME,
-            $relatedName,
+            $foreignAlias,
             $sub
         );
 
@@ -42,7 +47,7 @@ abstract class MapperSelect extends TableSelect
     public function loadRelated(array $loadRelated) : self
     {
         // make sure that all loadRelated() are on relateds that actually exist
-        $fields = $this->mapper->getRelationships()->getRelationshipLocator()->getNames();
+        $fields = $this->mapper->getRelationshipLocator()->getNames();
         foreach ($loadRelated as $key => $val) {
             $related = $key;
             if (is_int($key)) {

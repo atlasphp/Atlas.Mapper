@@ -13,8 +13,6 @@ class RegularRelationshipTest extends RelationshipTest
 {
     protected $fakeRelationshipLocator;
 
-    protected $mapperRelationships;
-
     protected function setUp() : void
     {
         parent::setUp();
@@ -22,10 +20,6 @@ class RegularRelationshipTest extends RelationshipTest
         $this->fakeRelationshipLocator = new FakeRelationshipLocator(
             $this->mapperLocator,
             Thread::CLASS
-        );
-
-        $this->mapperRelationships = new MapperRelationships(
-            $this->fakeRelationshipLocator
         );
     }
 

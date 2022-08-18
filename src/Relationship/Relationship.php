@@ -39,7 +39,7 @@ abstract class Relationship
         return $this;
     }
 
-    abstract public function joinSelect(
+    abstract public function appendJoin(
         MapperSelect $select,
         string $join,
         string $nativeAlias,
