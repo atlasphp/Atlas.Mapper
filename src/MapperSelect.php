@@ -27,19 +27,28 @@ abstract class MapperSelect extends TableSelect
 
     protected $loadRelated = [];
 
-    public function joinRelated(string $relatedSpec, callable $sub = null) : self
+    public function joinRelated(string|array $relatedSpecs) : self
     {
+        $relatedSpecs = (array) $relatedSpecs;
+
         $relationshipLocator = $this->mapper->getRelationshipLocator();
 
-        list($relatedName, $join, $foreignAlias) = $relationshipLocator->listRelatedSpec($relatedSpec);
+        foreach ($relatedSpecs as $relatedSpec => $relatedMore) {
+            if (is_int($relatedSpec)) {
+                $relatedSpec = $relatedMore;
+                $relatedMore = [];
+            }
 
-        $relationshipLocator->get($relatedName)->appendJoin(
-            $this,
-            $join,
-            $this->table::NAME,
-            $foreignAlias,
-            $sub
-        );
+            list($relatedName, $join, $foreignAlias) = $relationshipLocator->listRelatedSpec($relatedSpec);
+
+            $relationshipLocator->get($relatedName)->joinSelect(
+                $this,
+                $join,
+                $this->table::NAME,
+                $foreignAlias,
+                $relatedMore
+            );
+        }
 
         return $this;
     }

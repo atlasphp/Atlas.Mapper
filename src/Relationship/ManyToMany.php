@@ -109,28 +109,28 @@ class ManyToMany extends RegularRelationship
         );
     }
 
-    public function appendJoin(
+    public function joinSelect(
         MapperSelect $select,
         string $join,
         string $nativeAlias, // threads
         string $foreignAlias, // tags
-        callable $sub = null
+        array $more = []
     ) : void
     {
-        $this->throughRelationship->appendJoin(
+        $this->throughRelationship->joinSelect(
             $select,
             $join,
             $nativeAlias,
             $this->throughName,
-            // no $sub here
+            // no $more here
         );
 
-        parent::appendJoin(
+        parent::joinSelect(
             $select,
             $join,
             $this->throughName,
             $foreignAlias,
-            $sub
+            $more
         );
     }
 

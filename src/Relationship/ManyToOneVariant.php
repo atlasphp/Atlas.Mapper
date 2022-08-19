@@ -90,12 +90,12 @@ class ManyToOneVariant extends Relationship
         return $this;
     }
 
-    public function appendJoin(
+    public function joinSelect(
         MapperSelect $select,
         string $join,
         string $nativeAlias,
         string $foreignAlias,
-        callable $sub = null
+        array $more = []
     ) : void
     {
         throw Exception::cannotJoinOnVariantRelationships();

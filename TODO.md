@@ -1,6 +1,6 @@
 - Figure how to type-check relateds at setting time
 
-    - Look at MapperRelationships statics?
+    - Done, via attributes on the related properties, which are typed
 
 - On insert/update/delete, look at the PDOStatement and set any returned column
   values (only good for PostgreSQL, but hey, nice touch.)

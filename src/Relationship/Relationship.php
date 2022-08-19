@@ -39,12 +39,12 @@ abstract class Relationship
         return $this;
     }
 
-    abstract public function appendJoin(
+    abstract public function joinSelect(
         MapperSelect $select,
         string $join,
         string $nativeAlias,
         string $foreignAlias,
-        callable $sub = null
+        array $more = []
     ) : void;
 
     abstract public function stitchIntoRecords(

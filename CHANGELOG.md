@@ -27,3 +27,16 @@ No releases yet.
   and MapperRelationships is now all-purpose for all relateds.
 
 - Remove MapperRelationships entirely in favor of new RelationshipLocator
+
+- Modified joinRelated() API. Use an array instead of a closure:
+
+        $threadSelect->joinRelated([
+          'author' => [
+            'threads AS other_threads' => [
+              'LEFT comments',
+            ]
+          ],
+          'LEFT summary AS summ',
+        ]);
+
+  Can still use a string for a single related.

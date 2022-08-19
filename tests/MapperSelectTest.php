@@ -69,17 +69,19 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
         $this->select->loadRelated(['no_such_related']);
     }
 
-    public function testJoinWithSubRelated()
+    public function testJoinRelated_withMoreRelated()
     {
         $select = $this->mapperLocator
             ->get(Author::CLASS)
             ->select()
             ->columns('*')
-            ->joinRelated('LEFT threads', function ($sub) {
-                $sub->joinRelated('INNER taggings AS taggings_alias', function ($sub) {
-                    $sub->joinRelated('tag');
-                });
-            });
+            ->joinRelated([
+                'LEFT threads' => [
+                    'INNER taggings AS taggings_alias' => [
+                        'tag',
+                    ],
+                ],
+            ]);
 
         $expect = '
             SELECT

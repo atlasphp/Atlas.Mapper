@@ -108,12 +108,12 @@ abstract class RegularRelationship extends Relationship
         array &$foreignRecords
     ) : void;
 
-    public function appendJoin(
+    public function joinSelect(
         MapperSelect $select,
         string $join,
         string $nativeAlias,
         string $foreignAlias,
-        callable $sub = null
+        array $more = []
     ) : void
     {
         $spec = $select->quoteIdentifier($this->foreignTableName);
@@ -134,16 +134,27 @@ abstract class RegularRelationship extends Relationship
 
         $this->foreignSelectWhere($select, $foreignAlias);
 
-        if ($sub === null) {
+        if (empty($more)) {
             return;
         }
 
-        // invoke the callable for sub-relateds
-        $sub(new SubJoinRelated(
-            $this->getForeignMapper()->getRelationshipLocator(),
-            $select,
-            $foreignAlias // current "foreign" alias becomes "native" one
-        ));
+        foreach ($more as $relatedSpec => $relatedMore) {
+            if (is_int($relatedSpec)) {
+                $relatedSpec = $relatedMore;
+                $relatedMore = [];
+            }
+
+            $foreignRelationshipLocator = $this->getForeignMapper()->getRelationshipLocator();
+            list($relatedName, $join, $nextForeignAlias) = $foreignRelationshipLocator->listRelatedSpec($relatedSpec);
+
+            $foreignRelationshipLocator->get($relatedName)->joinSelect(
+                $select,
+                $join,
+                $foreignAlias, // current "foreign" alias becomes "native" one
+                $nextForeignAlias,
+                $relatedMore
+            );
+        }
     }
 
     protected function fetchForeignRecords(array $records, $custom) : array
