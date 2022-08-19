@@ -79,7 +79,6 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
 
     public function testFetchRecordSetBy()
     {
-        // note that we canno to
         $actual = $this->mapperLocator->get(Student::CLASS)->fetchRecordSetBy(
             ['student_fn' => ['Anna', 'Betty', 'Clara']],
             [
