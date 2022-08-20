@@ -34,11 +34,11 @@ class ManyToMany extends RegularRelationship
     protected $throughRecordSet;
 
     public function __construct(
-        string $name,
-        RelationshipAttribute $attribute,
-        MapperLocator $mapperLocator,
-        string $nativeMapperClass,
+        protected string $name,
+        protected MapperLocator $mapperLocator,
+        protected string $nativeMapperClass,
         string $foreignMapperClass,
+        RelationshipAttribute $attribute,
         RelationshipLocator $relationshipLocator
     ) {
         $this->throughName = $attribute->through;
@@ -99,10 +99,10 @@ class ManyToMany extends RegularRelationship
 
         parent::__construct(
             $name,
-            $attribute,
             $mapperLocator,
             $nativeMapperClass,
             $foreignMapperClass,
+            $attribute,
             $relationshipLocator
         );
     }

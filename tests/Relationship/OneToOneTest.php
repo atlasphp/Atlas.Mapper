@@ -11,10 +11,10 @@ class OneToOneTest extends RelationshipTest
     {
         $rel = new OneToOne(
             'summary',
-            new Define\OneToOne(),
             $this->mapperLocator,
             Thread::CLASS,
             Summary::CLASS,
+            new Define\OneToOne(),
             new RelationshipLocator(
                 $this->mapperLocator,
                 Thread::CLASS

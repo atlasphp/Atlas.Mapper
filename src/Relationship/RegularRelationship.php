@@ -23,35 +23,26 @@ use SplObjectStorage;
 
 abstract class RegularRelationship extends Relationship
 {
-    protected $name;
+    protected array $on = [];
 
-    protected $mapperLocator;
+    protected string $nativeTableName;
 
-    protected $nativeMapperClass;
+    protected string $foreignTableName;
 
-    protected $on = [];
-
-    protected $nativeTableName;
-
-    protected $foreignTableName;
-
-    protected $foreignStrategy;
+    protected ForeignSimple|ForeignComposite $foreignStrategy;
 
     public function __construct(
-        string $name,
-        RelationshipAttribute $attribute,
-        MapperLocator $mapperLocator,
-        string $nativeMapperClass,
+        protected string $name,
+        protected MapperLocator $mapperLocator,
+        protected string $nativeMapperClass,
         string $foreignMapperClass,
-        RelationshipLocator $relationshipLocator
+        RelationshipAttribute $attribute,
+        /* RelationshipLocator $relationshipLocator, */
     ) {
         if (! class_exists($foreignMapperClass)) {
             throw Exception::classDoesNotExist($foreignMapperClass);
         }
 
-        $this->name = $name;
-        $this->mapperLocator = $mapperLocator;
-        $this->nativeMapperClass = $nativeMapperClass;
         $this->foreignMapperClass = $foreignMapperClass;
 
         $foreignTable = $this->foreignMapperClass . 'Table';
@@ -157,7 +148,7 @@ abstract class RegularRelationship extends Relationship
         }
     }
 
-    protected function fetchForeignRecords(array $records, $custom) : array
+    protected function fetchForeignRecords(array $records, ?callable $custom) : array
     {
         if (! $records) {
             return [];
@@ -170,10 +161,11 @@ abstract class RegularRelationship extends Relationship
         if ($custom) {
             $custom($select);
         }
+
         return $select->fetchRecords();
     }
 
-    protected function foreignSelectWhere(MapperSelect $select, $alias) : void
+    protected function foreignSelectWhere(MapperSelect $select, string $alias) : void
     {
         $qa = $select->quoteIdentifier($alias);
         foreach ($this->where as $spec) {
@@ -199,7 +191,7 @@ abstract class RegularRelationship extends Relationship
         return true;
     }
 
-    protected function valuesMatch($nativeVal, $foreignVal) : bool
+    protected function valuesMatch(mixed $nativeVal, mixed $foreignVal) : bool
     {
         // cannot match if one is numeric and other is not
         if (is_numeric($nativeVal) && ! is_numeric($foreignVal)) {

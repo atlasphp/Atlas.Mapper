@@ -29,10 +29,10 @@ class RegularRelationshipTest extends RelationshipTest
         $this->expectExceptionMessage("Class 'NoSuchClass' does not exist.");
         $fake = new FakeRegularRelationship(
             'fake',
-            new Define\OneToOne(),
             $this->mapperLocator,
             Thread::CLASS,
             'NoSuchClass',
+            new Define\OneToOne(),
             $this->fakeRelationshipLocator,
         );
     }
@@ -41,10 +41,10 @@ class RegularRelationshipTest extends RelationshipTest
     {
         $fake = new FakeRegularRelationship(
             'fake',
-            new Define\OneToOne(),
             $this->mapperLocator,
             Thread::CLASS,
             Author::CLASS,
+            new Define\OneToOne(),
             $this->fakeRelationshipLocator,
         );
         $this->assertFalse($fake->valuesMatch('1', 'a'));
@@ -54,10 +54,10 @@ class RegularRelationshipTest extends RelationshipTest
     {
         $fake = new FakeRegularRelationship(
             'fake',
-            new Define\OneToOne(),
             $this->mapperLocator,
             Thread::CLASS,
             Author::CLASS,
+            new Define\OneToOne(),
             $this->fakeRelationshipLocator,
         );
         $this->assertSame([], $fake->fetchForeignRecords([], null));

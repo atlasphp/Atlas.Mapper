@@ -98,10 +98,10 @@ class RelationshipLocator implements IteratorAggregate
         /** @var Relationship */
         $relationship = new $relationshipClass(
             $name,
-            $attribute,
             $this->mapperLocator,
             $this->nativeMapperClass,
             $foreignMapperClass,
+            $attribute,
             $this
         );
 

@@ -123,10 +123,10 @@ class ManyToOneVariantTest extends RelationshipTest
     {
         $relationship = new ManyToOneVariant(
             'foo',
-            new Define\ManyToOneVariant(column: 'related_type'),
             $this->mapperLocator,
             Comment::CLASS,
             'UNKNOWN',
+            new Define\ManyToOneVariant(column: 'related_type'),
             new RelationshipLocator($this->mapperLocator, Comment::CLASS),
         );
 
@@ -175,10 +175,10 @@ class ManyToOneVariantTest extends RelationshipTest
     {
         $relationship = new ManyToOneVariant(
             'foo',
-            new Define\ManyToOneVariant(column: 'related_type'),
             $this->mapperLocator,
             Comment::CLASS,
             'UNKNOWN',
+            new Define\ManyToOneVariant(column: 'related_type'),
             new RelationshipLocator($this->mapperLocator, Comment::CLASS),
         );
 

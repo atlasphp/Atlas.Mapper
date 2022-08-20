@@ -21,12 +21,6 @@ use SplObjectStorage;
 
 class ManyToOneVariant extends Relationship
 {
-    protected $name;
-
-    protected $mapperLocator;
-
-    protected $nativeMapperClass;
-
     protected $typeCol;
 
     protected $variants = [];
@@ -34,11 +28,11 @@ class ManyToOneVariant extends Relationship
     protected RelationshipLocator $relationshipLocator;
 
     public function __construct(
-        string $name,
-        Define\ManyToOneVariant $attribute,
-        MapperLocator $mapperLocator,
-        string $nativeMapperClass,
+        protected string $name,
+        protected MapperLocator $mapperLocator,
+        protected string $nativeMapperClass,
         string $foreignMapperClass,
+        Define\ManyToOneVariant $attribute,
         RelationshipLocator $relationshipLocator
     ) {
         $this->name = $name;
@@ -57,10 +51,10 @@ class ManyToOneVariant extends Relationship
     {
         $variant = new ManyToOne(
             $this->name,
-            new Define\ManyToOne(on: $attr->on),
             $this->mapperLocator,
             $this->nativeMapperClass,
             Mapper::classFrom($attr->class),
+            new Define\ManyToOne(on: $attr->on),
             $this->relationshipLocator,
         );
 

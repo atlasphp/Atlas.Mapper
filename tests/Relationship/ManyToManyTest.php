@@ -195,10 +195,10 @@ class ManyToManyTest extends RelationshipTest
 
         $fakeRelationshipLocator->setFake('thread_taggings', new OneToMany(
             'thread_taggings',
-            new Define\OneToMany(),
             $this->mapperLocator,
             Thread::CLASS,
             Tagging::CLASS,
+            new Define\OneToMany(),
             $fakeRelationshipLocator,
         ));
 
@@ -211,10 +211,10 @@ class ManyToManyTest extends RelationshipTest
 
         $mtm = new ManyToMany(
             'tag_authors',
-            new Define\ManyToMany(through: 'thread_taggings'),
             $this->mapperLocator,
             Author::CLASS,
             Tag::CLASS,
+            new Define\ManyToMany(through: 'thread_taggings'),
             $fakeRelationshipLocator
         );
     }
@@ -228,10 +228,10 @@ class ManyToManyTest extends RelationshipTest
 
         $fakeRelationshipLocator->setFake('thread_taggings', new OneToMany(
             'thread_taggings',
-            new Define\OneToMany(),
             $this->mapperLocator,
             Thread::CLASS,
             Tagging::CLASS,
+            new Define\OneToMany(),
             $fakeRelationshipLocator,
         ));
 
@@ -244,10 +244,10 @@ class ManyToManyTest extends RelationshipTest
 
         $mtm = new ManyToMany(
             'tag_authors',
-            new Define\ManyToMany(through: 'thread_taggings'),
             $this->mapperLocator,
             Tag::CLASS,
             Author::CLASS,
+            new Define\ManyToMany(through: 'thread_taggings'),
             $fakeRelationshipLocator
         );
     }
