@@ -14,9 +14,9 @@ No releases yet.
 
     - rename `MapperSelect::joinWith()` to `MapperSelect::joinRelated()` for symmetry
 
-    - rename `SubJoinWith` to `SubJoinRelated`
+    - use Atlas.Table IdentityMap instead of one in Atlas.Mapper
 
-- Moved away from MapperRelationships::define() to using Define attributes
+- Moved away from MapperRelationships::define(), to using Define attributes
 
 - Now using instance of NotLoaded instead of `false` to indicate a related field
   was not eager-loaded

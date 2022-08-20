@@ -160,41 +160,6 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testCalcPrimaryComposite_missingKey()
-    {
-        $this->expectException(Exception::CLASS);
-        $this->expectExceptionMessage(
-            "Expected scalar value for primary key 'student_ln', value is missing instead."
-        );
-        $this->mapperLocator->get(Student::CLASS)->fetchRecord(['student_fn' => 'Anna']);
-    }
-
-    public function testCalcPrimaryComposite_nonScalar()
-    {
-        $this->expectException(Exception::CLASS);
-        $this->expectExceptionMessage(
-            "Expected scalar value for primary key 'student_fn', got array instead."
-        );
-        $this->mapperLocator->get(Student::CLASS)->fetchRecord(
-            ['student_fn' => ['Anna', 'Betty', 'Clara']]
-        );
-    }
-
-    public function testCalcPrimaryComposite()
-    {
-        $actual = $this->mapperLocator->get(Student::CLASS)->fetchRecord(
-            [
-                'foo' => 'bar',
-                'student_fn' => 'Anna',
-                'student_ln' => 'Alpha',
-                'baz' => 'dib',
-            ]
-        );
-
-        $this->assertSame('Anna', $actual->student_fn);
-        $this->assertSame('Alpha', $actual->student_ln);
-    }
-
     public function testRelationshipWhere()
     {
         $student = $this->mapperLocator->get(Student::CLASS)->fetchRecord(

@@ -365,28 +365,6 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->mapperLocator->get(Author::CLASS)->update($author);
     }
 
-    public function testCalcPrimary()
-    {
-        // plain old primary value
-        $actual = $this->mapperLocator->get(Author::CLASS)->fetchRecord(1);
-        $this->assertSame('1', $actual->author_id);
-
-        // // primary embedded in array
-        // $actual = $this->mapperLocator->get(Author::CLASS)->fetchRecord([
-        //     'author_id' => 2,
-        //     'foo' => 'bar',
-        //     'baz' => 'dib'
-        // ]);
-        // $this->assertSame('2', $actual->author_id);
-
-        // not a scalar
-        $this->expectException(Exception::CLASS);
-        $this->expectExceptionMessage(
-            "Expected scalar value for primary key 'author_id', got array instead."
-        );
-        $this->mapperLocator->get(Author::CLASS)->fetchRecord([1, 2, 3]);
-    }
-
     public function testLeftJoinWith()
     {
         $select = $this->mapperLocator->get(Thread::CLASS)->select()

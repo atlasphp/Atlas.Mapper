@@ -14,6 +14,8 @@ use Atlas\Mapper\Identity;
 use Atlas\Mapper\Relationship\RelationshipLocator;
 use Atlas\Table\Row;
 use Atlas\Table\Table;
+use Atlas\Table\IdentityMap\CompositeIdentityMap;
+use Atlas\Table\IdentityMap\SimpleIdentityMap;
 use SplObjectStorage;
 
 abstract class Mapper
@@ -44,15 +46,10 @@ abstract class Mapper
         $this->table = $table;
         $this->relationshipLocator = $relationshipLocator;
         $this->mapperEvents = $mapperEvents;
-
         $this->recordSetClass = static::CLASS . 'RecordSet';
-
-        $primaryKey = $this->table::PRIMARY_KEY;
-        if (count($primaryKey) == 1) {
-            $this->identityMap = new Identity\IdentitySimple($primaryKey[0]);
-        } else {
-            $this->identityMap = new Identity\IdentityComposite($primaryKey);
-        }
+        $this->identityMap = $this->table::COMPOSITE_KEY
+            ? new CompositeIdentityMap($this->table)
+            : new SimpleIdentityMap($this->table);
     }
 
     public function getTable() : Table
@@ -67,9 +64,7 @@ abstract class Mapper
 
     public function fetchRecord($primaryVal, array $loadRelated = []) : ?Record
     {
-        $serial = $this->identityMap->getSerial($primaryVal);
-        $row = $this->identityMap->getRow($serial)
-            ?? $this->table->selectRow($this->select(), $primaryVal);
+        $row = $this->identityMap->fetchRow($primaryVal, $this->select());
 
         if ($row === null) {
             return null;
@@ -84,6 +79,7 @@ abstract class Mapper
     ) : ?Record
     {
         $row = $this->select($whereEquals)->fetchRow();
+
         if ($row === null) {
             return null;
         }
@@ -93,38 +89,7 @@ abstract class Mapper
 
     public function fetchRecords(array $primaryVals, array $loadRelated = []) : array
     {
-        $rows = [];
-        $missing = [];
-
-        // find identity-mapped rows
-        foreach ($primaryVals as $primaryVal) {
-            $serial = $this->identityMap->getSerial($primaryVal);
-            $memory = $this->identityMap->getRow($serial);
-            if ($memory === null) {
-                $rows[$serial] = null;
-                $missing[$serial] = $primaryVal;
-            } else {
-                $rows[$serial] = $memory;
-            }
-        }
-
-        // early return if all records were identity-mapped
-        if (count($missing) == 0) {
-            return $this->turnRowsIntoRecords($rows, $loadRelated);
-        }
-
-        // fetch rows missing from identity map
-        foreach ($this->table->selectRows($this->select(), $missing) as $row) {
-            $serial = $this->identityMap->getSerial($row);
-            $rows[$serial] = $row;
-            unset($missing[$serial]);
-        }
-
-        // remove placeholders for unfetched rows
-        foreach ($missing as $serial => $primaryVal) {
-            unset($rows[$serial]);
-        }
-
+        $rows = $this->identityMap->fetchRows($primaryVals, $this->select());
         return $this->turnRowsIntoRecords($rows, $loadRelated);
     }
 
@@ -297,7 +262,7 @@ abstract class Mapper
 
     protected function newRecordFromSelectedRow(Row $row) : Record
     {
-        $row = $this->identityMap->setOrGetRow($row);
+        $row = $this->identityMap->memRow($row);
         return $this->newRecordFromRow($row);
     }
 
