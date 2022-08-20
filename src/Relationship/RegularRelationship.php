@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Mapper\Define\RelationshipAttribute;
+use Atlas\Mapper\Define;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\Mapper;
 use Atlas\Mapper\MapperLocator;
@@ -36,7 +36,7 @@ abstract class RegularRelationship extends Relationship
         protected MapperLocator $mapperLocator,
         protected string $nativeMapperClass,
         string $foreignMapperClass,
-        RelationshipAttribute $attribute,
+        Define\RelationshipAttribute $attribute,
         /* RelationshipLocator $relationshipLocator, */
     ) {
         if (! class_exists($foreignMapperClass)) {
@@ -87,11 +87,6 @@ abstract class RegularRelationship extends Relationship
         foreach ($nativeRecords as $nativeRecord) {
             $this->stitchIntoRecord($nativeRecord, $foreignRecords);
         }
-    }
-
-    protected function getForeignMapper() : Mapper
-    {
-        return $this->mapperLocator->get($this->foreignMapperClass);
     }
 
     abstract protected function stitchIntoRecord(

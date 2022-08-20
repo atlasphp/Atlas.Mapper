@@ -21,9 +21,10 @@ use SplObjectStorage;
 
 class ManyToOneVariant extends Relationship
 {
-    protected $typeCol;
+    protected string $typeCol;
 
-    protected $variants = [];
+    /** @var ManyToOne[] */
+    protected array $variants = [];
 
     protected RelationshipLocator $relationshipLocator;
 
@@ -55,7 +56,6 @@ class ManyToOneVariant extends Relationship
             $this->nativeMapperClass,
             Mapper::classFrom($attr->class),
             new Define\ManyToOne(on: $attr->on),
-            $this->relationshipLocator,
         );
 
         $variant->where = $this->where;
@@ -65,7 +65,10 @@ class ManyToOneVariant extends Relationship
         return $this;
     }
 
-    public function where(string $condition, ...$bindInline) : Relationship
+    public function where(
+        string $condition,
+        mixed ...$bindInline
+    ) : Relationship
     {
         if (empty($this->variants)) {
             return parent::where($condition, ...$bindInline);
@@ -98,7 +101,7 @@ class ManyToOneVariant extends Relationship
         throw Exception::cannotJoinOnVariantRelationships();
     }
 
-    protected function getVariant($typeVal)
+    protected function getVariant(mixed $typeVal) : ManyToOne
     {
         if (isset($this->variants[$typeVal])) {
             return $this->variants[$typeVal];

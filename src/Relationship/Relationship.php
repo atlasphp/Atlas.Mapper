@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Atlas\Mapper\Relationship;
 
 use Atlas\Mapper\Mapper;
+use Atlas\Mapper\MapperLocator;
 use Atlas\Mapper\MapperSelect;
 use Atlas\Mapper\Record;
 use SplObjectStorage;
@@ -21,6 +22,8 @@ abstract class Relationship
 
     public const AFTER_NATIVE = 'AFTER_NATIVE';
 
+    protected MapperLocator $mapperLocator;
+
     protected string $foreignMapperClass;
 
     protected bool $ignoreCase = false;
@@ -28,6 +31,11 @@ abstract class Relationship
     protected array $where = [];
 
     abstract public function getPersistencePriority() : string;
+
+    protected function getForeignMapper() : Mapper
+    {
+        return $this->mapperLocator->get($this->foreignMapperClass);
+    }
 
     public function where(
         string $condition,

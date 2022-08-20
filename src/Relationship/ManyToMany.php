@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Mapper\Define\RelationshipAttribute;
+use Atlas\Mapper\Define;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\Mapper;
 use Atlas\Mapper\MapperLocator;
@@ -23,22 +23,22 @@ use SplObjectStorage;
 
 class ManyToMany extends RegularRelationship
 {
-    protected $throughName;
+    protected string $throughName;
 
-    protected $throughRelationship;
+    protected Relationship $throughRelationship;
 
-    protected $throughNativeRelatedName;
+    protected ?string $throughNativeRelatedName = null;
 
-    protected $throughForeignRelatedName;
+    protected ?string $throughForeignRelatedName = null;
 
-    protected $throughRecordSet;
+    protected RecordSet $throughRecordSet;
 
     public function __construct(
         protected string $name,
         protected MapperLocator $mapperLocator,
         protected string $nativeMapperClass,
         string $foreignMapperClass,
-        RelationshipAttribute $attribute,
+        Define\ManyToMany $attribute,
         RelationshipLocator $relationshipLocator
     ) {
         $this->throughName = $attribute->through;
@@ -102,8 +102,7 @@ class ManyToMany extends RegularRelationship
             $mapperLocator,
             $nativeMapperClass,
             $foreignMapperClass,
-            $attribute,
-            $relationshipLocator
+            $attribute
         );
     }
 
@@ -208,6 +207,8 @@ class ManyToMany extends RegularRelationship
         }
 
         $foreignMapper = $this->getForeignMapper();
+
+        /** @var Record $foreignRecord */
         foreach ($foreignRecordSet as $foreignRecord) {
             $foreignMapper->persist($foreignRecord, $tracker);
         }
@@ -229,10 +230,13 @@ class ManyToMany extends RegularRelationship
         }
 
         // find foreigns with a matching through
+        /** @var Record $foreignRecord */
         foreach ($foreignRecordSet as $foreignRecord) {
 
             // does the foreign match any through?
             $matched = false;
+
+            /** @var Record $throughRecord */
             foreach ($throughRecords as $i => $throughRecord) {
 
                 // does this through match the foreign?
