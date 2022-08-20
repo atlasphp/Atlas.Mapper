@@ -73,6 +73,7 @@ class OneToMany extends DeletableRelationship
             return;
         }
 
+        /** @var Record $foreignRecord */
         foreach ($foreignRecordSet as $foreignRecord) {
             foreach ($this->on as $nativeField => $foreignField) {
                 $foreignRecord->$foreignField = $nativeRecord->$nativeField;
@@ -92,6 +93,8 @@ class OneToMany extends DeletableRelationship
         }
 
         $foreignMapper = $this->getForeignMapper();
+
+        /** @var Record $foreignRecord */
         foreach ($foreignRecordSet as $foreignRecord) {
             $foreignMapper->persist($foreignRecord, $tracker);
         }
