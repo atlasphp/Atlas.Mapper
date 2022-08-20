@@ -200,8 +200,8 @@ abstract class RegularRelationship extends Relationship
 
         // ignore string case?
         if ($this->ignoreCase) {
-            $nativeVal = strtolower($nativeVal);
-            $foreignVal = strtolower($foreignVal);
+            $nativeVal = strtolower((string) $nativeVal);
+            $foreignVal = strtolower((string) $foreignVal);
         }
 
         // are they equal?
