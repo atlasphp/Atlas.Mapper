@@ -25,29 +25,34 @@ use ReflectionProperty;
 
 class RelationshipLocator implements IteratorAggregate
 {
-    protected string $nativeTableClass;
-
+    /** @var Relationship[] */
     protected array $instances = [];
 
-    protected $persist = [];
+    protected string $nativeRelatedClass;
+
+    protected string $nativeTableClass;
+
+    protected array $persist = [
+        Relationship::BEFORE_NATIVE => [],
+        Relationship::AFTER_NATIVE => [],
+    ];
 
     public function __construct(
         protected MapperLocator $mapperLocator,
         protected string $nativeMapperClass
     ) {
-        $this->mapperLocator = $mapperLocator;
-        $this->nativeMapperClass = $nativeMapperClass;
         $this->nativeTableClass = $this->nativeMapperClass . 'Table';
+        $this->nativeRelatedClass = $this->nativeMapperClass . 'Related';
+        $rclass = new ReflectionClass($this->nativeRelatedClass);
 
-        $rc = new ReflectionClass($this->nativeMapperClass . 'Related');
-        $properties = $rc->getProperties();
-
-        foreach ($properties as $property) {
-            $this->defineFromProperty($property);
+        foreach ($rclass->getProperties() as $property) {
+            $this->defineFromRelatedProperty($property);
         }
     }
 
-    protected function defineFromProperty(ReflectionProperty $property)
+    protected function defineFromRelatedProperty(
+        ReflectionProperty $property
+    ) : void
     {
         $attributes = $property->getAttributes();
 
@@ -56,16 +61,18 @@ class RelationshipLocator implements IteratorAggregate
                 $attribute->getName(),
                 RelationshipAttribute::CLASS
             )) {
-                $this->defineFromPropertyAttribute(
+                /** @var RelationshipAttribute */
+                $attribute = $attribute->newInstance();
+                $this->defineFromRelatedPropertyAttribute(
                     $property,
-                    $attribute->newInstance(),
+                    $attribute,
                     $attributes
                 );
             }
         }
     }
 
-    protected function defineFromPropertyAttribute(
+    protected function defineFromRelatedPropertyAttribute(
         ReflectionProperty $property,
         RelationshipAttribute $attribute,
         array $otherAttrs
@@ -76,7 +83,11 @@ class RelationshipLocator implements IteratorAggregate
         $name = $property->getName();
 
         if (in_array($name, $this->nativeTableClass::COLUMN_NAMES)) {
-            throw Exception::nameConflict($name, 'column');
+            throw Exception::relatedNameConflict(
+                $this->nativeRelatedClass,
+                $name,
+                $this->nativeTableClass
+            );
         }
 
         $type = $property->getType();
@@ -84,6 +95,7 @@ class RelationshipLocator implements IteratorAggregate
             ? Mapper::classFrom($type->getName())
             : 'UNKNOWN';
 
+        /** @var Relationship */
         $relationship = new $relationshipClass(
             $name,
             $attribute,
@@ -94,7 +106,8 @@ class RelationshipLocator implements IteratorAggregate
         );
 
         $this->instances[$name] = $relationship;
-        $this->persist[$relationship::PERSISTENCE_PRIORITY][] = $relationship;
+        $priority = $relationship->getPersistencePriority();
+        $this->persist[$priority][] = $relationship;
 
         foreach ($otherAttrs as $otherAttr) {
             if (is_subclass_of(
@@ -132,7 +145,7 @@ class RelationshipLocator implements IteratorAggregate
         return $this->persist[Relationship::AFTER_NATIVE] ?? [];
     }
 
-    public function getNames()
+    public function getNames() : array
     {
         return array_keys($this->instances);
     }

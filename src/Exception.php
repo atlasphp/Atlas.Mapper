@@ -69,9 +69,9 @@ class Exception extends \Exception
         return new Exception($message);
     }
 
-    public static function relatedNameConflict(string $name, string $type)
+    public static function relatedNameConflict(string $nativeRelatedClass, string $name, string $nativeTableClass)
     {
-        $message = "Relationship '$name' conflicts with existing {$type} name.";
+        $message = "{$nativeRelatedClass} property \${$name} conflicts with existing {$nativeTableClass} column name.";
         return new Exception($message);
     }
 

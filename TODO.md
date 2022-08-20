@@ -7,3 +7,5 @@
 
 - Add a "required" on one-to-one and many-to-one? Existing 1:1 and M:1 are
   really to-zero-or-one, and "required" is to-exactly-one. Maybe "always".
+
+- Better Exception messages. Include e.g. the class it came from.

@@ -23,8 +23,6 @@ use SplObjectStorage;
 
 class ManyToMany extends RegularRelationship
 {
-    public const PERSISTENCE_PRIORITY = self::BEFORE_NATIVE;
-
     protected $throughName;
 
     protected $throughRelationship;
@@ -107,6 +105,11 @@ class ManyToMany extends RegularRelationship
             $foreignMapperClass,
             $relationshipLocator
         );
+    }
+
+    public function getPersistencePriority() : string
+    {
+        return static::BEFORE_NATIVE;
     }
 
     public function joinSelect(

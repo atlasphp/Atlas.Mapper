@@ -21,13 +21,18 @@ abstract class Relationship
 
     public const AFTER_NATIVE = 'AFTER_NATIVE';
 
-    protected $foreignMapperClass;
+    protected string $foreignMapperClass;
 
-    protected $ignoreCase = false;
+    protected bool $ignoreCase = false;
 
-    protected $where = [];
+    protected array $where = [];
 
-    public function where(string $condition, ...$bindInline) : Relationship
+    abstract public function getPersistencePriority() : string;
+
+    public function where(
+        string $condition,
+        mixed ...$bindInline
+    ) : Relationship
     {
         $this->where[] = func_get_args();
         return $this;

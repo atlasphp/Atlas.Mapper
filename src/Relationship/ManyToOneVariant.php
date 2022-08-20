@@ -21,8 +21,6 @@ use SplObjectStorage;
 
 class ManyToOneVariant extends Relationship
 {
-    public const PERSISTENCE_PRIORITY = self::BEFORE_NATIVE;
-
     protected $name;
 
     protected $mapperLocator;
@@ -48,6 +46,11 @@ class ManyToOneVariant extends Relationship
         $this->nativeMapperClass = $nativeMapperClass;
         $this->typeCol = $attribute->column;
         $this->relationshipLocator = $relationshipLocator;
+    }
+
+    public function getPersistencePriority() : string
+    {
+        return static::BEFORE_NATIVE;
     }
 
     public function type(Define\Variant $attr) : self

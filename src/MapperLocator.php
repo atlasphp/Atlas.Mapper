@@ -20,7 +20,7 @@ class MapperLocator
 
     protected $factory;
 
-    static public function new(mixed ...$args) : MapperLocator
+    public static function new(mixed ...$args) : MapperLocator
     {
         return new MapperLocator(
             new TableLocator(

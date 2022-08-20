@@ -12,9 +12,9 @@ namespace Atlas\Mapper\Relationship;
 
 final class NotLoaded
 {
-    static protected ?NotLoaded $instance = null;
+    protected static ?NotLoaded $instance = null;
 
-    static public function getInstance() : NotLoaded
+    public static function getInstance() : NotLoaded
     {
         if (static::$instance === null) {
             static::$instance = new NotLoaded();

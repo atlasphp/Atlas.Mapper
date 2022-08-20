@@ -14,7 +14,7 @@ use Atlas\Table\TableSelect;
 
 abstract class MapperSelect extends TableSelect
 {
-    static public function new(mixed $arg, mixed ...$args) : static
+    public static function new(mixed $arg, mixed ...$args) : static
     {
         /** @var Mapper */
         $mapper = array_pop($args);

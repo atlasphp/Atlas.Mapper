@@ -12,6 +12,11 @@ class FakeRegularRelationship extends RegularRelationship
         return $this->$func(...$args);
     }
 
+    public function getPersistencePriority() : string
+    {
+        return static::BEFORE_NATIVE;
+    }
+
     protected function stitchIntoRecord(
         Record $nativeRecord,
         array &$foreignRecords

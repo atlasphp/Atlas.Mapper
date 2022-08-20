@@ -20,7 +20,7 @@ use SplObjectStorage;
 
 abstract class Mapper
 {
-    static public function classFrom(string $spec)
+    public static function classFrom(string $spec)
     {
         // DataSource\Foo\BarRecord => DataSource\Foo\Foo
         $parts = explode('\\', $spec);

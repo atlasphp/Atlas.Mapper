@@ -15,8 +15,6 @@ use SplObjectStorage;
 
 class OneToOneBidi extends OneToOne
 {
-    public const PERSISTENCE_PRIORITY = self::AFTER_NATIVE;
-
     public function fixNativeRecord(Record $nativeRecord) : void
     {
         $foreignRecord = $nativeRecord->{$this->name};
