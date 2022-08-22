@@ -11,20 +11,20 @@ declare(strict_types=1);
 namespace Atlas\Mapper\Define;
 
 use Atlas\Mapper\Mapper;
-use Atlas\Mapper\Relationship\Relationship;
+use Atlas\Mapper\Relationship\ManyToOneVariant;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::IS_REPEATABLE)]
 class Variant extends RefinementAttribute
 {
     public function __construct(
-        public mixed $value,
+        public int|string $value,
         public string $class,
         public array $on
     ) {
     }
 
-    public function __invoke(Relationship $relationship) : void
+    public function __invoke(ManyToOneVariant $relationship) : void
     {
         $relationship->type($this);
     }

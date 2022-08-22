@@ -14,7 +14,7 @@ use Atlas\Table\Row;
 
 class Exception extends \Exception
 {
-    public static function classDoesNotExist(string $class) : Exception
+    public static function classDoesNotExist(string $class) : self
     {
         return new Exception("Class '{$class}' does not exist.");
     }
@@ -22,17 +22,12 @@ class Exception extends \Exception
     public static function propertyDoesNotExist(
         string $class,
         string $property
-    ) : Exception
+    ) : self
     {
         return new Exception("{$class}::\${$property} does not exist.");
     }
 
-    public static function mapperNotFound(string $class) : Exception
-    {
-        return new Exception("{$class} not found in mapper locator.");
-    }
-
-    public static function invalidType(string $expect, $actual) : Exception
+    public static function invalidType(string $expect, mixed $actual) : self
     {
         if (is_object($actual)) {
             $actual = get_class($actual);
@@ -43,58 +38,58 @@ class Exception extends \Exception
         return new Exception("Expected type $expect; got $actual instead.");
     }
 
-    public static function rowAlreadyMapped(Row $row) : Exception
+    public static function rowAlreadyMapped(Row $row) : self
     {
         return new Exception("Row already exists in IdentityMap.");
     }
 
     public static function relationshipDoesNotExist(
         string $foreignName
-    ) : Exception
+    ) : self
     {
         return new Exception("Relationship '$foreignName' does not exist.");
     }
 
-    public static function primaryValueNotScalar(string $col, $val)
+    public static function primaryValueNotScalar(string $col, mixed $val) : self
     {
         $message = "Expected scalar value for primary key '{$col}', "
             . "got " . gettype($val) . " instead.";
         return new Exception($message);
     }
 
-    public static function primaryValueMissing(string $col)
+    public static function primaryValueMissing(string $col) : self
     {
         $message = "Expected scalar value for primary key '$col', "
             . "value is missing instead.";
         return new Exception($message);
     }
 
-    public static function relatedNameConflict(string $nativeRelatedClass, string $name, string $nativeTableClass)
+    public static function relatedNameConflict(string $nativeRelatedClass, string $name, string $nativeTableClass) : self
     {
         $message = "{$nativeRelatedClass} property \${$name} conflicts with existing {$nativeTableClass} column name.";
         return new Exception($message);
     }
 
-    public static function cannotJoinOnVariantRelationships()
+    public static function cannotJoinOnVariantRelationships() : self
     {
         $message = "Cannot JOIN on variant relationships.";
         return new Exception($message);
     }
 
-    public static function noSuchType(string $nativeMapperClass, $typeVal)
+    public static function noSuchVariantType(string $nativeMapperClass, int|string|null $typeVal) : self
     {
-        $message = "Variant relationship type '{$typeVal}' "
-            . "not defined in {$nativeMapperClass}Relationships.";
+        $typeVal = $typeVal === null ? 'NULL' : "'" . (string) $typeVal . "'";
+        $message = "Variant relationship type {$typeVal} "
+            . "not defined in {$nativeMapperClass}Related.";
         return new Exception($message);
     }
 
-    public static function mapperAlreadySet()
-    {
-        $message = "Mapper already set.";
-        return new Exception($message);
-    }
-
-    public static function couldNotFindThroughRelationship($type, $throughName, $foreignName, $mapperClass)
+    public static function couldNotFindThroughRelationship(
+        string $type,
+        string $throughName,
+        string $foreignName,
+        string $mapperClass
+    ) : self
     {
         $message = "Could not find ManyToOne $type relationship through '$throughName' "
             . "for ManyToMany '{$foreignName}' on {$mapperClass}";

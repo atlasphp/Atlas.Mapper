@@ -79,7 +79,7 @@ class ManyToOneVariantTest extends RelationshipTest
 
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage(
-            "Variant relationship type 'NO_SUCH_TYPE' not defined in Atlas\Mapper\DataSource\Comment\CommentRelationships."
+            "Variant relationship type 'NO_SUCH_TYPE' not defined in Atlas\Mapper\DataSource\Comment\CommentRelated."
         );
         $this->mapperLocator->get(Page::CLASS)->persist($page);
     }
@@ -94,7 +94,7 @@ class ManyToOneVariantTest extends RelationshipTest
 
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage(
-            "Variant relationship type '' not defined in Atlas\Mapper\DataSource\Comment\CommentRelationships."
+            "Variant relationship type NULL not defined in Atlas\Mapper\DataSource\Comment\CommentRelated."
         );
         $this->mapperLocator->get(Page::CLASS)->persist($page);
     }

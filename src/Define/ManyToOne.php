@@ -16,7 +16,7 @@ use Attribute;
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class ManyToOne extends RelationshipAttribute
 {
-    public $class = Relationship\ManyToOne::CLASS;
+    public string $class = Relationship\ManyToOne::CLASS;
 
     public function __construct(
         public array $on = []

@@ -206,7 +206,7 @@ class RelationshipLocator implements IteratorAggregate
         $mapperClass = implode('\\', $parts) . '\\' . end($parts);
 
         if (! class_exists($mapperClass)) {
-            throw Exception::mapperNotFound($mapperClass);
+            throw Exception::classDoesNotExist($mapperClass);
         }
 
         return $mapperClass;

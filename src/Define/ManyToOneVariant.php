@@ -16,7 +16,7 @@ use Attribute;
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class ManyToOneVariant extends RelationshipAttribute
 {
-    public $class = Relationship\ManyToOneVariant::CLASS;
+    public string $class = Relationship\ManyToOneVariant::CLASS;
 
     public function __construct(
         public string $column

@@ -16,7 +16,7 @@ use Attribute;
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class ManyToMany extends RelationshipAttribute
 {
-    public $class = Relationship\ManyToMany::CLASS;
+    public string $class = Relationship\ManyToMany::CLASS;
 
     public function __construct(
         public string $through,

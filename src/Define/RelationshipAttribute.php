@@ -12,7 +12,7 @@ namespace Atlas\Mapper\Define;
 
 abstract class RelationshipAttribute
 {
-    public $class = 'UNKNOWN';
+    public string $class = 'UNKNOWN';
 
     public array $on = [];
 }

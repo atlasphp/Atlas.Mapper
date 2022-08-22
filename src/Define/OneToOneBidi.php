@@ -16,7 +16,7 @@ use Attribute;
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class OneToOneBidi extends RelationshipAttribute
 {
-    public $class = Relationship\OneToOneBidi::CLASS;
+    public string $class = Relationship\OneToOneBidi::CLASS;
 
     public function __construct(
         public array $on = []

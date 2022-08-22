@@ -107,13 +107,13 @@ class ManyToOneVariant extends Relationship
         throw Exception::cannotJoinOnVariantRelationships();
     }
 
-    protected function getVariant(mixed $typeVal) : ManyToOne
+    protected function getVariant(int|string|null $typeVal) : ManyToOne
     {
         if (isset($this->variants[$typeVal])) {
             return $this->variants[$typeVal];
         }
 
-        throw Exception::noSuchType($this->nativeMapperClass, $typeVal);
+        throw Exception::noSuchVariantType($this->nativeMapperClass, $typeVal);
     }
 
     public function stitchIntoRecords(
