@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Atlas\Mapper;
 
 use Atlas\Mapper\Identity;
+use Atlas\Mapper\Relationship\Relationship;
 use Atlas\Mapper\Relationship\RelationshipLocator;
 use Atlas\Table\Row;
 use Atlas\Table\Table;
@@ -20,15 +21,15 @@ use SplObjectStorage;
 
 abstract class Mapper
 {
-    protected $table;
+    protected Table $table;
 
-    protected $relationshipLocator;
+    protected RelationshipLocator $relationshipLocator;
 
-    protected $mapperEvents;
+    protected MapperEvents $mapperEvents;
 
-    protected $recordSetClass;
+    protected string $recordSetClass;
 
-    protected $identityMap;
+    protected SimpleIdentityMap|CompositeIdentityMap $identityMap;
 
     public function __construct(
         Table $table,
@@ -54,7 +55,7 @@ abstract class Mapper
         return $this->relationshipLocator;
     }
 
-    public function fetchRecord($primaryVal, array $loadRelated = []) : ?Record
+    public function fetchRecord(mixed $primaryVal, array $loadRelated = []) : ?Record
     {
         $row = $this->identityMap->fetchRow($primaryVal, $this->select());
 
@@ -229,6 +230,8 @@ abstract class Mapper
     public function newRecordSet(array $records = []) : RecordSet
     {
         $recordSetClass = $this->recordSetClass;
+
+        /** @var RecordSet */
         return new $recordSetClass(
             $records,
             [$this, 'newRecord']
@@ -261,6 +264,8 @@ abstract class Mapper
     protected function newRecordFromRow(Row $row, array $fields = []) : Record
     {
         $recordClass = $this->getRecordClass($row);
+
+        /** @var Record */
         return new $recordClass(
             $row,
             $this->newRelated($fields)
@@ -270,6 +275,8 @@ abstract class Mapper
     public function newRelated(array $fields = []) : Related
     {
         $relatedClass = static::CLASS . 'Related';
+
+        /** @var Related */
         $related = new $relatedClass();
         $related->set($fields);
         return $related;
@@ -282,6 +289,7 @@ abstract class Mapper
 
     protected function fixNativeRecord(Record $nativeRecord) : void
     {
+        /** @var Relationship $relationship */
         foreach ($this->relationshipLocator as $relationship) {
             $relationship->fixNativeRecord($nativeRecord);
         }
@@ -289,6 +297,7 @@ abstract class Mapper
 
     protected function fixForeignRecord(Record $nativeRecord) : void
     {
+        /** @var Relationship $relationship */
         foreach ($this->relationshipLocator as $relationship) {
             $relationship->fixForeignRecord($nativeRecord);
         }

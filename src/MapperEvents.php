@@ -82,7 +82,7 @@ abstract class MapperEvents
         Mapper $mapper,
         Record $record,
         Delete $delete,
-        PDOStatement $pdoStatement
+        ?PDOStatement $pdoStatement
     ) : void
     {
     }
