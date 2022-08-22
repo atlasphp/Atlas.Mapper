@@ -23,9 +23,9 @@ abstract class MapperSelect extends TableSelect
         return $select;
     }
 
-    protected $mapper;
+    protected Mapper $mapper;
 
-    protected $loadRelated = [];
+    protected array $loadRelated = [];
 
     public function joinRelated(string|array $relatedSpecs) : self
     {

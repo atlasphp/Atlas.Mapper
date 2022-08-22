@@ -11,22 +11,25 @@ declare(strict_types=1);
 namespace Atlas\Mapper\Relationship;
 
 use Atlas\Mapper\MapperSelect;
+use Atlas\Mapper\Record;
 
 class ForeignSimple
 {
-    protected $foreignTableName;
+    protected string $nativeCol;
 
-    protected $nativeCol;
+    protected string $foreignCol;
 
-    protected $foriegnCol;
-
-    public function __construct(string $foreignTableName, array $on)
-    {
-        $this->foreignTableName = $foreignTableName;
-        $this->nativeCol = key($on);
-        $this->foreignCol = current($on);
+    public function __construct(
+        protected string $foreignTableName,
+        array $on
+    ) {
+        $this->nativeCol = (string) key($on);
+        $this->foreignCol = (string) current($on);
     }
 
+    /**
+     * @param Record[] $records
+     */
     public function modifySelect(MapperSelect $select, array $records) : void
     {
         $vals = [];

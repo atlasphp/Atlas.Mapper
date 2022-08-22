@@ -14,12 +14,15 @@ use Atlas\Mapper\Record;
 
 abstract class DeletableRelationship extends RegularRelationship
 {
-    const CASCADE = 'CASCADE';
-    const INIT_DELETED = 'INIT_DELETED';
-    const SET_DELETE = 'SET_DELETE';
-    const SET_NULL = 'SET_NULL';
+    public const CASCADE = 'CASCADE';
 
-    protected $onDelete;
+    public const INIT_DELETED = 'INIT_DELETED';
+
+    public const SET_DELETE = 'SET_DELETE';
+
+    public const SET_NULL = 'SET_NULL';
+
+    protected string $onDelete;
 
     public function onDeleteCascade() : Relationship
     {

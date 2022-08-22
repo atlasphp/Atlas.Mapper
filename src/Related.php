@@ -32,7 +32,7 @@ class Related
         }
     }
 
-    public function __get(string $field)
+    public function __get(string $field) : mixed
     {
         $this->assertHas($field);
 
@@ -41,7 +41,7 @@ class Related
             : NotLoaded::getInstance();
     }
 
-    public function __set(string $field, $value) : void
+    public function __set(string $field, mixed $value) : void
     {
         $this->assertHas($field);
         $this->$field = $value;
@@ -66,6 +66,8 @@ class Related
 
     public function getFields() : array
     {
+        $fields = [];
+
         foreach ($this->__LOADED as $field => $flag) {
             $fields[$field] = $this->__get($field);
         }
@@ -107,6 +109,7 @@ class Related
             $tracker[$this] = $array;
         }
 
+        /** @var array */
         return $tracker[$this];
     }
 
