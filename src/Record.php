@@ -17,23 +17,23 @@ use SplObjectStorage;
 
 abstract class Record implements JsonSerializable
 {
-    private $row;
+    private Row $__ROW;
 
-    private $related;
+    private Related $__RELATED;
 
     public function __construct(Row $row, Related $related)
     {
-        $this->row = $row;
-        $this->related = $related;
+        $this->__ROW = $row;
+        $this->__RELATED = $related;
     }
 
-    public function __get(string $field)
+    public function __get(string $field) : mixed
     {
         $prop = $this->assertHas($field);
         return $this->$prop->$field;
     }
 
-    public function __set(string $field, $value) : void
+    public function __set(string $field, mixed $value) : void
     {
         $prop = $this->assertHas($field);
         $this->$prop->$field = $value;
@@ -45,7 +45,7 @@ abstract class Record implements JsonSerializable
         return isset($this->$prop->$field);
     }
 
-    public function __unset($field) : void
+    public function __unset(string $field) : void
     {
         $prop = $this->assertHas($field);
         unset($this->$prop->$field);
@@ -58,29 +58,29 @@ abstract class Record implements JsonSerializable
 
     public function getRow() : Row
     {
-        return $this->row;
+        return $this->__ROW;
     }
 
     public function getRelated() : Related
     {
-        return $this->related;
+        return $this->__RELATED;
     }
 
     public function set(array $fieldsValues) : void
     {
         foreach ($fieldsValues as $field => $value) {
-            if ($this->row->has($field)) {
-                $this->row->$field = $value;
-            } elseif ($this->related->has($field)) {
-                $this->related->$field = $value;
+            if ($this->__ROW->has($field)) {
+                $this->__ROW->$field = $value;
+            } elseif ($this->__RELATED->has($field)) {
+                $this->__RELATED->$field = $value;
             }
         }
     }
 
-    public function has($field) : bool
+    public function has(string $field) : bool
     {
-        return $this->row->has($field)
-            || $this->related->has($field);
+        return $this->__ROW->has($field)
+            || $this->__RELATED->has($field);
     }
 
     public function getArrayCopy(SplObjectStorage $tracker = null) : array
@@ -91,10 +91,11 @@ abstract class Record implements JsonSerializable
 
         if (! $tracker->contains($this)) {
             $tracker[$this]
-                = $this->row->getArrayCopy($tracker)
-                + $this->related->getArrayCopy($tracker);
+                = $this->__ROW->getArrayCopy()
+                + $this->__RELATED->getArrayCopy($tracker);
         }
 
+        /** @var array */
         return $tracker[$this];
     }
 
@@ -103,24 +104,24 @@ abstract class Record implements JsonSerializable
         return $this->getArrayCopy();
     }
 
-    public function setDelete($delete = true) : void
+    public function setDelete(bool $delete = true) : void
     {
-        $this->row->setDelete($delete);
+        $this->__ROW->setDelete($delete);
     }
 
     public function getAction() : ?string
     {
-        return $this->row->getNextAction();
+        return $this->__ROW->getNextAction();
     }
 
-    private function assertHas($field) : string
+    private function assertHas(string $field) : string
     {
-        if ($this->row->has($field)) {
-            return 'row';
+        if ($this->__ROW->has($field)) {
+            return '__ROW';
         }
 
-        if ($this->related->has($field)) {
-            return 'related';
+        if ($this->__RELATED->has($field)) {
+            return '__RELATED';
         }
 
         throw Exception::propertyDoesNotExist(static::CLASS, $field);

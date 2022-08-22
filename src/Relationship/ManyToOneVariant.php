@@ -41,6 +41,12 @@ class ManyToOneVariant extends Relationship
         $this->nativeMapperClass = $nativeMapperClass;
         $this->typeCol = $attribute->column;
         $this->relationshipLocator = $relationshipLocator;
+
+        /*
+         * @phpstan-ignore-next-line because $foreignMapperClass is unused,
+         * but needed for constructor consistency
+         */
+        $foreignMapperClass;
     }
 
     public function getPersistencePriority() : string
