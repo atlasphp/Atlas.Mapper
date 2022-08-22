@@ -26,9 +26,7 @@ abstract class RecordSet implements
 {
     private array $records = [];
 
-    /**
-     * @var callable
-     */
+    /** @var callable */
     private mixed $newRecordFactory;
 
     public function __construct(

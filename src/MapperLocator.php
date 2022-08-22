@@ -16,9 +16,10 @@ use Atlas\Table\TableLocator;
 
 class MapperLocator
 {
-    protected $instances = [];
+    protected array $instances = [];
 
-    protected $factory;
+    /** @var callable */
+    protected mixed $factory;
 
     public static function new(mixed ...$args) : MapperLocator
     {
@@ -65,7 +66,7 @@ class MapperLocator
         return $this->tableLocator;
     }
 
-    protected function newMapper($mapperClass) : Mapper
+    protected function newMapper(string $mapperClass) : Mapper
     {
         $table = "{$mapperClass}Table";
         $events = "{$mapperClass}Events";
