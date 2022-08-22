@@ -24,9 +24,12 @@ abstract class RecordSet implements
     IteratorAggregate,
     JsonSerializable
 {
-    private $records = [];
+    private array $records = [];
 
-    private $newRecordFactory;
+    /**
+     * @var callable
+     */
+    private mixed $newRecordFactory;
 
     public function __construct(
         array $records,
@@ -100,12 +103,14 @@ abstract class RecordSet implements
         if (! $tracker->contains($this)) {
             $tracker[$this] = [];
             $array = [];
+            /** @var Record $record */
             foreach ($this as $key => $record) {
                 $array[] = $record->getArrayCopy($tracker);
             }
             $tracker[$this] = $array;
         }
 
+        /** @var array */
         return $tracker[$this];
     }
 
@@ -113,6 +118,8 @@ abstract class RecordSet implements
     {
         $record = call_user_func($this->newRecordFactory, $fields);
         $this->records[] = $record;
+
+        /** @var Record */
         return $record;
     }
 
