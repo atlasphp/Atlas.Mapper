@@ -60,7 +60,7 @@ class ManyToOneVariant extends Relationship
             $this->name,
             $this->mapperLocator,
             $this->nativeMapperClass,
-            Mapper::classFrom($attr->class),
+            $this->relationshipLocator->resolveMapperClass($attr->class),
             new Define\ManyToOne(on: $attr->on),
         );
 
