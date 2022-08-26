@@ -405,11 +405,14 @@ ORDER BY
         $this->assertSameSql($expect, $actual);
     }
 
-    public function testMissingWith()
+    public function testMissingLoad()
     {
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage(
-            "Relationship 'no-such-relationship' does not exist."
+            "Cannot load 'no-such-relationship' for "
+            . "Atlas\Mapper\DataSource\Thread\ThreadRecord because there is no "
+            . "Atlas\Mapper\DataSource\Thread\ThreadRelated property defined "
+            . "for it."
         );
 
         $this->mapperLocator->get(Thread::CLASS)->fetchRecord(

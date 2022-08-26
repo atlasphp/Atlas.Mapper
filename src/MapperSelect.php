@@ -58,12 +58,16 @@ abstract class MapperSelect extends TableSelect
         // make sure that all loadRelated() are on relateds that actually exist
         $fields = $this->mapper->getRelationshipLocator()->getNames();
         foreach ($loadRelated as $key => $val) {
-            $related = $key;
+            $relatedName = $key;
             if (is_int($key)) {
-                $related = $val;
+                $relatedName = $val;
             }
-            if (! in_array($related, $fields)) {
-                throw Exception::relationshipDoesNotExist($related);
+            if (! in_array($relatedName, $fields)) {
+                throw Exception::cannotLoadRelated(
+                    $relatedName,
+                    get_class($this),
+                    get_class($this->mapper),
+                );
             }
         }
         $this->loadRelated = $loadRelated;

@@ -310,7 +310,11 @@ abstract class Mapper
     {
         foreach ($this->fixLoadRelated($loadRelated) as $relatedName => $custom) {
             if (! $this->relationshipLocator->has($relatedName)) {
-                throw Exception::relationshipDoesNotExist($relatedName);
+                throw Exception::cannotLoadRelated(
+                    $relatedName,
+                    static::CLASS . 'Record',
+                    static::CLASS,
+                );
             }
             $this->relationshipLocator->get($relatedName)->stitchIntoRecords(
                 $nativeRecords,

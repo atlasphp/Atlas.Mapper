@@ -43,8 +43,13 @@ class ManyToMany extends RegularRelationship
     ) {
         $this->throughName = $attribute->through;
 
+        // In ThreadRelated, ManyToMany property $tags is defined as going through
+        // a OneToMany property $taggings, but $taggings does not exist.
         if (! $relationshipLocator->has($this->throughName)) {
-            throw Exception::relationshipDoesNotExist($this->throughName);
+            throw Exception::propertyDoesNotExist(
+                $this->nativeMapperClass,
+                $this->throughName
+            );
         }
 
         $this->throughRelationship = $relationshipLocator->get($this->throughName);
@@ -57,21 +62,16 @@ class ManyToMany extends RegularRelationship
 
         foreach ($relatedNames as $relatedName) {
             $relationship = $throughForeignRelationshipLocator->get($relatedName);
+
             if (! $relationship instanceof ManyToOne) {
                 continue;
             }
 
-            if (
-                $this->throughNativeRelatedName === null
-                && $relationship->foreignMapperClass === $nativeMapperClass
-            ) {
+            if ($relationship->foreignMapperClass === $nativeMapperClass) {
                 $this->throughNativeRelatedName = $relatedName;
             }
 
-            if (
-                $this->throughForeignRelatedName === null
-                && $relationship->foreignMapperClass === $foreignMapperClass
-            ) {
+            if ($relationship->foreignMapperClass === $foreignMapperClass) {
                 $this->throughForeignRelatedName = $relatedName;
                 if (empty($attribute->on)) {
                     $attribute->on = $relationship->on;
@@ -79,21 +79,31 @@ class ManyToMany extends RegularRelationship
             }
         }
 
+        // DataSource\Thread\ThreadRelated::$tags goes through
+        // DataSource\Tagging\TaggingRecordSet $taggings,
+        // but DataSource\Tagging\TaggingRelated does not define
+        // a ManyToOne property relating to a ThreadRecord.
         if (! $this->throughNativeRelatedName) {
-            throw Exception::couldNotFindThroughRelationship(
-                'native',
-                $this->throughName,
+            throw Exception::throughDoesNotExist(
+                $nativeMapperClass,
                 $name,
-                $nativeMapperClass
+                $this->throughName,
+                $throughForeignRelationshipLocator->getNativeRelatedClass(),
+                $nativeMapperClass,
             );
         }
 
+        // DataSource\Thread\ThreadRelated::$tags goes through
+        // DataSource\Tagging\TaggingRecordSet $taggings,
+        // but DataSource\Tagging\TaggingRelated does not define
+        // a ManyToOne property relating to a TagRecord.
         if (! $this->throughForeignRelatedName) {
-            throw Exception::couldNotFindThroughRelationship(
-                'foreign',
-                $this->throughName,
+            throw Exception::throughDoesNotExist(
+                $nativeMapperClass,
                 $name,
-                $nativeMapperClass
+                $this->throughName,
+                $throughForeignRelationshipLocator->getNativeRelatedClass(),
+                $foreignMapperClass,
             );
         }
 

@@ -113,7 +113,11 @@ class ManyToOneVariant extends Relationship
             return $this->variants[$typeVal];
         }
 
-        throw Exception::noSuchVariantType($this->nativeMapperClass, $typeVal);
+        throw Exception::variantDoesNotExist(
+            $this->nativeMapperClass,
+            $this->name,
+            $typeVal,
+        );
     }
 
     public function stitchIntoRecords(

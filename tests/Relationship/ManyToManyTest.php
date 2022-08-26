@@ -203,10 +203,16 @@ class ManyToManyTest extends RelationshipTest
         ));
 
         $this->expectException(Exception::CLASS);
+        // $this->expectExceptionMessage(
+        //     "Could not find ManyToOne native relationship through "
+        //     . "'thread_taggings' for ManyToMany 'tag_authors' on "
+        //     . "Atlas\Mapper\DataSource\Author\Author"
+        // );
         $this->expectExceptionMessage(
-            "Could not find ManyToOne native relationship through "
-            . "'thread_taggings' for ManyToMany 'tag_authors' on "
-            . "Atlas\Mapper\DataSource\Author\Author"
+            "ManyToMany Atlas\Mapper\DataSource\Author\AuthorRelated::\$tag_authors "
+            . "goes through ManyToOne \$thread_taggings, but "
+            . "Atlas\Mapper\DataSource\Tagging\TaggingRelated does not define "
+            . "a ManyToOne property typehinted to Atlas\Mapper\DataSource\Author\AuthorRecord."
         );
 
         $mtm = new ManyToMany(
@@ -236,10 +242,16 @@ class ManyToManyTest extends RelationshipTest
         ));
 
         $this->expectException(Exception::CLASS);
+        // $this->expectExceptionMessage(
+        //     "Could not find ManyToOne foreign relationship through "
+        //     . "'thread_taggings' for ManyToMany 'tag_authors' on "
+        //     . "Atlas\Mapper\DataSource\Tag\Tag"
+        // );
         $this->expectExceptionMessage(
-            "Could not find ManyToOne foreign relationship through "
-            . "'thread_taggings' for ManyToMany 'tag_authors' on "
-            . "Atlas\Mapper\DataSource\Tag\Tag"
+            "ManyToMany Atlas\Mapper\DataSource\Tag\TagRelated::\$tag_authors "
+            . "goes through ManyToOne \$thread_taggings, but "
+            . "Atlas\Mapper\DataSource\Tagging\TaggingRelated does not define "
+            . "a ManyToOne property typehinted to Atlas\Mapper\DataSource\Author\AuthorRecord."
         );
 
         $mtm = new ManyToMany(

@@ -86,9 +86,8 @@ class RelationshipLocator implements IteratorAggregate
 
         if (in_array($name, $this->nativeTableClass::COLUMN_NAMES)) {
             throw Exception::relatedNameConflict(
-                $this->nativeRelatedClass,
+                $this->nativeMapperClass,
                 $name,
-                $this->nativeTableClass
             );
         }
 
@@ -118,6 +117,11 @@ class RelationshipLocator implements IteratorAggregate
                 $otherAttr($relationship);
             }
         }
+    }
+
+    public function getNativeRelatedClass()
+    {
+        return $this->nativeRelatedClass;
     }
 
     public function getIterator() : ArrayIterator
@@ -206,7 +210,7 @@ class RelationshipLocator implements IteratorAggregate
         $mapperClass = implode('\\', $parts) . '\\' . end($parts);
 
         if (! class_exists($mapperClass)) {
-            throw Exception::classDoesNotExist($mapperClass);
+            throw Exception::unresolvableMapperClass($spec, $mapperClass);
         }
 
         return $mapperClass;

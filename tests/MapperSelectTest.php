@@ -60,11 +60,14 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
         $this->assertSameSql($expect, $actual);
     }
 
-    public function testWith_noSuchRelationship()
+    public function testLoadRelated_noSuchRelationship()
     {
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage(
-            "Relationship 'no_such_related' does not exist."
+            "Cannot load 'no_such_related' for "
+            . "Atlas\Mapper\DataSource\Employee\EmployeeSelect because there "
+            . "is no Atlas\Mapper\DataSource\Employee\EmployeeRelated property "
+            . "defined for it."
         );
         $this->select->loadRelated(['no_such_related']);
     }
