@@ -104,7 +104,10 @@ class ManyToOneVariant extends Relationship
         array $more = []
     ) : void
     {
-        throw Exception::cannotJoinOnVariantRelationships();
+        throw new Exception\CannotJoinRelatedVariant(
+            $this->nativeMapperClass,
+            $this->name
+        );
     }
 
     protected function getVariant(int|string|null $typeVal) : ManyToOne
@@ -113,7 +116,7 @@ class ManyToOneVariant extends Relationship
             return $this->variants[$typeVal];
         }
 
-        throw Exception::variantDoesNotExist(
+        throw new Exception\VariantDoesNotExist(
             $this->nativeMapperClass,
             $this->name,
             $typeVal,

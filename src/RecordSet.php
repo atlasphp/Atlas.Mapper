@@ -52,11 +52,17 @@ abstract class RecordSet implements
     public function offsetSet($offset, $value) : void
     {
         if (! is_object($value)) {
-            throw Exception::invalidRecordSetValue(get_class($this), gettype($value));
+            throw new Exception\InvalidRecordSetValue(
+                get_class($this),
+                gettype($value)
+            );
         }
 
         if (! $value instanceof Record) {
-            throw Exception::invalidRecordSetValue(get_class($this), $value);
+            throw new Exception\InvalidRecordSetValue(
+                get_class($this),
+                $value
+            );
         }
 
         if ($offset === null) {

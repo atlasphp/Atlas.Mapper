@@ -115,7 +115,7 @@ class ManyToOneVariantTest extends RelationshipTest
     {
         $select = $this->mapperLocator->get(Comment::CLASS)->select();
         $this->expectException(Exception::CLASS);
-        $this->expectExceptionMessage('Cannot JOIN on variant relationships.');
+        $this->expectExceptionMessage("Cannot JOIN on ManyToOneVariant relationships (Atlas\Mapper\DataSource\Comment\CommentRelated::\$commentable).");
         $select->joinRelated('LEFT commentable');
     }
 

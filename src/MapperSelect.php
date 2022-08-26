@@ -63,7 +63,7 @@ abstract class MapperSelect extends TableSelect
                 $relatedName = $val;
             }
             if (! in_array($relatedName, $fields)) {
-                throw Exception::cannotLoadRelated(
+                throw new Exception\CannotLoadRelated(
                     $relatedName,
                     get_class($this),
                     get_class($this->mapper),

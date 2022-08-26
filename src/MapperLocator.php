@@ -51,7 +51,7 @@ class MapperLocator
     public function get(string $mapperClass) : Mapper
     {
         if (! $this->has($mapperClass)) {
-            throw Exception::classDoesNotExist($mapperClass);
+            throw new Exception\ClassDoesNotExist($mapperClass);
         }
 
         if (! isset($this->instances[$mapperClass])) {

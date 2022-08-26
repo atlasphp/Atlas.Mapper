@@ -43,11 +43,12 @@ class ManyToMany extends RegularRelationship
     ) {
         $this->throughName = $attribute->through;
 
-        // In ThreadRelated, ManyToMany property $tags is defined as going through
-        // a OneToMany property $taggings, but $taggings does not exist.
+        // In ThreadRelated, ManyToMany property $tags is defined as going
+        // through a OneToMany property $taggings, but $taggings does not exist.
         if (! $relationshipLocator->has($this->throughName)) {
-            throw Exception::propertyDoesNotExist(
+            throw new Exception\ThroughPropertyDoesNotExist(
                 $this->nativeMapperClass,
+                $this->name,
                 $this->throughName
             );
         }
@@ -67,7 +68,7 @@ class ManyToMany extends RegularRelationship
                 continue;
             }
 
-            if ($relationship->foreignMapperClass === $nativeMapperClass) {
+            if ($relationship->foreignMapperClass === $this->nativeMapperClass) {
                 $this->throughNativeRelatedName = $relatedName;
             }
 
@@ -84,12 +85,12 @@ class ManyToMany extends RegularRelationship
         // but DataSource\Tagging\TaggingRelated does not define
         // a ManyToOne property relating to a ThreadRecord.
         if (! $this->throughNativeRelatedName) {
-            throw Exception::throughDoesNotExist(
-                $nativeMapperClass,
-                $name,
+            throw new Exception\ThroughRelatedDoesNotExist(
+                $this->nativeMapperClass,
+                $this->name,
                 $this->throughName,
                 $throughForeignRelationshipLocator->getNativeRelatedClass(),
-                $nativeMapperClass,
+                $this->nativeMapperClass,
             );
         }
 
@@ -98,9 +99,9 @@ class ManyToMany extends RegularRelationship
         // but DataSource\Tagging\TaggingRelated does not define
         // a ManyToOne property relating to a TagRecord.
         if (! $this->throughForeignRelatedName) {
-            throw Exception::throughDoesNotExist(
-                $nativeMapperClass,
-                $name,
+            throw new Exception\ThroughRelatedDoesNotExist(
+                $this->nativeMapperClass,
+                $this->name,
                 $this->throughName,
                 $throughForeignRelationshipLocator->getNativeRelatedClass(),
                 $foreignMapperClass,

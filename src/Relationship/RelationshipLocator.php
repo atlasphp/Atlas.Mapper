@@ -85,7 +85,7 @@ class RelationshipLocator implements IteratorAggregate
         $name = $property->getName();
 
         if (in_array($name, $this->nativeTableClass::COLUMN_NAMES)) {
-            throw Exception::relatedNameConflict(
+            throw new Exception\RelatedNameConflict(
                 $this->nativeMapperClass,
                 $name,
             );
@@ -210,7 +210,7 @@ class RelationshipLocator implements IteratorAggregate
         $mapperClass = implode('\\', $parts) . '\\' . end($parts);
 
         if (! class_exists($mapperClass)) {
-            throw Exception::unresolvableMapperClass($spec, $mapperClass);
+            throw new Exception\UnresolvableMapperClass($spec, $mapperClass);
         }
 
         return $mapperClass;
