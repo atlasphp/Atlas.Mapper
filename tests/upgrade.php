@@ -1,5 +1,5 @@
 <?php
-// require __DIR__ . '/skeleton.php';
+require __DIR__ . '/skeleton.php';
 
 // - `class {$TYPE} extends _generated/{$TYPE}_` for everything
 // - change Events return type (tricky)
@@ -8,10 +8,6 @@
 // - read {$TYPE}Relationships into {$TYPE}Related, w/ attribs not methods (super tough)
 //     - likely to take AST work
 // - delete {$TYPE}Relationships
-
-$upgrade = new Upgrade();
-$upgrade();
-
 
 class Upgrade
 {
@@ -105,7 +101,13 @@ class Upgrade
         $class = end($classes);
         $upgradeRelationships = new $class();
         $upgradeRelationships->define();
-        var_dump($upgradeRelationships);
+
+        $this->rewrite("{$typeDir}/{$type}Related.php", [
+            '/use Atlas\\\\Mapper\\\\Define;/' => '$0' . PHP_EOL . $upgradeRelationships->imports(),
+            '/\{[\r\n]+\}/m' => '{' . PHP_EOL . $upgradeRelationships->properties() . PHP_EOL . '}',
+        ]);
+
+        // rm Relationships.php
     }
 
     public function upgradeTypeRow($typeDir, $type)
@@ -173,7 +175,6 @@ class Upgrade
         }
 
         file_put_contents($file, $code);
-        // echo $code . PHP_EOL;
     }
 }
 
@@ -186,7 +187,8 @@ class UpgradeRelationships
         string $defineClass,
         string $foreignMapperClass,
         ?array $on = [],
-        ?string $extra = null,
+        ?string $extraName = null,
+        ?string $extraValue = null,
     ) : UpgradeRelationship
     {
         switch (true) {
@@ -208,10 +210,34 @@ class UpgradeRelationships
             $defineClass,
             $relatedType,
             $on,
-            $extra
+            $extraName,
+            $extraValue,
         );
         $this->rels[] = $rel;
         return $rel;
+    }
+
+    public function properties()
+    {
+        $str = '';
+        foreach ($this->rels as $rel) {
+            $str .= '    ' . $rel->property() . PHP_EOL;
+        }
+        return rtrim($str);
+    }
+
+    public function imports()
+    {
+        $str = [];
+
+        foreach ($this->rels as $rel) {
+            foreach ($rel->imports as $import) {
+                $str[] = 'use ' . $import . ';';
+            }
+        }
+
+        $str = array_unique($str);
+        return implode(PHP_EOL, $str);
     }
 
     protected function oneToOne(
@@ -279,7 +305,8 @@ class UpgradeRelationships
             $relatedName,
             'Define\\ManyToOneVariant',
             'mixed',
-            null,
+            [],
+            'column',
             $referenceCol,
         );
     }
@@ -287,7 +314,7 @@ class UpgradeRelationships
     protected function manyToMany(
         string $relatedName,
         string $foreignMapperClass,
-        string $throughRelatedName,
+        string $throughRelatedName = null,
         array $on = []
     ) : UpgradeRelationship
     {
@@ -296,27 +323,154 @@ class UpgradeRelationships
             'Define\\ManyToMany',
             $foreignMapperClass,
             $on,
+            'through',
             $throughRelatedName
         );
     }
 }
 
+
 class UpgradeRelationship
 {
     public array $calls = [];
+
+    public array $imports = [];
 
     public function __construct(
         public string $relatedName,
         public string $defineClass,
         public string $relatedType,
         public ?array $on = [],
-        public ?string $extra = null,
+        public ?string $extraName = null,
+        public ?string $extraValue = null,
     ) {
+        if ($relatedType !== 'mixed') {
+            $this->imports[] = $relatedType;
+        }
     }
 
-    public function __call(string $func, array $args)
+    public function property()
     {
-        $this->calls[] = [$func, $args];
+        $on = '';
+        if (! empty($this->on)) {
+            $on = $this->fixOn($this->on);
+        }
+
+        $extra = '';
+        if ($this->extraName !== null) {
+            $extra = $this->extraName . ': ' . var_export($this->extraValue, true);
+        }
+
+        $define = "#[{$this->defineClass}";
+        if ($on || $extra) {
+            $comma = $on && $extra ? ', ' : '';
+            $define .= '(';
+            $define .= $on . $comma . $extra;
+            $define = rtrim($define, ', ');
+            $define .= ')';
+        }
+
+        $define .= ']' . PHP_EOL;
+
+        $short = $this->shortClass($this->relatedType);
+        if (substr($short, -6) === 'Record') {
+            $short = "?{$short}";
+        }
+
+        $called = '';
+        foreach ($this->calls as $call) {
+            list ($attr, $args) = $call;
+            $called .= "    #[{$attr}";
+            if (! empty($args)) {
+                $called .= '(' . implode(', ', $args) . ')';
+            }
+            $called .= ']' . PHP_EOL;
+        }
+
+        $property = "    protected {$short} \${$this->relatedName};". PHP_EOL;
+        return $define . $called . $property;
+    }
+
+    protected function fixOn(array $on)
+    {
+        if (empty($on)) {
+            return '';
+        }
+
+        $on = var_export($on, true);
+        $on = str_replace('array (' . PHP_EOL, '', $on);
+        $on = str_replace(PHP_EOL . ')', '', $on);
+        $on = str_replace('  ', '', $on);
+        $on = str_replace(PHP_EOL, ' ', $on);
+        $on = rtrim($on, ', '. PHP_EOL);
+        return 'on: [' . $on . ']';
+    }
+
+    protected function shortClass(string $fqcn)
+    {
+        $parts = explode('\\', $fqcn);
+        return end($parts);
+    }
+
+    public function type(
+        string $typeVal,
+        string $foreignMapperClass,
+        array $on
+    ) : self
+    {
+        $variantType = $foreignMapperClass . 'Record';
+        $this->imports[] = $variantType;
+        $short = $this->shortClass($variantType);
+        $args = [
+            var_export($typeVal, true),
+            $short . '::CLASS',
+            $this->fixOn($on),
+        ];
+        $this->calls[] = ['Define\\Variant', $args];
+        return $this;
+    }
+
+    public function ignoreCase(bool $ignoreCase = null) : self
+    {
+        $args = ($ignoreCase === null) ? [] : [var_export($ignoreCase, true)];
+        $this->calls[] = ['Define\\IgnoreCase', $args];
+        return $this;
+    }
+
+    public function where(string $condition, ...$bindInline) : self
+    {
+        $args = [];
+        foreach (func_get_args() as $arg) {
+            $args[] = var_export($arg, true);
+        }
+        $this->calls[] = ['Define\\Where', $args];
+        return $this;
+    }
+
+    public function onDeleteCascade() : self
+    {
+        $this->calls[] = ['Define\\OnDelete\\Cascade', []];
+        return $this;
+    }
+
+    public function onDeleteInitDeleted() : self
+    {
+        $this->calls[] = ['Define\\OnDelete\\InitDeleted', []];
+        return $this;
+    }
+
+    public function onDeleteSetDelete() : self
+    {
+        $this->calls[] = ['Define\\OnDelete\\SetDelete', []];
+        return $this;
+    }
+
+    public function onDeleteSetNull() : self
+    {
+        $this->calls[] = ['Define\\OnDelete\\SetNull', []];
         return $this;
     }
 }
+
+$upgrade = new Upgrade();
+$upgrade();
