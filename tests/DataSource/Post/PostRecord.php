@@ -3,12 +3,6 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\DataSource\Post;
 
-use Atlas\Mapper\Record;
-
-/**
- * @method PostRow getRow()
- */
-class PostRecord extends Record
+class PostRecord extends _generated\PostRecord_
 {
-    use PostFields;
 }

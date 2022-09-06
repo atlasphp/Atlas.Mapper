@@ -3,12 +3,6 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\DataSource\Bidibar;
 
-use Atlas\Mapper\Record;
-
-/**
- * @method BidibarRow getRow()
- */
-class BidibarRecord extends Record
+class BidibarRecord extends _generated\BidibarRecord_
 {
-    use BidibarFields;
 }

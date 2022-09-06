@@ -6,14 +6,6 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\DataSource\Author;
 
-use Atlas\Table\Row;
-
-/**
- * @property mixed $author_id INTEGER
- * @property mixed $name VARCHAR(10) NOT NULL
- */
-class AuthorRow extends Row
+class AuthorRow extends _generated\AuthorRow_
 {
-    protected mixed $author_id = null;
-    protected mixed $name = null;
 }

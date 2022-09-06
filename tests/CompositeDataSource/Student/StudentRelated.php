@@ -1,20 +1,21 @@
 <?php
+declare(strict_types=1);
+
 namespace Atlas\Mapper\CompositeDataSource\Student;
 
 use Atlas\Mapper\Define;
-use Atlas\Mapper\Related;
-use Atlas\Mapper\CompositeDataSource\Degree\DegreeRecord;
 use Atlas\Mapper\CompositeDataSource\Gpa\GpaRecord;
+use Atlas\Mapper\CompositeDataSource\Degree\DegreeRecord;
 use Atlas\Mapper\CompositeDataSource\Enrollment\EnrollmentRecordSet;
 
-class StudentRelated extends Related
+class StudentRelated extends _generated\StudentRelated_
 {
     #[Define\OneToOne]
-    protected GpaRecord $gpa;
+    protected ?GpaRecord $gpa;
 
     #[Define\ManyToOne]
     #[Define\IgnoreCase]
-    protected DegreeRecord $degree;
+    protected ?DegreeRecord $degree;
 
     #[Define\OneToMany]
     protected EnrollmentRecordSet $enrollments;

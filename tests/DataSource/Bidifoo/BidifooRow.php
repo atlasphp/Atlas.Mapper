@@ -6,16 +6,6 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\DataSource\Bidifoo;
 
-use Atlas\Table\Row;
-
-/**
- * @property mixed $bidifoo_id INTEGER
- * @property mixed $bidibar_id INTEGER
- * @property mixed $name VARCHAR(10)
- */
-class BidifooRow extends Row
+class BidifooRow extends _generated\BidifooRow_
 {
-    protected mixed $bidifoo_id = null;
-    protected mixed $bidibar_id = null;
-    protected mixed $name = null;
 }

@@ -6,16 +6,6 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\CompositeDataSource\Degree;
 
-use Atlas\Table\Row;
-
-/**
- * @property mixed $degree_type CHAR(2)
- * @property mixed $degree_subject CHAR(4)
- * @property mixed $title VARCHAR(50)
- */
-class DegreeRow extends Row
+class DegreeRow extends _generated\DegreeRow_
 {
-    protected mixed $degree_type = null;
-    protected mixed $degree_subject = null;
-    protected mixed $title = null;
 }

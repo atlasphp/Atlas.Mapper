@@ -6,14 +6,6 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\DataSource\Nopkey;
 
-use Atlas\Table\Row;
-
-/**
- * @property mixed $name VARCHAR(255)
- * @property mixed $email VARCHAR(255)
- */
-class NopkeyRow extends Row
+class NopkeyRow extends _generated\NopkeyRow_
 {
-    protected mixed $name = null;
-    protected mixed $email = null;
 }

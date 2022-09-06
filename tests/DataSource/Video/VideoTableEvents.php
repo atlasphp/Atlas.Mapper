@@ -12,6 +12,6 @@ use Atlas\Table\Table;
 use Atlas\Table\TableEvents;
 use PDOStatement;
 
-class VideoTableEvents extends TableEvents
+class VideoTableEvents extends _generated\VideoTableEvents_
 {
 }

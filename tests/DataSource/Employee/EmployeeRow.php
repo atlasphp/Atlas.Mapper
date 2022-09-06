@@ -6,18 +6,6 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\DataSource\Employee;
 
-use Atlas\Table\Row;
-
-/**
- * @property mixed $id INTEGER
- * @property mixed $name VARCHAR(10) NOT NULL
- * @property mixed $building INTEGER
- * @property mixed $floor INTEGER
- */
-class EmployeeRow extends Row
+class EmployeeRow extends _generated\EmployeeRow_
 {
-    protected mixed $id = null;
-    protected mixed $name = null;
-    protected mixed $building = null;
-    protected mixed $floor = null;
 }

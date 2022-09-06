@@ -6,16 +6,6 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\DataSource\Tagging;
 
-use Atlas\Table\Row;
-
-/**
- * @property mixed $tagging_id INTEGER
- * @property mixed $thread_id INTEGER
- * @property mixed $tag_id INTEGER
- */
-class TaggingRow extends Row
+class TaggingRow extends _generated\TaggingRow_
 {
-    protected mixed $tagging_id = null;
-    protected mixed $thread_id = null;
-    protected mixed $tag_id = null;
 }

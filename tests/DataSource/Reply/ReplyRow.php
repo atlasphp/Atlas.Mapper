@@ -6,18 +6,6 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\DataSource\Reply;
 
-use Atlas\Table\Row;
-
-/**
- * @property mixed $reply_id INTEGER
- * @property mixed $thread_id INTEGER NOT NULL
- * @property mixed $author_id INTEGER NOT NULL
- * @property mixed $body TEXT
- */
-class ReplyRow extends Row
+class ReplyRow extends _generated\ReplyRow_
 {
-    protected mixed $reply_id = null;
-    protected mixed $thread_id = null;
-    protected mixed $author_id = null;
-    protected mixed $body = null;
 }

@@ -6,16 +6,6 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\CompositeDataSource\Course;
 
-use Atlas\Table\Row;
-
-/**
- * @property mixed $course_subject CHAR(4)
- * @property mixed $course_number INT
- * @property mixed $title VARCHAR(20)
- */
-class CourseRow extends Row
+class CourseRow extends _generated\CourseRow_
 {
-    protected mixed $course_subject = null;
-    protected mixed $course_number = null;
-    protected mixed $title = null;
 }

@@ -6,22 +6,6 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\CompositeDataSource\Enrollment;
 
-use Atlas\Table\Row;
-
-/**
- * @property mixed $student_fn VARCHAR(10)
- * @property mixed $student_ln VARCHAR(10)
- * @property mixed $course_subject CHAR(4)
- * @property mixed $course_number INT
- * @property mixed $grade INT
- * @property mixed $points INT
- */
-class EnrollmentRow extends Row
+class EnrollmentRow extends _generated\EnrollmentRow_
 {
-    protected mixed $student_fn = null;
-    protected mixed $student_ln = null;
-    protected mixed $course_subject = null;
-    protected mixed $course_number = null;
-    protected mixed $grade = null;
-    protected mixed $points = null;
 }

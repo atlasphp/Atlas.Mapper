@@ -12,6 +12,6 @@ use Atlas\Table\Table;
 use Atlas\Table\TableEvents;
 use PDOStatement;
 
-class BidifooTableEvents extends TableEvents
+class BidifooTableEvents extends _generated\BidifooTableEvents_
 {
 }

@@ -12,6 +12,6 @@ use Atlas\Table\Table;
 use Atlas\Table\TableEvents;
 use PDOStatement;
 
-class ReplyTableEvents extends TableEvents
+class ReplyTableEvents extends _generated\ReplyTableEvents_
 {
 }

@@ -1,15 +1,16 @@
 <?php
+declare(strict_types=1);
+
 namespace Atlas\Mapper\DataSource\Thread;
 
 use Atlas\Mapper\Define;
-use Atlas\Mapper\Related;
 use Atlas\Mapper\DataSource\Author\AuthorRecord;
 use Atlas\Mapper\DataSource\Summary\SummaryRecord;
 use Atlas\Mapper\DataSource\Reply\ReplyRecordSet;
-use Atlas\Mapper\DataSource\Tag\TagRecordSet;
 use Atlas\Mapper\DataSource\Tagging\TaggingRecordSet;
+use Atlas\Mapper\DataSource\Tag\TagRecordSet;
 
-class ThreadRelated extends Related
+class ThreadRelated extends _generated\ThreadRelated_
 {
     #[Define\ManyToOne]
     protected ?AuthorRecord $author;

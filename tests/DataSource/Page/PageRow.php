@@ -6,16 +6,6 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\DataSource\Page;
 
-use Atlas\Table\Row;
-
-/**
- * @property mixed $page_id INTEGER
- * @property mixed $title VARCHAR(255)
- * @property mixed $body TEXT
- */
-class PageRow extends Row
+class PageRow extends _generated\PageRow_
 {
-    protected mixed $page_id = null;
-    protected mixed $title = null;
-    protected mixed $body = null;
 }

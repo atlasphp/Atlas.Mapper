@@ -6,18 +6,6 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\DataSource\Comment;
 
-use Atlas\Table\Row;
-
-/**
- * @property mixed $comment_id INTEGER
- * @property mixed $related_type VARCHAR(255)
- * @property mixed $related_id INTEGER
- * @property mixed $body TEXT
- */
-class CommentRow extends Row
+class CommentRow extends _generated\CommentRow_
 {
-    protected mixed $comment_id = null;
-    protected mixed $related_type = null;
-    protected mixed $related_id = null;
-    protected mixed $body = null;
 }

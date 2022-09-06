@@ -6,16 +6,6 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\DataSource\Post;
 
-use Atlas\Table\Row;
-
-/**
- * @property mixed $post_id INTEGER
- * @property mixed $subj VARCHAR(255)
- * @property mixed $body TEXT
- */
-class PostRow extends Row
+class PostRow extends _generated\PostRow_
 {
-    protected mixed $post_id = null;
-    protected mixed $subj = null;
-    protected mixed $body = null;
 }

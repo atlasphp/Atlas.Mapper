@@ -6,18 +6,6 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\CompositeDataSource\Student;
 
-use Atlas\Table\Row;
-
-/**
- * @property mixed $student_fn VARCHAR(10)
- * @property mixed $student_ln VARCHAR(10)
- * @property mixed $degree_type CHAR(2)
- * @property mixed $degree_subject CHAR(4)
- */
-class StudentRow extends Row
+class StudentRow extends _generated\StudentRow_
 {
-    protected mixed $student_fn = null;
-    protected mixed $student_ln = null;
-    protected mixed $degree_type = null;
-    protected mixed $degree_subject = null;
 }

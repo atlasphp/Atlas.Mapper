@@ -12,6 +12,6 @@ use Atlas\Table\Table;
 use Atlas\Table\TableEvents;
 use PDOStatement;
 
-class EmployeeTableEvents extends TableEvents
+class EmployeeTableEvents extends _generated\EmployeeTableEvents_
 {
 }

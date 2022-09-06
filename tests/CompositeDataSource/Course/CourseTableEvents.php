@@ -12,6 +12,6 @@ use Atlas\Table\Table;
 use Atlas\Table\TableEvents;
 use PDOStatement;
 
-class CourseTableEvents extends TableEvents
+class CourseTableEvents extends _generated\CourseTableEvents_
 {
 }

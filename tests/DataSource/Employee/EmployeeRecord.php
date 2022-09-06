@@ -3,12 +3,6 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\DataSource\Employee;
 
-use Atlas\Mapper\Record;
-
-/**
- * @method EmployeeRow getRow()
- */
-class EmployeeRecord extends Record
+class EmployeeRecord extends _generated\EmployeeRecord_
 {
-    use EmployeeFields;
 }

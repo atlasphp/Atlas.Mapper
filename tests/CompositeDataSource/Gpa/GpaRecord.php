@@ -3,12 +3,6 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\CompositeDataSource\Gpa;
 
-use Atlas\Mapper\Record;
-
-/**
- * @method GpaRow getRow()
- */
-class GpaRecord extends Record
+class GpaRecord extends _generated\GpaRecord_
 {
-    use GpaFields;
 }

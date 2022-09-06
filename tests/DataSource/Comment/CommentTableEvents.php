@@ -12,6 +12,6 @@ use Atlas\Table\Table;
 use Atlas\Table\TableEvents;
 use PDOStatement;
 
-class CommentTableEvents extends TableEvents
+class CommentTableEvents extends _generated\CommentTableEvents_
 {
 }

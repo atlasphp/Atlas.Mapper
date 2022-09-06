@@ -12,6 +12,6 @@ use Atlas\Table\Table;
 use Atlas\Table\TableEvents;
 use PDOStatement;
 
-class GpaTableEvents extends TableEvents
+class GpaTableEvents extends _generated\GpaTableEvents_
 {
 }

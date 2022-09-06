@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace Atlas\Mapper\CompositeDataSource\Degree;
 
 use Atlas\Mapper\Define;
-use Atlas\Mapper\Related;
 use Atlas\Mapper\CompositeDataSource\Student\StudentRecordSet;
 
-class DegreeRelated extends Related
+class DegreeRelated extends _generated\DegreeRelated_
 {
     #[Define\OneToMany]
     #[Define\IgnoreCase]

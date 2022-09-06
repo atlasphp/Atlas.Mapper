@@ -1,9 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace Atlas\Mapper\CompositeDataSource\Gpa;
 
 use Atlas\Mapper\Define;
-use Atlas\Mapper\Related;
 
-class GpaRelated extends Related
+
+class GpaRelated extends _generated\GpaRelated_
 {
+
 }

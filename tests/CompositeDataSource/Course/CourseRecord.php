@@ -3,12 +3,6 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\CompositeDataSource\Course;
 
-use Atlas\Mapper\Record;
-
-/**
- * @method CourseRow getRow()
- */
-class CourseRecord extends Record
+class CourseRecord extends _generated\CourseRecord_
 {
-    use CourseFields;
 }

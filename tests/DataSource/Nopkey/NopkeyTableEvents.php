@@ -12,6 +12,6 @@ use Atlas\Table\Table;
 use Atlas\Table\TableEvents;
 use PDOStatement;
 
-class NopkeyTableEvents extends TableEvents
+class NopkeyTableEvents extends _generated\NopkeyTableEvents_
 {
 }

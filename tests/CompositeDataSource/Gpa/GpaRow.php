@@ -6,16 +6,6 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\CompositeDataSource\Gpa;
 
-use Atlas\Table\Row;
-
-/**
- * @property mixed $student_fn VARCHAR(10)
- * @property mixed $student_ln VARCHAR(10)
- * @property mixed $gpa DECIMAL(4,3)
- */
-class GpaRow extends Row
+class GpaRow extends _generated\GpaRow_
 {
-    protected mixed $student_fn = null;
-    protected mixed $student_ln = null;
-    protected mixed $gpa = null;
 }
