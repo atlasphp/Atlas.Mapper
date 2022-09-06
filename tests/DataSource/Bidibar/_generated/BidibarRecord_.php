@@ -12,7 +12,6 @@ use Atlas\Mapper\Record;
  * @property mixed $bidibar_id INTEGER
  * @property mixed $bidifoo_id INTEGER
  * @property mixed $name VARCHAR(10)
- * @property ?\Atlas\Mapper\DataSource\Bidifoo\BidifooRecord $bidifoo
  * @method \Atlas\Mapper\DataSource\Bidibar\BidibarRow getRow()
  */
 abstract class BidibarRecord_ extends Record

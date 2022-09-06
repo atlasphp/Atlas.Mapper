@@ -11,7 +11,6 @@ use Atlas\Mapper\Record;
 /**
  * @property mixed $tag_id INTEGER
  * @property mixed $name VARCHAR(10) NOT NULL
- * @property \Atlas\Mapper\DataSource\Tagging\TaggingRecordSet $taggings
  * @method \Atlas\Mapper\DataSource\Tag\TagRow getRow()
  */
 abstract class TagRecord_ extends Record

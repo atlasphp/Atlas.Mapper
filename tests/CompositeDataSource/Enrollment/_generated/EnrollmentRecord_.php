@@ -15,8 +15,6 @@ use Atlas\Mapper\Record;
  * @property mixed $course_number INT
  * @property mixed $grade INT
  * @property mixed $points INT
- * @property ?\Atlas\Mapper\CompositeDataSource\Course\CourseRecord $course
- * @property ?\Atlas\Mapper\CompositeDataSource\Student\StudentRecord $student
  * @method \Atlas\Mapper\CompositeDataSource\Enrollment\EnrollmentRow getRow()
  */
 abstract class EnrollmentRecord_ extends Record

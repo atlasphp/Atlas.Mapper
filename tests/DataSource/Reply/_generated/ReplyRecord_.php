@@ -13,7 +13,6 @@ use Atlas\Mapper\Record;
  * @property mixed $thread_id INTEGER NOT NULL
  * @property mixed $author_id INTEGER NOT NULL
  * @property mixed $body TEXT
- * @property ?\Atlas\Mapper\DataSource\Author\AuthorRecord $author
  * @method \Atlas\Mapper\DataSource\Reply\ReplyRow getRow()
  */
 abstract class ReplyRecord_ extends Record

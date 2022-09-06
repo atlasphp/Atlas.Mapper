@@ -11,8 +11,6 @@ use Atlas\Mapper\Record;
 /**
  * @property mixed $author_id INTEGER
  * @property mixed $name VARCHAR(10) NOT NULL
- * @property \Atlas\Mapper\DataSource\Reply\ReplyRecordSet $replies
- * @property \Atlas\Mapper\DataSource\Thread\ThreadRecordSet $threads
  * @method \Atlas\Mapper\DataSource\Author\AuthorRow getRow()
  */
 abstract class AuthorRecord_ extends Record

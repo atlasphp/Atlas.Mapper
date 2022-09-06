@@ -13,7 +13,6 @@ use Atlas\Mapper\Record;
  * @property mixed $thread_id INTEGER NOT NULL
  * @property mixed $reply_count INTEGER NOT NULL
  * @property mixed $view_count INTEGER NOT NULL
- * @property ?\Atlas\Mapper\DataSource\Thread\ThreadRecord $thread
  * @method \Atlas\Mapper\DataSource\Summary\SummaryRow getRow()
  */
 abstract class SummaryRecord_ extends Record
