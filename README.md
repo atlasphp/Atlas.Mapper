@@ -20,7 +20,7 @@ $mapperLocator = MapperLocator::new('sqlite::memory:'')
 You can then use the locator to retrieve a _Mapper_ by its class name.
 
 ```php
-use Atlas\Testing\DataSource\Thread\ThreadMapper;
+use Project\DataSource\Thread\ThreadMapper;
 
 $threadMapper = $mapperLocator->get(ThreadMapper::CLASS)
 ```
