@@ -2,16 +2,13 @@
 
 ## Next
 
-- Generate table classes under new skeleton, update Mapper 2.x to handle it.
-  Something to run *after* you regenerate the classes in 2.x.
+- Make ForeignSimple/Composite "strategies" more like Table IdentityMap classes?
 
-- Converter for 3.x to 4.x, esp. Relationship => Related.
+- Add new Bidi classes, with tests.
 
-- Convert from `throw Exception::method()` to `throw new Exception\Name(...)`
+- Full test coverage.
 
-- Better Exception messages. Include e.g. the class it came from.
-
-- ForeignSimple/Composite more like Table IdentityMap classes.
+- Full stan coverage.
 
 ## Other
 
@@ -20,3 +17,8 @@
 
 - Add a "required" on one-to-one and many-to-one? Existing 1:1 and M:1 are
   really to-zero-or-one, and "required" is to-exactly-one. Maybe "always".
+
+- ToOne relationships, if not null, should get a new Record if one was not found
+  during eager load? (ToMany always get a NotLoaded/RecordSet anyway.) It also
+  means that when you create a new Record, all the not-null Related fields for
+  it should be populated. (That could snowball pretty quick though.)

@@ -29,6 +29,7 @@ abstract class RegularRelationship extends Relationship
 
     protected string $foreignTableName;
 
+    // this is for selecting the related rows
     protected ForeignSimple|ForeignComposite $foreignStrategy;
 
     public function __construct(

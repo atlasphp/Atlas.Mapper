@@ -28,14 +28,16 @@ class ForeignSimple
     }
 
     /**
+     * Given an array of native records, select foreign rows related to those
+     * records.
+     *
      * @param Record[] $records
      */
     public function modifySelect(MapperSelect $select, array $records) : void
     {
         $vals = [];
         foreach ($records as $record) {
-            $row = $record->getRow();
-            $vals[] = $row->{$this->nativeCol};
+            $vals[] = $record->{$this->nativeCol};
         }
 
         $qftn = $select->quoteIdentifier($this->foreignTableName);

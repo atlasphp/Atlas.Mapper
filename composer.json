@@ -11,6 +11,12 @@
             "homepage": "https://github.com/atlasphp/Atlas.Mapper/contributors"
         }
     ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../Atlas.Skeleton"
+        }
+    ],
     "require": {
         "php": "^8.0",
         "atlas/table": "2.x-dev"
@@ -23,7 +29,8 @@
     "require-dev": {
         "pds/skeleton": "^1.0",
         "phpunit/phpunit": "^9.0",
-        "phpstan/phpstan": "^1.0"
+        "phpstan/phpstan": "^1.0",
+        "atlas/skeleton": "*"
     },
     "autoload-dev": {
         "psr-4": {
@@ -37,5 +44,6 @@
     },
     "suggest": {
         "atlas/skeleton": "A command-line tool to build skeleton classes."
-    }
+    },
+    "minimum-stability": "dev"
 }

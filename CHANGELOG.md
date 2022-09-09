@@ -40,3 +40,5 @@ No releases yet.
         ]);
 
   Can still use a string for a single related.
+
+- Atlas.Skeleton now has 'upgrade' to upgrade from Cassini to Dymaxion.

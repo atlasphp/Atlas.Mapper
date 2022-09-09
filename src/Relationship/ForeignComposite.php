@@ -12,6 +12,8 @@ namespace Atlas\Mapper\Relationship;
 
 use Atlas\Mapper\MapperSelect;
 
+// can we make this into RegularRelationship::foreignSelectRelated()?
+// but this and Simple really are very different from each other.
 class ForeignComposite
 {
     public function __construct(
@@ -22,6 +24,12 @@ class ForeignComposite
         $this->on = $on;
     }
 
+    /**
+     * Given an array of native records, select foreign rows related to those
+     * records.
+     *
+     * @param Record[] $records
+     */
     public function modifySelect(MapperSelect $select, array $records) : void
     {
         $uniques = $this->getUniqueCompositeKeys($records);
@@ -47,10 +55,9 @@ class ForeignComposite
     {
         $uniques = [];
         foreach ($records as $record) {
-            $row = $record->getRow();
             $vals = [];
             foreach ($this->on as $nativeCol => $foreignCol) {
-                $vals[$nativeCol] = $row->$nativeCol;
+                $vals[$nativeCol] = $record->$nativeCol;
             }
             // a pipe, and ASCII 31 ("unit separator").
             // identical composite values should have identical array keys,
