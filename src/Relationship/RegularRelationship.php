@@ -75,24 +75,9 @@ abstract class RegularRelationship extends Relationship
         return $on;
     }
 
-    public function stitchIntoRecords(
+    abstract public function stitchIntoRecords(
         array $nativeRecords,
         callable $custom = null
-    ) : void
-    {
-        if (empty($nativeRecords)) {
-            return;
-        }
-
-        $foreignRecords = $this->fetchForeignRecords($nativeRecords, $custom);
-        foreach ($nativeRecords as $nativeRecord) {
-            $this->stitchIntoRecord($nativeRecord, $foreignRecords);
-        }
-    }
-
-    abstract protected function stitchIntoRecord(
-        Record $nativeRecord,
-        array &$foreignRecords
     ) : void;
 
     public function joinSelect(

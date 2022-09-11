@@ -17,17 +17,17 @@ class FakeRegularRelationship extends RegularRelationship
         return static::BEFORE_NATIVE;
     }
 
-    protected function stitchIntoRecord(
-        Record $nativeRecord,
-        array &$foreignRecords
-    ) : void {
-        return;
+    public function stitchIntoRecords(
+        array $nativeRecords,
+        callable $custom = null
+    ) : void
+    {
     }
 
     public function persistForeign(
         Record $nativeRecord,
         SplObjectStorage $tracker
-    ) : void {
-        return;
+    ) : void
+    {
     }
 }

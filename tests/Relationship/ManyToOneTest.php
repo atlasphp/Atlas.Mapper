@@ -2,21 +2,21 @@
 namespace Atlas\Mapper\Relationship;
 
 use Atlas\Mapper\Define;
-use Atlas\Testing\DataSource\Summary\Summary;
+use Atlas\Testing\DataSource\Tagging\Tagging;
 use Atlas\Testing\DataSource\Thread\Thread;
 
-class OneToOneTest extends RelationshipTest
+class ManyToOneTest extends RelationshipTest
 {
     public function testStitchIntoRecords_noNativeRecords()
     {
         $rel = $this
             ->mapperLocator
-            ->get(Thread::class)
+            ->get(Tagging::CLASS)
             ->getRelationshipLocator()
-            ->get('summary');
+            ->get('thread');
 
-        $threads = [];
-        $rel->stitchIntoRecords($threads);
-        $this->assertSame([], $threads);
+        $taggings = [];
+        $rel->stitchIntoRecords($taggings);
+        $this->assertEmpty($taggings);
     }
 }

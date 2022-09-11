@@ -30,6 +30,21 @@ class ManyToOne extends RegularRelationship
         return $on;
     }
 
+    public function stitchIntoRecords(
+        array $nativeRecords,
+        callable $custom = null
+    ) : void
+    {
+        if (empty($nativeRecords)) {
+            return;
+        }
+
+        $foreignRecords = $this->fetchForeignRecords($nativeRecords, $custom);
+        foreach ($nativeRecords as $nativeRecord) {
+            $this->stitchIntoRecord($nativeRecord, $foreignRecords);
+        }
+    }
+
     protected function stitchIntoRecord(
         Record $nativeRecord,
         array &$foreignRecords

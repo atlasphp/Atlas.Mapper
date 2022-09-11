@@ -12,6 +12,9 @@
 
 Change assertions for PHP 8.1
 
+getArrayCopy() should return ... what? ... for NotLoaded objects? just drop them?
+or convert to false, like old times?
+
 ## Other
 
 - On insert/update/delete, look at the PDOStatement and set any returned column
