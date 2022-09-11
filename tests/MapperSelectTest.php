@@ -1,10 +1,10 @@
 <?php
 namespace Atlas\Mapper;
 
-use Atlas\Mapper\Assertions;
-use Atlas\Mapper\DataSource\Author\Author;
-use Atlas\Mapper\DataSource\Employee\Employee;
-use Atlas\Mapper\DataSourceFixture;
+use Atlas\Testing\Assertions;
+use Atlas\Testing\DataSource\Author\Author;
+use Atlas\Testing\DataSource\Employee\Employee;
+use Atlas\Testing\DataSourceFixture;
 use Iterator;
 use PDO;
 
@@ -65,8 +65,8 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage(
             "Cannot load 'no_such_related' for "
-            . "Atlas\Mapper\DataSource\Employee\EmployeeSelect because there "
-            . "is no Atlas\Mapper\DataSource\Employee\EmployeeRelated property "
+            . "Atlas\Testing\DataSource\Employee\EmployeeSelect because there "
+            . "is no Atlas\Testing\DataSource\Employee\EmployeeRelated property "
             . "defined for it."
         );
         $this->select->loadRelated(['no_such_related']);

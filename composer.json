@@ -11,12 +11,6 @@
             "homepage": "https://github.com/atlasphp/Atlas.Mapper/contributors"
         }
     ],
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../Atlas.Skeleton"
-        }
-    ],
     "require": {
         "php": "^8.0",
         "atlas/table": "2.x-dev"
@@ -30,7 +24,7 @@
         "pds/skeleton": "^1.0",
         "phpunit/phpunit": "^9.0",
         "phpstan/phpstan": "^1.0",
-        "atlas/skeleton": "*"
+        "atlas/testing": "dev-2.x-wip"
     },
     "autoload-dev": {
         "psr-4": {

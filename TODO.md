@@ -10,6 +10,8 @@
 
 - Full stan coverage.
 
+Change assertions for PHP 8.1
+
 ## Other
 
 - On insert/update/delete, look at the PDOStatement and set any returned column

@@ -1,11 +1,11 @@
 <?php
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Mapper\Assertions;
-use Atlas\Mapper\DataSource\Author\Author;
-use Atlas\Mapper\DataSource\Tag\Tag;
-use Atlas\Mapper\DataSource\Tagging\Tagging;
-use Atlas\Mapper\DataSource\Thread\Thread;
+use Atlas\Testing\Assertions;
+use Atlas\Testing\DataSource\Author\Author;
+use Atlas\Testing\DataSource\Tag\Tag;
+use Atlas\Testing\DataSource\Tagging\Tagging;
+use Atlas\Testing\DataSource\Thread\Thread;
 use Atlas\Mapper\Define;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\Fake\FakeRelationshipLocator;
@@ -206,13 +206,13 @@ class ManyToManyTest extends RelationshipTest
         // $this->expectExceptionMessage(
         //     "Could not find ManyToOne native relationship through "
         //     . "'thread_taggings' for ManyToMany 'tag_authors' on "
-        //     . "Atlas\Mapper\DataSource\Author\Author"
+        //     . "Atlas\Testing\DataSource\Author\Author"
         // );
         $this->expectExceptionMessage(
-            "ManyToMany Atlas\Mapper\DataSource\Author\AuthorRelated::\$tag_authors "
+            "ManyToMany Atlas\Testing\DataSource\Author\AuthorRelated::\$tag_authors "
             . "goes through ManyToOne \$thread_taggings, but "
-            . "Atlas\Mapper\DataSource\Tagging\TaggingRelated does not define "
-            . "a ManyToOne property typehinted to Atlas\Mapper\DataSource\Author\AuthorRecord."
+            . "Atlas\Testing\DataSource\Tagging\TaggingRelated does not define "
+            . "a ManyToOne property typehinted to Atlas\Testing\DataSource\Author\AuthorRecord."
         );
 
         $mtm = new ManyToMany(
@@ -245,13 +245,13 @@ class ManyToManyTest extends RelationshipTest
         // $this->expectExceptionMessage(
         //     "Could not find ManyToOne foreign relationship through "
         //     . "'thread_taggings' for ManyToMany 'tag_authors' on "
-        //     . "Atlas\Mapper\DataSource\Tag\Tag"
+        //     . "Atlas\Testing\DataSource\Tag\Tag"
         // );
         $this->expectExceptionMessage(
-            "ManyToMany Atlas\Mapper\DataSource\Tag\TagRelated::\$tag_authors "
+            "ManyToMany Atlas\Testing\DataSource\Tag\TagRelated::\$tag_authors "
             . "goes through ManyToOne \$thread_taggings, but "
-            . "Atlas\Mapper\DataSource\Tagging\TaggingRelated does not define "
-            . "a ManyToOne property typehinted to Atlas\Mapper\DataSource\Author\AuthorRecord."
+            . "Atlas\Testing\DataSource\Tagging\TaggingRelated does not define "
+            . "a ManyToOne property typehinted to Atlas\Testing\DataSource\Author\AuthorRecord."
         );
 
         $mtm = new ManyToMany(

@@ -1,11 +1,11 @@
 <?php
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Mapper\DataSource\Author\Author;
-use Atlas\Mapper\DataSource\Summary\Summary;
-use Atlas\Mapper\DataSource\Tag\Tag;
-use Atlas\Mapper\DataSource\Tagging\Tagging;
-use Atlas\Mapper\DataSource\Thread\Thread;
+use Atlas\Testing\DataSource\Author\Author;
+use Atlas\Testing\DataSource\Summary\Summary;
+use Atlas\Testing\DataSource\Tag\Tag;
+use Atlas\Testing\DataSource\Tagging\Tagging;
+use Atlas\Testing\DataSource\Thread\Thread;
 
 class DeletableRelationshipTest extends RelationshipTest
 {

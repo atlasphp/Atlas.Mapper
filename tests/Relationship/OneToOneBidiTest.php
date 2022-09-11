@@ -1,8 +1,8 @@
 <?php
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Mapper\DataSource\Bidibar\Bidibar;
-use Atlas\Mapper\DataSource\Bidifoo\Bidifoo;
+use Atlas\Testing\DataSource\Bidibar\Bidibar;
+use Atlas\Testing\DataSource\Bidifoo\Bidifoo;
 
 class OneToOneBidiTest extends RelationshipTest
 {

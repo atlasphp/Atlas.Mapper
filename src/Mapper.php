@@ -15,8 +15,8 @@ use Atlas\Mapper\Relationship\Relationship;
 use Atlas\Mapper\Relationship\RelationshipLocator;
 use Atlas\Table\Row;
 use Atlas\Table\Table;
-use Atlas\Table\IdentityMap\CompositeIdentityMap;
-use Atlas\Table\IdentityMap\SimpleIdentityMap;
+use Atlas\Table\CompositeIdentityMap;
+use Atlas\Table\SimpleIdentityMap;
 use SplObjectStorage;
 
 abstract class Mapper

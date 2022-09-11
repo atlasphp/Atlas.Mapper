@@ -1,8 +1,8 @@
 <?php
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Mapper\DataSource\Author\Author;
-use Atlas\Mapper\DataSource\Thread\Thread;
+use Atlas\Testing\DataSource\Author\Author;
+use Atlas\Testing\DataSource\Thread\Thread;
 use Atlas\Mapper\Define;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\Fake\FakeRegularRelationship;

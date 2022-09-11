@@ -2,8 +2,8 @@
 namespace Atlas\Mapper\Relationship;
 
 use Atlas\Mapper\Define;
-use Atlas\Mapper\DataSource\Summary\Summary;
-use Atlas\Mapper\DataSource\Thread\Thread;
+use Atlas\Testing\DataSource\Summary\Summary;
+use Atlas\Testing\DataSource\Thread\Thread;
 
 class OneToOneTest extends RelationshipTest
 {

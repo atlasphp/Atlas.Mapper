@@ -1,13 +1,12 @@
 <?php
 namespace Atlas\Mapper;
 
-use Atlas\Mapper\Assertions;
-use Atlas\Mapper\CompositeDataSource\Course\Course;
-use Atlas\Mapper\CompositeDataSource\Degree\Degree;
-use Atlas\Mapper\CompositeDataSource\Enrollment\Enrollment;
-use Atlas\Mapper\CompositeDataSource\Gpa\Gpa;
-use Atlas\Mapper\CompositeDataSource\Student\Student;
-use Atlas\Mapper\CompositeDataSourceFixture;
+use Atlas\Testing\CompositeDataSource\Course\Course;
+use Atlas\Testing\CompositeDataSource\Degree\Degree;
+use Atlas\Testing\CompositeDataSource\Enrollment\Enrollment;
+use Atlas\Testing\CompositeDataSource\Gpa\Gpa;
+use Atlas\Testing\CompositeDataSource\Student\Student;
+use Atlas\Testing\CompositeDataSourceFixture;
 use Atlas\Mapper\Relationship\NotLoaded;
 
 class MapperCompositeTest extends \PHPUnit\Framework\TestCase
@@ -35,7 +34,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
             ]
         )->getArrayCopy();
 
-        $this->assertSame($this->expectRecord(), $actual);
+        $this->assertEquals($this->expectRecord(), $actual);
     }
 
     public function testFetchRecordBy()
@@ -51,7 +50,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
             ]
         )->getArrayCopy();
 
-        $this->assertSame($this->expectRecord(), $actual);
+        $this->assertEquals($this->expectRecord(), $actual);
     }
 
     public function testFetchRecordSet()
@@ -73,7 +72,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
         )->getArrayCopy();
 
         foreach ($this->expectRecordSet() as $i => $expect) {
-            $this->assertSame($expect, $actual[$i], "record $i not the same");
+            $this->assertEquals($expect, $actual[$i], "record $i not the same");
         }
     }
 
@@ -92,7 +91,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
         )->getArrayCopy();
 
         foreach ($this->expectRecordSet() as $i => $expect) {
-            $this->assertSame($expect, $actual[$i], "record $i not the same");
+            $this->assertEquals($expect, $actual[$i], "record $i not the same");
         }
     }
 
@@ -110,7 +109,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
             ])
             ->fetchRecord();
 
-        $this->assertSame($this->expectRecord(), $actual->getArrayCopy());
+        $this->assertEquals($this->expectRecord(), $actual->getArrayCopy());
     }
 
     public function testSelect_fetchRecordSet()
@@ -130,7 +129,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
             ->getArrayCopy();
 
         foreach ($this->expectRecordSet() as $i => $expect) {
-            $this->assertSame($expect, $actual[$i], "record $i not the same");
+            $this->assertEquals($expect, $actual[$i], "record $i not the same");
         }
     }
 
@@ -187,7 +186,7 @@ class MapperCompositeTest extends \PHPUnit\Framework\TestCase
             ]
         ];
 
-        $this->assertSame($expect, $actual);
+        $this->assertEquals($expect, $actual);
     }
 
     protected function expectRecord() { return [

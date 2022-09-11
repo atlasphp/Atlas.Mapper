@@ -1,19 +1,19 @@
 <?php
 namespace Atlas\Mapper;
 
-use Atlas\Mapper\Assertions;
-use Atlas\Mapper\DataSource\Author\Author;
-use Atlas\Mapper\DataSource\Reply\Reply;
-use Atlas\Mapper\DataSource\Reply\ReplyRecord;
-use Atlas\Mapper\DataSource\Reply\ReplyRecordSet;
-use Atlas\Mapper\DataSource\Summary\Summary;
-use Atlas\Mapper\DataSource\Summary\SummaryTable;
-use Atlas\Mapper\DataSource\Tag\Tag;
-use Atlas\Mapper\DataSource\Tagging\Tagging;
-use Atlas\Mapper\DataSource\Thread\Thread;
-use Atlas\Mapper\DataSource\Thread\ThreadRecord;
-use Atlas\Mapper\DataSource\Thread\ThreadRecordSet;
-use Atlas\Mapper\DataSourceFixture;
+use Atlas\Testing\Assertions;
+use Atlas\Testing\DataSource\Author\Author;
+use Atlas\Testing\DataSource\Reply\Reply;
+use Atlas\Testing\DataSource\Reply\ReplyRecord;
+use Atlas\Testing\DataSource\Reply\ReplyRecordSet;
+use Atlas\Testing\DataSource\Summary\Summary;
+use Atlas\Testing\DataSource\Summary\SummaryTable;
+use Atlas\Testing\DataSource\Tag\Tag;
+use Atlas\Testing\DataSource\Tagging\Tagging;
+use Atlas\Testing\DataSource\Thread\Thread;
+use Atlas\Testing\DataSource\Thread\ThreadRecord;
+use Atlas\Testing\DataSource\Thread\ThreadRecordSet;
+use Atlas\Testing\DataSourceFixture;
 use Atlas\Mapper\Record;
 use Atlas\Mapper\RecordSet;
 use Atlas\Mapper\Relationship\NotLoaded;
@@ -80,7 +80,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(RecordSet::CLASS, $actual->replies);
         $this->assertInstanceOf(RecordSet::CLASS, $actual->taggings);
 
-        $this->assertSame($this->expectRecord(), $actual->getArrayCopy());
+        $this->assertEquals($this->expectRecord(), $actual->getArrayCopy());
 
         // did the rows identity-map?
         $again = $this->mapperLocator->get(Thread::CLASS)->fetchRecord(1);
@@ -108,7 +108,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             ]
         );
 
-        $this->assertSame($this->expectRecord(), $actual->getArrayCopy());
+        $this->assertEquals($this->expectRecord(), $actual->getArrayCopy());
 
         // did the rows identity-map?
         $again = $this->mapperLocator->get(Thread::CLASS)->fetchRecord(1);
@@ -131,7 +131,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         )->getArrayCopy();
 
         foreach ($this->expectRecordSet() as $i => $expect) {
-            $this->assertSame($expect, $actual[$i], "record $i not the same");
+            $this->assertEquals($expect, $actual[$i], "record $i not the same");
         }
     }
 
@@ -151,7 +151,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         )->getArrayCopy();
 
         foreach ($this->expectRecordSet() as $i => $expect) {
-            $this->assertSame($expect, $actual[$i], "record $i not the same");
+            $this->assertEquals($expect, $actual[$i], "record $i not the same");
         }
     }
 
@@ -172,7 +172,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         foreach ($this->expectRecordSet() as $i => $expect) {
             $array = $actual[$i]->getArrayCopy();
-            $this->assertSame($expect, $array, "record $i not the same");
+            $this->assertEquals($expect, $array, "record $i not the same");
         }
     }
 
@@ -193,7 +193,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         foreach ($this->expectRecordSet() as $i => $expect) {
             $array = $actual[$i]->getArrayCopy();
-            $this->assertSame($expect, $array, "record $i not the same");
+            $this->assertEquals($expect, $array, "record $i not the same");
         }
     }
 
@@ -212,7 +212,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             ])
             ->fetchRecord();
 
-        $this->assertSame($this->expectRecord(), $actual->getArrayCopy());
+        $this->assertEquals($this->expectRecord(), $actual->getArrayCopy());
     }
 
     public function testSelect_fetchRecordNestedArrayWith()
@@ -230,7 +230,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             ])
             ->fetchRecord();
 
-        $this->assertSame($this->expectRecord(), $actual->getArrayCopy());
+        $this->assertEquals($this->expectRecord(), $actual->getArrayCopy());
     }
 
     public function testSelect_fetchRecordCallableArrayWith()
@@ -249,7 +249,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             ])
             ->fetchRecord();
 
-        $this->assertSame($this->expectRecord(), $actual->getArrayCopy());
+        $this->assertEquals($this->expectRecord(), $actual->getArrayCopy());
     }
 
     public function testSelect_fetchRecordSet()
@@ -269,7 +269,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             ->getArrayCopy();
 
         foreach ($this->expectRecordSet() as $i => $expect) {
-            $this->assertSame($expect, $actual[$i], "record $i not the same");
+            $this->assertEquals($expect, $actual[$i], "record $i not the same");
         }
     }
 
@@ -301,7 +301,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             ->fetchOne(
                 'SELECT * FROM authors WHERE author_id = 13'
             );
-        $this->assertSame($expect, $actual);
+        $this->assertEquals($expect, $actual);
     }
 
     public function testUpdate()
@@ -410,8 +410,8 @@ ORDER BY
         $this->expectException(Exception::CLASS);
         $this->expectExceptionMessage(
             "Cannot load 'no-such-relationship' for "
-            . "Atlas\Mapper\DataSource\Thread\ThreadRecord because there is no "
-            . "Atlas\Mapper\DataSource\Thread\ThreadRelated property defined "
+            . "Atlas\Testing\DataSource\Thread\ThreadRecord because there is no "
+            . "Atlas\Testing\DataSource\Thread\ThreadRelated property defined "
             . "for it."
         );
 

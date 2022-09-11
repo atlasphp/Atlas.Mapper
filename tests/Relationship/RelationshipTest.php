@@ -2,7 +2,7 @@
 namespace Atlas\Mapper\Relationship;
 
 use Atlas\Mapper\MapperLocator;
-use Atlas\Mapper\DataSourceFixture;
+use Atlas\Testing\DataSourceFixture;
 
 abstract class RelationshipTest extends \PHPUnit\Framework\TestCase
 {
