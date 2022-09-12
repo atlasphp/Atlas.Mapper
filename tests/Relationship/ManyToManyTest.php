@@ -206,12 +206,7 @@ class ManyToManyTest extends RelationshipTest
             $fakeRelationshipLocator,
         ));
 
-        $this->expectException(Exception::CLASS);
-        // $this->expectExceptionMessage(
-        //     "Could not find ManyToOne native relationship through "
-        //     . "'thread_taggings' for ManyToMany 'tag_authors' on "
-        //     . "Atlas\Testing\DataSource\Author\Author"
-        // );
+        $this->expectException(Exception\ThroughRelatedDoesNotExist::CLASS);
         $this->expectExceptionMessage(
             "ManyToMany Atlas\Testing\DataSource\Author\AuthorRelated::\$tag_authors "
             . "goes through ManyToOne \$thread_taggings, but "
@@ -247,12 +242,7 @@ class ManyToManyTest extends RelationshipTest
             $fakeRelationshipLocator,
         ));
 
-        $this->expectException(Exception::CLASS);
-        // $this->expectExceptionMessage(
-        //     "Could not find ManyToOne foreign relationship through "
-        //     . "'thread_taggings' for ManyToMany 'tag_authors' on "
-        //     . "Atlas\Testing\DataSource\Tag\Tag"
-        // );
+        $this->expectException(Exception\ThroughRelatedDoesNotExist::CLASS);
         $this->expectExceptionMessage(
             "ManyToMany Atlas\Testing\DataSource\Tag\TagRelated::\$tag_authors "
             . "goes through ManyToOne \$thread_taggings, but "

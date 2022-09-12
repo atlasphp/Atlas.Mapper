@@ -28,7 +28,7 @@ class RelatedTest extends \PHPUnit\Framework\TestCase
 
         // missing
         $this->expectException(
-            'Atlas\Mapper\Exception',
+            Exception\PropertyDoesNotExist::CLASS,
             'Atlas\Mapper\Related::$noSuchForeign does not exist'
         );
         $this->related->noSuchForeign;
@@ -44,7 +44,7 @@ class RelatedTest extends \PHPUnit\Framework\TestCase
 
         // missing
         $this->expectException(
-            'Atlas\Mapper\Exception',
+            Exception\PropertyDoesNotExist::CLASS,
             'Atlas\Mapper\Related::$noSuchForeign does not exist'
         );
         $this->related->noSuchForeign = 'missing';
@@ -57,7 +57,7 @@ class RelatedTest extends \PHPUnit\Framework\TestCase
 
         // missing
         $this->expectException(
-            'Atlas\Mapper\Exception',
+            Exception\PropertyDoesNotExist::CLASS,
             'Atlas\Mapper\Related::$noSuchForeign does not exist'
         );
         isset($this->related->noSuchForeign);
@@ -71,7 +71,7 @@ class RelatedTest extends \PHPUnit\Framework\TestCase
 
         // missing
         $this->expectException(
-            'Atlas\Mapper\Exception',
+            Exception\PropertyDoesNotExist::CLASS,
             'Atlas\Mapper\Related::$noSuchForeign does not exist'
         );
         unset($this->related->noSuchForeign);

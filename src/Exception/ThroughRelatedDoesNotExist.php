@@ -21,11 +21,6 @@ class ThroughRelatedDoesNotExist extends Exception
         string $throughRelatedClass,
         string $targetMapperClass
     ) {
-        // DataSource\Thread\ThreadRelated::$tags goes through
-        // DataSource\Tagging\TaggingRecordSet $taggings,
-        // but DataSource\Tagging\TaggingRelated does not define
-        // a ManyToOne property relating to a TagRecord.
-
         $ms = "ManyToMany {$nativeMapperClass}Related::\${$nativeName} "
             . "goes through ManyToOne \${$throughName}, "
             . "but {$throughRelatedClass} does not define "

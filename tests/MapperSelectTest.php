@@ -62,7 +62,7 @@ class MapperSelectTest extends \PHPUnit\Framework\TestCase
 
     public function testLoadRelated_noSuchRelationship()
     {
-        $this->expectException(Exception::CLASS);
+        $this->expectException(Exception\CannotLoadRelated::CLASS);
         $this->expectExceptionMessage(
             "Cannot load 'no_such_related' for "
             . "Atlas\Testing\DataSource\Employee\EmployeeSelect because there "

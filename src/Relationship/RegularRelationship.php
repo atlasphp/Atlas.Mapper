@@ -41,7 +41,7 @@ abstract class RegularRelationship extends Relationship
         /* RelationshipLocator $relationshipLocator, */
     ) {
         if (! class_exists($foreignMapperClass)) {
-            throw new Exception\ClassDoesNotExist($foreignMapperClass);
+            throw new Exception\MapperClassMissing($foreignMapperClass);
         }
 
         $this->foreignMapperClass = $foreignMapperClass;

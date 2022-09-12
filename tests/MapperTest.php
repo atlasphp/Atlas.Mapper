@@ -19,6 +19,7 @@ use Atlas\Mapper\RecordSet;
 use Atlas\Mapper\Relationship\NotLoaded;
 use Atlas\Pdo\Connection;
 use Atlas\Pdo\Profiler;
+use PDOException;
 
 class MapperTest extends \PHPUnit\Framework\TestCase
 {
@@ -358,7 +359,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         // set to null, should fail update
         $author->name = null;
-        $this->expectException(\PDOException::CLASS);
+        $this->expectException(PDOException::CLASS);
         $this->expectExceptionMessage(
             'SQLSTATE[23000]: Integrity constraint violation'
         );
@@ -407,7 +408,7 @@ ORDER BY
 
     public function testMissingLoad()
     {
-        $this->expectException(Exception::CLASS);
+        $this->expectException(Exception\CannotLoadRelated::CLASS);
         $this->expectExceptionMessage(
             "Cannot load 'no-such-relationship' for "
             . "Atlas\Testing\DataSource\Thread\ThreadRecord because there is no "

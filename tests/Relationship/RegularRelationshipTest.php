@@ -27,10 +27,10 @@ class RegularRelationshipTest extends RelationshipTest
         );
     }
 
-    public function testClassDoesNotExist()
+    public function testMapperClassMissing()
     {
-        $this->expectException(Exception::CLASS);
-        $this->expectExceptionMessage("Class 'NoSuchClass' does not exist.");
+        $this->expectException(Exception\MapperClassMissing::CLASS);
+        $this->expectExceptionMessage("Mapper class 'NoSuchClass' does not exist, or is not a Mapper.");
         $fake = new FakeRegularRelationship(
             'fake',
             $this->mapperLocator,

@@ -54,13 +54,13 @@ class RecordSetTest extends \PHPUnit\Framework\TestCase
 
     public function testOffsetSet_nonObject()
     {
-        $this->expectException(Exception::CLASS);
+        $this->expectException(Exception\InvalidRecordSetValue::CLASS);
         $this->recordSet[] = 'Foo';
     }
 
     public function testOffsetSet_nonRecordObject()
     {
-        $this->expectException(Exception::CLASS);
+        $this->expectException(Exception\InvalidRecordSetValue::CLASS);
         $this->recordSet[] = new StdClass();
     }
 

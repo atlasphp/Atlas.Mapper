@@ -12,10 +12,10 @@ namespace Atlas\Mapper\Exception;
 
 use Atlas\Mapper\Exception;
 
-class ClassDoesNotExist extends Exception
+class MapperClassMissing extends Exception
 {
     public function __construct(string $class)
     {
-        parent::__construct("Class '{$class}' does not exist.");
+        parent::__construct("Mapper class '{$class}' does not exist, or is not a Mapper.");
     }
 }

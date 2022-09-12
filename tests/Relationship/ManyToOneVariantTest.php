@@ -79,7 +79,7 @@ class ManyToOneVariantTest extends RelationshipTest
             'body' => 'New comment on page',
         ]);
 
-        $this->expectException(Exception::CLASS);
+        $this->expectException(Exception\VariantDoesNotExist::CLASS);
         $this->expectExceptionMessage(
             "Variant relationship for value 'NO_SUCH_TYPE' does not exist on Atlas\Testing\DataSource\Comment\CommentRelated::\$commentable."
         );
@@ -94,7 +94,7 @@ class ManyToOneVariantTest extends RelationshipTest
             'body' => 'New comment on page',
         ]);
 
-        $this->expectException(Exception::CLASS);
+        $this->expectException(Exception\VariantDoesNotExist::CLASS);
         $this->expectExceptionMessage(
             "Variant relationship for value NULL does not exist on Atlas\Testing\DataSource\Comment\CommentRelated::\$commentable."
         );
@@ -116,7 +116,7 @@ class ManyToOneVariantTest extends RelationshipTest
     public function testJoinSelect()
     {
         $select = $this->mapperLocator->get(Comment::CLASS)->select();
-        $this->expectException(Exception::CLASS);
+        $this->expectException(Exception\CannotJoinRelatedVariant::CLASS);
         $this->expectExceptionMessage("Cannot JOIN on ManyToOneVariant relationships (Atlas\Testing\DataSource\Comment\CommentRelated::\$commentable).");
         $select->joinRelated('LEFT commentable');
     }
