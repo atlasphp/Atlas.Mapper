@@ -15,7 +15,11 @@ Change assertions for PHP 8.1
 getArrayCopy() should return ... what? ... for NotLoaded objects? just drop them?
 or convert to false, like old times?
 
-When testing for exceptions, test for the SPECIFIC EXCEPTION.
+Create RelationshipFactory? Issue is to test resolveMapperClass() more fully,
+and to separate the concerns more properly.
+
+Improve resolveMapperClass() UNKNOWN behaviors. Must resolve to a known class,
+or to mixed, or to a union of known mapper classes.
 
 ## Other
 

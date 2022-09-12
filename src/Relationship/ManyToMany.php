@@ -159,17 +159,9 @@ class ManyToMany extends RegularRelationship
         $throughRecords = $this->getThroughRecords($nativeRecords);
         $foreignRecords = $this->fetchForeignRecords($throughRecords, $custom);
         foreach ($nativeRecords as $nativeRecord) {
-            $this->stitchIntoRecord($nativeRecord, $foreignRecords);
+            $matches = $this->getMatches($nativeRecord, $foreignRecords);
+            $nativeRecord->{$this->name} = $this->getForeignMapper()->newRecordSet($matches);
         }
-    }
-
-    protected function stitchIntoRecord(
-        Record $nativeRecord,
-        array &$foreignRecords
-    ) : void
-    {
-        $matches = $this->getMatches($nativeRecord, $foreignRecords);
-        $nativeRecord->{$this->name} = $this->getForeignMapper()->newRecordSet($matches);
     }
 
     protected function getThroughRecords(array $nativeRecords) : array

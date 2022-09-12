@@ -24,9 +24,11 @@ class ManyToOne extends RegularRelationship
     {
         $on = [];
         $foreignTableClass = $this->foreignMapperClass . 'Table';
+
         foreach ($foreignTableClass::PRIMARY_KEY as $col) {
             $on[$col] = $col;
         }
+
         return $on;
     }
 
@@ -40,6 +42,7 @@ class ManyToOne extends RegularRelationship
         }
 
         $foreignRecords = $this->fetchForeignRecords($nativeRecords, $custom);
+
         foreach ($nativeRecords as $nativeRecord) {
             $this->stitchIntoRecord($nativeRecord, $foreignRecords);
         }
@@ -47,7 +50,7 @@ class ManyToOne extends RegularRelationship
 
     protected function stitchIntoRecord(
         Record $nativeRecord,
-        array &$foreignRecords
+        array $foreignRecords
     ) : void
     {
         foreach ($foreignRecords as $foreignRecord) {
@@ -61,6 +64,7 @@ class ManyToOne extends RegularRelationship
     public function fixNativeRecord(Record $nativeRecord) : void
     {
         $foreignRecord = $nativeRecord->{$this->name};
+
         if (! $foreignRecord instanceof Record) {
             return;
         }
@@ -73,6 +77,7 @@ class ManyToOne extends RegularRelationship
     public function fixForeignRecord(Record $nativeRecord) : void
     {
         $foreignRecord = $nativeRecord->{$this->name};
+
         if (! $foreignRecord instanceof Record) {
             return;
         }
@@ -88,6 +93,7 @@ class ManyToOne extends RegularRelationship
     ) : void
     {
         $foreignRecord = $nativeRecord->{$this->name};
+
         if (! $foreignRecord instanceof Record) {
             return;
         }
