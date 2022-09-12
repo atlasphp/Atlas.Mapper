@@ -3,7 +3,9 @@ namespace Atlas\Mapper\Relationship;
 
 use Atlas\Testing\Assertions;
 use Atlas\Testing\DataSource\Comment\Comment;
+use Atlas\Testing\DataSource\Comment\CommentTable;
 use Atlas\Testing\DataSource\Comment\CommentRecord;
+use Atlas\Testing\DataSource\Comment\CommentRelated;
 use Atlas\Testing\DataSource\Page\Page;
 use Atlas\Testing\DataSource\Page\PageRecord;
 use Atlas\Testing\DataSource\Post\Post;
@@ -127,7 +129,12 @@ class ManyToOneVariantTest extends RelationshipTest
             Comment::CLASS,
             'UNKNOWN',
             new Define\ManyToOneVariant(column: 'related_type'),
-            new RelationshipLocator($this->mapperLocator, Comment::CLASS),
+            new RelationshipLocator(
+                $this->mapperLocator,
+                Comment::CLASS,
+                CommentTable::CLASS,
+                CommentRelated::CLASS
+            ),
         );
 
         // should apply as a default to all types
@@ -179,7 +186,12 @@ class ManyToOneVariantTest extends RelationshipTest
             Comment::CLASS,
             'UNKNOWN',
             new Define\ManyToOneVariant(column: 'related_type'),
-            new RelationshipLocator($this->mapperLocator, Comment::CLASS),
+            new RelationshipLocator(
+                $this->mapperLocator,
+                Comment::CLASS,
+                CommentTable::CLASS,
+                CommentRelated::CLASS
+            ),
         );
 
         // should apply as a default to all types

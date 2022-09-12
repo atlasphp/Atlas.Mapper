@@ -70,6 +70,7 @@ class MapperLocator
     {
         $tableClass = "{$mapperClass}Table";
         $eventsClass = "{$mapperClass}Events";
+        $relatedClass = "{$mapperClass}Related";
 
         /** @var Mapper */
         return new $mapperClass(
@@ -77,6 +78,8 @@ class MapperLocator
             new RelationshipLocator(
                 $this,
                 $mapperClass,
+                $tableClass,
+                $relatedClass,
             ),
             ($this->factory)($eventsClass)
         );

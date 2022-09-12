@@ -6,6 +6,8 @@ use Atlas\Testing\DataSource\Author\Author;
 use Atlas\Testing\DataSource\Tag\Tag;
 use Atlas\Testing\DataSource\Tagging\Tagging;
 use Atlas\Testing\DataSource\Thread\Thread;
+use Atlas\Testing\DataSource\Thread\ThreadTable;
+use Atlas\Testing\DataSource\Thread\ThreadRelated;
 use Atlas\Mapper\Define;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\Fake\FakeRelationshipLocator;
@@ -191,6 +193,8 @@ class ManyToManyTest extends RelationshipTest
         $fakeRelationshipLocator = new FakeRelationshipLocator(
             $this->mapperLocator,
             Thread::CLASS,
+            ThreadTable::CLASS,
+            ThreadRelated::CLASS,
         );
 
         $fakeRelationshipLocator->setFake('thread_taggings', new OneToMany(
@@ -230,6 +234,8 @@ class ManyToManyTest extends RelationshipTest
         $fakeRelationshipLocator = new FakeRelationshipLocator(
             $this->mapperLocator,
             Thread::CLASS,
+            ThreadTable::CLASS,
+            ThreadRelated::CLASS,
         );
 
         $fakeRelationshipLocator->setFake('thread_taggings', new OneToMany(

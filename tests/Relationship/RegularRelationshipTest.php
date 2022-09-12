@@ -1,13 +1,15 @@
 <?php
 namespace Atlas\Mapper\Relationship;
 
-use Atlas\Testing\DataSource\Author\Author;
-use Atlas\Testing\DataSource\Thread\Thread;
 use Atlas\Mapper\Define;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\Fake\FakeRegularRelationship;
 use Atlas\Mapper\Fake\FakeRelationshipLocator;
 use Atlas\Mapper\MapperRelationships;
+use Atlas\Testing\DataSource\Author\Author;
+use Atlas\Testing\DataSource\Thread\Thread;
+use Atlas\Testing\DataSource\Thread\ThreadRelated;
+use Atlas\Testing\DataSource\Thread\ThreadTable;
 
 class RegularRelationshipTest extends RelationshipTest
 {
@@ -19,7 +21,9 @@ class RegularRelationshipTest extends RelationshipTest
 
         $this->fakeRelationshipLocator = new FakeRelationshipLocator(
             $this->mapperLocator,
-            Thread::CLASS
+            Thread::CLASS,
+            ThreadTable::CLASS,
+            ThreadRelated::CLASS,
         );
     }
 

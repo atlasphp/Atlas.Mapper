@@ -30,10 +30,6 @@ class RelationshipLocator implements IteratorAggregate
     /** @var Relationship[] */
     protected array $instances = [];
 
-    protected string $nativeRelatedClass;
-
-    protected string $nativeTableClass;
-
     protected array $persist = [
         Relationship::BEFORE_NATIVE => [],
         Relationship::AFTER_NATIVE => [],
@@ -41,10 +37,10 @@ class RelationshipLocator implements IteratorAggregate
 
     public function __construct(
         protected MapperLocator $mapperLocator,
-        protected string $nativeMapperClass
+        protected string $nativeMapperClass,
+        protected string $nativeTableClass,
+        protected string $nativeRelatedClass,
     ) {
-        $this->nativeTableClass = $this->nativeMapperClass . 'Table';
-        $this->nativeRelatedClass = $this->nativeMapperClass . 'Related';
         $rclass = new ReflectionClass($this->nativeRelatedClass);
 
         foreach ($rclass->getProperties() as $property) {
@@ -70,6 +66,7 @@ class RelationshipLocator implements IteratorAggregate
                     $attribute,
                     $attributes
                 );
+                return;
             }
         }
     }
