@@ -18,6 +18,19 @@ class ManyToManyTest extends RelationshipTest
 {
     use Assertions;
 
+    public function testStitchIntoRecords_noNativeRecords()
+    {
+        $rel = $this
+            ->mapperLocator
+            ->get(Thread::CLASS)
+            ->getRelationshipLocator()
+            ->get('tags');
+
+        $threads = [];
+        $rel->stitchIntoRecords($threads);
+        $this->assertEmpty($threads);
+    }
+
     public function testForeignPersist_basic()
     {
         $threadMapper = $this->mapperLocator->get(Thread::CLASS);

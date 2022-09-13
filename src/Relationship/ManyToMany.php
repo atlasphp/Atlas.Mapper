@@ -64,19 +64,13 @@ class ManyToMany extends RegularRelationship
         foreach ($relatedNames as $relatedName) {
             $relationship = $throughForeignRelationshipLocator->get($relatedName);
 
-            if (! $relationship instanceof ManyToOne) {
-                continue;
-            }
-
-            if ($relationship->foreignMapperClass === $this->nativeMapperClass) {
-                $this->throughNativeRelatedName = $relatedName;
-            }
-
-            if ($relationship->foreignMapperClass === $foreignMapperClass) {
-                $this->throughForeignRelatedName = $relatedName;
-                if (empty($attribute->on)) {
-                    $attribute->on = $relationship->on;
-                }
+            if ($relationship instanceof ManyToOne) {
+                $this->retainRelationship(
+                    $relatedName,
+                    $relationship,
+                    $foreignMapperClass,
+                    $attribute
+                );
             }
         }
 
@@ -115,6 +109,25 @@ class ManyToMany extends RegularRelationship
             $foreignMapperClass,
             $attribute
         );
+    }
+
+    protected function retainRelationship(
+        string $relatedName,
+        Relationship $relationship,
+        string $foreignMapperClass,
+        Define\ManyToMany $attribute
+    ) : void
+    {
+        if ($relationship->foreignMapperClass === $this->nativeMapperClass) {
+            $this->throughNativeRelatedName = $relatedName;
+        }
+
+        if ($relationship->foreignMapperClass === $foreignMapperClass) {
+            $this->throughForeignRelatedName = $relatedName;
+            if (empty($attribute->on)) {
+                $attribute->on = $relationship->on;
+            }
+        }
     }
 
     public function getPersistencePriority() : string

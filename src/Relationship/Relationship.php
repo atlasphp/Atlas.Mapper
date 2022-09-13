@@ -15,9 +15,78 @@ use Atlas\Mapper\MapperLocator;
 use Atlas\Mapper\MapperSelect;
 use Atlas\Mapper\Record;
 use SplObjectStorage;
+use ReflectionType;
+use ReflectionNamedType;
+use ReflectionUnionType;
+use Atlas\Mapper\Exception;
 
 abstract class Relationship
 {
+    /**
+     * Project\DataSource\Foo\BarRecord => Project\DataSource\Foo\Foo
+     */
+    public static function resolveMapperClass(
+        ReflectionType|string|null $spec
+    ) : string
+    {
+        if ($spec instanceof ReflectionUnionType) {
+            return 'UNKNOWN';
+        }
+
+        if ($spec instanceof ReflectionNamedType) {
+            $spec = $spec->isBuiltin() ? '' : $spec->getName();
+        }
+
+        $spec = trim((string) $spec);
+
+        if ($spec === '') {
+            return 'UNKNOWN';
+        }
+
+        $parts = explode('\\', $spec);
+        array_pop($parts);
+        $mapperClass = implode('\\', $parts) . '\\' . end($parts);
+
+        if (! class_exists($mapperClass)) {
+            throw new Exception\UnresolvableMapperClass($spec, $mapperClass);
+        }
+
+        return $mapperClass;
+    }
+
+
+    public static function listRelatedSpec(string $relatedSpec) : array
+    {
+        $relatedSpec = trim($relatedSpec);
+
+        // extract the foreign alias
+        $foreignAlias = '';
+        $pos = stripos($relatedSpec, ' AS ');
+        if ($pos !== false) {
+            $foreignAlias = trim(substr($relatedSpec, $pos + 4));
+            $relatedSpec = trim(substr($relatedSpec, 0, $pos));
+        }
+
+        // extract the join type
+        $join = 'JOIN';
+        $pos = strpos($relatedSpec, ' ');
+        if ($pos !== false) {
+            $join = trim(substr($relatedSpec, 0, $pos));
+            $relatedSpec = trim(substr($relatedSpec, $pos));
+        }
+
+        // fix the foreign alias
+        if ($foreignAlias === '') {
+            $foreignAlias = $relatedSpec;
+        }
+
+        return [
+            $relatedSpec,
+            $join,
+            $foreignAlias,
+        ];
+    }
+
     public const BEFORE_NATIVE = 'BEFORE_NATIVE';
 
     public const AFTER_NATIVE = 'AFTER_NATIVE';
@@ -29,6 +98,11 @@ abstract class Relationship
     protected bool $ignoreCase = false;
 
     protected array $where = [];
+
+    public function getName() : string
+    {
+        return $this->name;
+    }
 
     abstract public function getPersistencePriority() : string;
 

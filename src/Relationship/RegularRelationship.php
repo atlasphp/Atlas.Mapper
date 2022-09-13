@@ -116,9 +116,9 @@ abstract class RegularRelationship extends Relationship
                 $relatedMore = [];
             }
 
-            $foreignRelationshipLocator = $this->getForeignMapper()->getRelationshipLocator();
-            list($relatedName, $join, $nextForeignAlias) = $foreignRelationshipLocator->listRelatedSpec($relatedSpec);
+            list($relatedName, $join, $nextForeignAlias) = Relationship::listRelatedSpec($relatedSpec);
 
+            $foreignRelationshipLocator = $this->getForeignMapper()->getRelationshipLocator();
             $foreignRelationshipLocator->get($relatedName)->joinSelect(
                 $select,
                 $join,
