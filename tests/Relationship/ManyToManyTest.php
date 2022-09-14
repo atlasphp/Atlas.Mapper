@@ -272,4 +272,25 @@ class ManyToManyTest extends RelationshipTest
             $fakeRelationshipLocator
         );
     }
+
+    public function testMissingThroughProperty()
+    {
+         $fakeRelationshipLocator = new FakeRelationshipLocator(
+            $this->mapperLocator,
+            Thread::CLASS,
+            ThreadTable::CLASS,
+            ThreadRelated::CLASS,
+        );
+
+        $this->expectException(Exception\ThroughPropertyDoesNotExist::CLASS);
+        $this->expectExceptionMessage('ManyToMany Atlas\Testing\DataSource\Thread\ThreadRelated::$tags goes through ManyToOne $noSuchProperty, but $noSuchProperty does not exist.');
+        new ManyToMany(
+            'tags',
+            $this->mapperLocator,
+            Thread::CLASS,
+            Tag::CLASS,
+            new Define\ManyToMany(through: 'noSuchProperty'),
+            $fakeRelationshipLocator
+        );
+    }
 }
