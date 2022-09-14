@@ -44,6 +44,13 @@ abstract class RegularRelationship extends Relationship
             throw new Exception\MapperClassMissing($foreignMapperClass);
         }
 
+        if (
+            $foreignMapperClass === ReflectionUnionType::CLASS
+            || $foreignMapperClass === 'mixed'
+        ) {
+            throw new Exception\UnexpectedNonvariantTypehint($nativeMapperClass, $name);
+        }
+
         $this->foreignMapperClass = $foreignMapperClass;
 
         $foreignTable = $this->foreignMapperClass . 'Table';

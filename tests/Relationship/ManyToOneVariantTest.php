@@ -22,6 +22,8 @@ use Atlas\Mapper\Record;
 use Atlas\Mapper\RecordSet;
 use Atlas\Pdo\Connection;
 use Atlas\Pdo\Profiler;
+use Atlas\Mapper\Fake\FakeRelatedUnionType;
+use Atlas\Mapper\Fake\FakeRelatedUnexpectedTypehint;
 
 class ManyToOneVariantTest extends RelationshipTest
 {
@@ -127,7 +129,7 @@ class ManyToOneVariantTest extends RelationshipTest
             'foo',
             $this->mapperLocator,
             Comment::CLASS,
-            'UNKNOWN',
+            'mixed',
             new Define\ManyToOneVariant(column: 'related_type'),
             new RelationshipLocator(
                 $this->mapperLocator,
@@ -184,7 +186,7 @@ class ManyToOneVariantTest extends RelationshipTest
             'foo',
             $this->mapperLocator,
             Comment::CLASS,
-            'UNKNOWN',
+            'mixed',
             new Define\ManyToOneVariant(column: 'related_type'),
             new RelationshipLocator(
                 $this->mapperLocator,
@@ -214,6 +216,30 @@ class ManyToOneVariantTest extends RelationshipTest
 
         $actual = $this->getProperty($variants['post'], 'ignoreCase');
         $this->assertFalse($actual);
+    }
+
+    public function testUnionTypeAccepted()
+    {
+        $this->expectNotToPerformAssertions();
+
+        new RelationshipLocator(
+            $this->mapperLocator,
+            Comment::CLASS,
+            CommentTable::CLASS,
+            FakeRelatedUnionType::CLASS
+        );
+    }
+
+    public function testCannoResolveRelatedMapperClass()
+    {
+        $this->expectException(Exception\CannotResolveRelatedMapperClass::CLASS);
+        $this->expectExceptionMessage('Atlas\Testing\DataSource\Comment\CommentRelated::$commentable typhinted as int resolves to Mapper class int, which does not exist or is not a Mapper.');
+        new RelationshipLocator(
+            $this->mapperLocator,
+            Comment::CLASS,
+            CommentTable::CLASS,
+            FakeRelatedUnexpectedTypehint::CLASS
+        );
     }
 
     protected function getProperty($object, $name)

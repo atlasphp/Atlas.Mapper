@@ -42,11 +42,13 @@ class ManyToOneVariant extends Relationship
         $this->typeCol = $attribute->column;
         $this->relationshipLocator = $relationshipLocator;
 
-        /*
-         * @phpstan-ignore-next-line because $foreignMapperClass is unused,
-         * but needed for constructor consistency
-         */
-        $foreignMapperClass;
+        if ($foreignMapperClass !== 'mixed') {
+            throw new Exception\UnexpectedVariantTypehint(
+                $nativeMapperClass,
+                $name,
+                $foreignMapperClass
+            );
+        }
     }
 
     public function getPersistencePriority() : string
@@ -56,11 +58,17 @@ class ManyToOneVariant extends Relationship
 
     public function type(Define\Variant $attr) : self
     {
+        $foreignMapperClass = ResolveRelated::mapperClass(
+            $this->nativeMapperClass,
+            $this->name,
+            $attr->class
+        );
+
         $variant = new ManyToOne(
             $this->name,
             $this->mapperLocator,
             $this->nativeMapperClass,
-            Relationship::resolveMapperClass($attr->class),
+            $foreignMapperClass,
             new Define\ManyToOne(on: $attr->on),
         );
 

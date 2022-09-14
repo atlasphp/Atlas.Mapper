@@ -22,39 +22,6 @@ use Atlas\Mapper\Exception;
 
 abstract class Relationship
 {
-    /**
-     * Project\DataSource\Foo\BarRecord => Project\DataSource\Foo\Foo
-     */
-    public static function resolveMapperClass(
-        ReflectionType|string|null $spec
-    ) : string
-    {
-        if ($spec instanceof ReflectionUnionType) {
-            return 'UNKNOWN';
-        }
-
-        if ($spec instanceof ReflectionNamedType) {
-            $spec = $spec->isBuiltin() ? '' : $spec->getName();
-        }
-
-        $spec = trim((string) $spec);
-
-        if ($spec === '') {
-            return 'UNKNOWN';
-        }
-
-        $parts = explode('\\', $spec);
-        array_pop($parts);
-        $mapperClass = implode('\\', $parts) . '\\' . end($parts);
-
-        if (! class_exists($mapperClass)) {
-            throw new Exception\UnresolvableMapperClass($spec, $mapperClass);
-        }
-
-        return $mapperClass;
-    }
-
-
     public static function listRelatedSpec(string $relatedSpec) : array
     {
         $relatedSpec = trim($relatedSpec);

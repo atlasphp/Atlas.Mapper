@@ -10,12 +10,12 @@ use Atlas\Testing\DataSourceFixture;
 
 class RelationshipLocatorTest extends \PHPUnit\Framework\TestCase
 {
-    public function test()
+    public function testRelatedNameConflict()
     {
         $connection = (new DataSourceFixture())->exec();
         $mapperLocator = MapperLocator::new($connection);
 
-        $this->expectException(Exception::CLASS);
+        $this->expectException(Exception\RelatedNameConflict::CLASS);
         $this->expectExceptionMessage("Atlas\Testing\DataSource\Employee\EmployeeRelated::\$id property conflicts with existing Atlas\Testing\DataSource\Employee\EmployeeTable column also named 'id'.");
 
         new RelationshipLocator(

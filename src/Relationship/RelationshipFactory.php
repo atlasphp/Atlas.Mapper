@@ -68,7 +68,11 @@ class RelationshipFactory
         }
 
         $type = $property->getType();
-        $foreignMapperClass = Relationship::resolveMapperClass($type);
+        $foreignMapperClass = ResolveRelated::mapperClass(
+            $this->nativeMapperClass,
+            $name,
+            $type
+        );
 
         /** @var Relationship */
         $relationship = new $relationshipClass(
