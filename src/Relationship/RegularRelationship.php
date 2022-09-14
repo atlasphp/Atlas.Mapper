@@ -123,7 +123,7 @@ abstract class RegularRelationship extends Relationship
                 $relatedMore = [];
             }
 
-            list($relatedName, $join, $nextForeignAlias) = Relationship::listRelatedSpec($relatedSpec);
+            list($relatedName, $join, $nextForeignAlias) = ResolveRelated::listJoinSpec($relatedSpec);
 
             $foreignRelationshipLocator = $this->getForeignMapper()->getRelationshipLocator();
             $foreignRelationshipLocator->get($relatedName)->joinSelect(

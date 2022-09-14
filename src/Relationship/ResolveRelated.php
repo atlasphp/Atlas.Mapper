@@ -65,4 +65,37 @@ class ResolveRelated
 
         return $relatedMapperClass;
     }
+
+    public static function listJoinSpec(string $relatedSpec) : array
+    {
+        $relatedSpec = trim($relatedSpec);
+
+        // extract the foreign alias
+        $foreignAlias = '';
+        $pos = stripos($relatedSpec, ' AS ');
+        if ($pos !== false) {
+            $foreignAlias = trim(substr($relatedSpec, $pos + 4));
+            $relatedSpec = trim(substr($relatedSpec, 0, $pos));
+        }
+
+        // extract the join type
+        $join = 'JOIN';
+        $pos = strpos($relatedSpec, ' ');
+        if ($pos !== false) {
+            $join = trim(substr($relatedSpec, 0, $pos));
+            $relatedSpec = trim(substr($relatedSpec, $pos));
+        }
+
+        // fix the foreign alias
+        if ($foreignAlias === '') {
+            $foreignAlias = $relatedSpec;
+        }
+
+        return [
+            $relatedSpec,
+            $join,
+            $foreignAlias,
+        ];
+    }
+
 }

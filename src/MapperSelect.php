@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace Atlas\Mapper;
 
 use Atlas\Table\TableSelect;
-use Atlas\Mapper\Relationship\Relationship;
+use Atlas\Mapper\Relationship\ResolveRelated;
 
 abstract class MapperSelect extends TableSelect
 {
@@ -40,7 +40,7 @@ abstract class MapperSelect extends TableSelect
                 $relatedMore = [];
             }
 
-            list($relatedName, $join, $foreignAlias) = Relationship::listRelatedSpec($relatedSpec);
+            list($relatedName, $join, $foreignAlias) = ResolveRelated::listJoinSpec($relatedSpec);
 
             $relationshipLocator->get($relatedName)->joinSelect(
                 $this,
