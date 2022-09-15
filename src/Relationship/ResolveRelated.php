@@ -25,7 +25,7 @@ class ResolveRelated
     public static function mapperClass(
         string $nativeMapperClass,
         string $relatedName,
-        ReflectionType|string $relatedSpec
+        ReflectionType|string|null $relatedSpec
     ) : string
     {
         if ($relatedSpec instanceof ReflectionUnionType) {

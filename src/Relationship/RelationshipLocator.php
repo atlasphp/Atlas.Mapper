@@ -48,6 +48,7 @@ class RelationshipLocator implements IteratorAggregate
         $properties = $rclass->getProperties();
         $yield = $relationshipFactory->yieldFromProperties($properties);
 
+        /** @var Relationship $relationship */
         foreach ($yield as $relationship) {
             $name = $relationship->getName();
             $this->instances[$name] = $relationship;

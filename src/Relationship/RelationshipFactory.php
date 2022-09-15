@@ -85,7 +85,7 @@ class RelationshipFactory
             );
         }
 
-        $type = ltrim($property->getType(), '?');
+        $type = $property->getType();
 
         $foreignMapperClass = ResolveRelated::mapperClass(
             $this->nativeMapperClass,
