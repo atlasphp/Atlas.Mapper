@@ -14,8 +14,9 @@ use Atlas\Mapper\Define\RefinementAttribute;
 use Atlas\Mapper\Define\RelationshipAttribute;
 use Atlas\Mapper\Exception;
 use Atlas\Mapper\MapperLocator;
-use Attribute;
+use ReflectionAttribute;
 use ReflectionProperty;
+use Generator;
 
 class RelationshipFactory
 {
@@ -27,7 +28,22 @@ class RelationshipFactory
     ) {
     }
 
-    public function newFromProperty(ReflectionProperty $property) : Relationship
+    /**
+     * @param ReflectionProperty[] $properties
+     */
+    public function yieldFromProperties(array $properties) : Generator
+    {
+        foreach ($properties as $property) {
+            $relationship = $this->newFromProperty($property);
+            if ($relationship !== null) {
+                yield $relationship;
+            }
+        }
+    }
+
+    protected function newFromProperty(
+        ReflectionProperty $property
+    ) : ?Relationship
     {
         $attributes = $property->getAttributes();
 
@@ -45,10 +61,12 @@ class RelationshipFactory
                 );
             }
         }
+
+        return null;
     }
 
     /**
-     * @param Attribute[] $otherAttrs
+     * @param ReflectionAttribute[] $otherAttrs
      */
     protected function newFromPropertyAttributes(
         ReflectionProperty $property,
@@ -84,12 +102,12 @@ class RelationshipFactory
             $this->relationshipLocator,
         );
 
-        /** @var Attribute $otherAttr */
         foreach ($otherAttrs as $otherAttr) {
             if (is_subclass_of(
                 $otherAttr->getName(),
                 RefinementAttribute::CLASS
             )) {
+                /** @var callable */
                 $otherAttr = $otherAttr->newInstance();
                 $otherAttr($relationship);
             }

@@ -45,9 +45,10 @@ class RelationshipLocator implements IteratorAggregate
         );
 
         $rclass = new ReflectionClass($this->nativeRelatedClass);
+        $properties = $rclass->getProperties();
+        $yield = $relationshipFactory->yieldFromProperties($properties);
 
-        foreach ($rclass->getProperties() as $property) {
-            $relationship = $relationshipFactory->newFromProperty($property);
+        foreach ($yield as $relationship) {
             $name = $relationship->getName();
             $this->instances[$name] = $relationship;
             $priority = $relationship->getPersistencePriority();
