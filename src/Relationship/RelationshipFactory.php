@@ -41,7 +41,7 @@ class RelationshipFactory
         }
     }
 
-    protected function newFromProperty(
+    public function newFromProperty(
         ReflectionProperty $property
     ) : ?Relationship
     {
@@ -66,12 +66,12 @@ class RelationshipFactory
     }
 
     /**
-     * @param ReflectionAttribute[] $otherAttrs
+     * @param ReflectionAttribute[] $otherAttributes
      */
     protected function newFromPropertyAttributes(
         ReflectionProperty $property,
         RelationshipAttribute $attribute,
-        array $otherAttrs
+        array $otherAttributes
     ) : Relationship
     {
         $relationshipClass = $attribute->class;
@@ -103,14 +103,14 @@ class RelationshipFactory
             $this->relationshipLocator,
         );
 
-        foreach ($otherAttrs as $otherAttr) {
+        foreach ($otherAttributes as $otherAttribute) {
             if (is_subclass_of(
-                $otherAttr->getName(),
+                $otherAttribute->getName(),
                 RefinementAttribute::CLASS
             )) {
                 /** @var callable */
-                $otherAttr = $otherAttr->newInstance();
-                $otherAttr($relationship);
+                $otherAttribute = $otherAttribute->newInstance();
+                $otherAttribute($relationship);
             }
         }
 

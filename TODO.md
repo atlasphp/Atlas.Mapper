@@ -4,8 +4,6 @@
 
 - Full test coverage.
 
-- Full stan coverage.
-
 - Make ForeignSimple/Composite "strategies" more like Table IdentityMap classes?
   Or at least rename to `foreignSelectModifier` (or something like that).
 
