@@ -40,6 +40,7 @@ class ResolveRelated
             return $relatedSpec;
         }
 
+        $relatedSpec = (string) $relatedSpec;
         $parts = explode('\\', $relatedSpec);
         array_pop($parts);
 
