@@ -185,13 +185,8 @@ abstract class RegularRelationship extends Relationship
 
         // ignore string case?
         if ($this->ignoreCase) {
-            $nativeVal = is_string($nativeVal)
-                ? strtolower($nativeVal)
-                : $nativeVal;
-
-            $foreignVal = is_string($foreignVal)
-                ? strtolower($foreignVal)
-                : $foreignVal;
+            $nativeVal = strtolower((string) $nativeVal);
+            $foreignVal = strtolower((string) $foreignVal);
         }
 
         // are they equivalent?

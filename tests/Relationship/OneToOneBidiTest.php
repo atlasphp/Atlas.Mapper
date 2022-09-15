@@ -1,6 +1,7 @@
 <?php
 namespace Atlas\Mapper\Relationship;
 
+use Atlas\Mapper\Relationship\NotLoaded;
 use Atlas\Testing\DataSource\Bidibar\Bidibar;
 use Atlas\Testing\DataSource\Bidifoo\Bidifoo;
 
@@ -55,5 +56,14 @@ class OneToOneBidiTest extends RelationshipTest
 
         $actual = $bidifoo->getArrayCopy();
         $this->assertSame($expect, $actual);
+    }
+
+    public function testFixNativeRecord_noRelatedRecord()
+    {
+        $bidifooMapper = $this->mapperLocator->get(Bidifoo::CLASS);
+        $bidifoo = $bidifooMapper->newRecord(['name' => 'foo']);
+        $relationship = $bidifooMapper->getRelationshipLocator()->get('bidibar');
+        $relationship->fixNativeRecord($bidifoo);
+        $this->assertInstanceOf(NotLoaded::class, $bidifoo->bidibar);
     }
 }
