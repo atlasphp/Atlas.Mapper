@@ -29,7 +29,6 @@ abstract class RegularRelationship extends Relationship
 
     protected string $foreignTableName;
 
-    // this is for selecting the related rows
     protected ForeignSimple|ForeignComposite $foreignStrategy;
 
     public function __construct(
@@ -40,15 +39,13 @@ abstract class RegularRelationship extends Relationship
         Define\RelationshipAttribute $attribute,
         /* RelationshipLocator $relationshipLocator, */
     ) {
-        if (! class_exists($foreignMapperClass)) {
-            throw new Exception\MapperClassMissing($foreignMapperClass);
-        }
-
-        if (
-            $foreignMapperClass === ReflectionUnionType::CLASS
-            || $foreignMapperClass === 'mixed'
-        ) {
-            throw new Exception\UnexpectedNonvariantTypehint($nativeMapperClass, $name);
+        if ($foreignMapperClass === 'mixed') {
+            throw new Exception\UnexpectedRelatedTypehint(
+                $nativeMapperClass,
+                $name,
+                "Record, ?Record, or RecordSet",
+                "'mixed' or a union of types"
+            );
         }
 
         $this->foreignMapperClass = $foreignMapperClass;

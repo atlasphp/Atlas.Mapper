@@ -43,9 +43,10 @@ class ManyToOneVariant extends Relationship
         $this->relationshipLocator = $relationshipLocator;
 
         if ($foreignMapperClass !== 'mixed') {
-            throw new Exception\UnexpectedVariantTypehint(
+            throw new Exception\UnexpectedRelatedTypehint(
                 $nativeMapperClass,
                 $name,
+                "'mixed' or a union of types",
                 $foreignMapperClass
             );
         }

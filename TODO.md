@@ -2,23 +2,19 @@
 
 ## Next
 
-- Make ForeignSimple/Composite "strategies" more like Table IdentityMap classes?
-
-- Add new Bidi classes, with tests.
-
 - Full test coverage.
 
 - Full stan coverage.
 
-Change assertions for PHP 8.1
+- Make ForeignSimple/Composite "strategies" more like Table IdentityMap classes?
+  Or at least rename to `foreignSelectModifier` (or something like that).
 
-getArrayCopy() should return ... what? ... for NotLoaded objects? just drop them?
+- getArrayCopy() should return ... what? ... for NotLoaded objects? just drop them?
 or convert to false, like old times?
 
-Improve resolveMapperClass() UNKNOWN behaviors. Must resolve to a known class,
-or to mixed, or to a union of known mapper classes.
-
 ## Other
+
+- Add new Bidi classes, with tests.
 
 - On insert/update/delete, look at the PDOStatement and set any returned column
   values? Only good for PostgreSQL, but hey, nice touch.

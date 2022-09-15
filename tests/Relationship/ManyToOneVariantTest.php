@@ -230,7 +230,26 @@ class ManyToOneVariantTest extends RelationshipTest
         );
     }
 
-    public function testCannoResolveRelatedMapperClass()
+    public function testUnexpectedRelatedTypehint()
+    {
+        $this->expectException(Exception\UnexpectedRelatedTypehint::CLASS);
+        $this->expectExceptionMessage("Atlas\Testing\DataSource\Comment\CommentRelated::\$foo expected a typehint of 'mixed' or a union of types; got FakeForeignMapper instead.");
+        $rel = new ManyToOneVariant(
+            'foo',
+            $this->mapperLocator,
+            Comment::CLASS,
+            'FakeForeignMapper',
+            new Define\ManyToOneVariant(column: 'related_type'),
+            new RelationshipLocator(
+                $this->mapperLocator,
+                Comment::CLASS,
+                CommentTable::CLASS,
+                CommentRelated::CLASS
+            ),
+        );
+    }
+
+    public function testCannotResolveRelatedMapperClass()
     {
         $this->expectException(Exception\CannotResolveRelatedMapperClass::CLASS);
         $this->expectExceptionMessage('Atlas\Testing\DataSource\Comment\CommentRelated::$commentable typhinted as int resolves to Mapper class int, which does not exist or is not a Mapper.');
