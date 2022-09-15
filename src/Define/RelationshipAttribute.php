@@ -10,9 +10,10 @@ declare(strict_types=1);
 
 namespace Atlas\Mapper\Define;
 
+/**
+ * @property string $class
+ */
 abstract class RelationshipAttribute
 {
-    public string $class = 'UNKNOWN';
-
     public array $on = [];
 }
