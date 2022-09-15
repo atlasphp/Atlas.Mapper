@@ -11,9 +11,8 @@ declare(strict_types=1);
 namespace Atlas\Mapper\Relationship;
 
 use Atlas\Mapper\MapperSelect;
+use Atlas\Mapper\Record;
 
-// can we make this into RegularRelationship::foreignSelectRelated()?
-// but this and Simple really are very different from each other.
 class ForeignComposite
 {
     public function __construct(

@@ -84,6 +84,7 @@ class RelationshipFactory
             $this->relationshipLocator,
         );
 
+        /** @var Attribute $otherAttr */
         foreach ($otherAttrs as $otherAttr) {
             if (is_subclass_of(
                 $otherAttr->getName(),

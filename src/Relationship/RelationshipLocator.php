@@ -55,7 +55,7 @@ class RelationshipLocator implements IteratorAggregate
         }
     }
 
-    public function getNativeRelatedClass()
+    public function getNativeRelatedClass() : string
     {
         return $this->nativeRelatedClass;
     }

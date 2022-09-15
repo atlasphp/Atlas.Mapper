@@ -113,7 +113,7 @@ class ManyToMany extends RegularRelationship
 
     protected function retainRelationship(
         string $relatedName,
-        Relationship $relationship,
+        RegularRelationship $relationship,
         string $foreignMapperClass,
         Define\ManyToMany $attribute
     ) : void

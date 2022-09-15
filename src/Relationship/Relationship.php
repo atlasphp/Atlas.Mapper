@@ -34,6 +34,8 @@ abstract class Relationship
 
     protected array $where = [];
 
+    protected string $name;
+
     public function getName() : string
     {
         return $this->name;
