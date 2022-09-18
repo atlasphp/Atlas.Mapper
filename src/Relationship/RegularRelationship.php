@@ -29,7 +29,7 @@ abstract class RegularRelationship extends Relationship
 
     protected string $foreignTableName;
 
-    protected ForeignSimple|ForeignComposite $foreignStrategy;
+    protected string $foreignSelectMethod;
 
     public function __construct(
         protected string $name,
@@ -62,10 +62,10 @@ abstract class RegularRelationship extends Relationship
             $this->on = $this->getDefaultOn();
         }
 
-        if (count($this->on) == 1) {
-            $this->foreignStrategy = new ForeignSimple($this->foreignTableName, $this->on);
+        if (count($this->on) === 1) {
+            $this->foreignSelectMethod = 'foreignSimple';
         } else {
-            $this->foreignStrategy = new ForeignComposite($this->foreignTableName, $this->on);
+            $this->foreignSelectMethod = 'foreignComposite';
         }
     }
 
@@ -140,7 +140,7 @@ abstract class RegularRelationship extends Relationship
         }
 
         $select = $this->getForeignMapper()->select();
-        $this->foreignStrategy->modifySelect($select, $records);
+        $select->{$this->foreignSelectMethod}($records, $this->on, $this->foreignTableName);
         $this->foreignSelectWhere($select, $this->foreignTableName);
 
         if ($custom) {

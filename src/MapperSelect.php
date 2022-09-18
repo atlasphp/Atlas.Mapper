@@ -96,4 +96,73 @@ abstract class MapperSelect extends TableSelect
         $records = $this->fetchRecords();
         return $this->mapper->newRecordSet($records);
     }
+
+    /**
+     * @param Record[] $nativeRecords
+     */
+    public function foreignSimple(
+        array $nativeRecords,
+        array $on,
+        string $foreignTableName
+    ) : void
+    {
+        $nativeCol = (string) key($on);
+        $foreignCol = (string) current($on);
+        $vals = [];
+
+        foreach ($nativeRecords as $nativeRecord) {
+            $vals[] = $nativeRecord->{$nativeCol};
+        }
+
+        $qftn = $this->quoteIdentifier($foreignTableName);
+        $qcol = $this->quoteIdentifier($foreignCol);
+        $where = "{$qftn}.{$qcol} IN ";
+        $this->where($where, array_unique($vals));
+    }
+
+    /**
+     * @param Record[] $nativeRecords
+     */
+    public function foreignComposite(
+        array $nativeRecords,
+        array $on,
+        string $foreignTableName
+    ) : void
+    {
+        $uniques = [];
+
+        foreach ($nativeRecords as $nativeRecord) {
+            $vals = [];
+
+            foreach ($on as $nativeCol => $foreignCol) {
+                $vals[$nativeCol] = $nativeRecord->$nativeCol;
+            }
+
+            // a pipe, and ASCII 31 ("unit separator").
+            // identical composite values should have identical array keys,
+            // which means this will automatically unique them.
+            $key = implode("|\x1F", $vals);
+            $uniques[$key] = $vals;
+        }
+
+        $qftn = $this->quoteIdentifier($foreignTableName);
+        $all = [];
+
+        foreach ($uniques as $unique) {
+            $one = [];
+
+            foreach ($unique as $col => $val) {
+                $qcol = $this->quoteIdentifier($col);
+                $one[] = "{$qftn}.{$qcol} = " . $this->bindInline($val);
+            }
+
+            $all[] = '(' . implode(' AND ', $one) . ')';
+        }
+
+        $cond = '( -- composite keys' . PHP_EOL . '    '
+            . implode(PHP_EOL . '    OR ', $all)
+            . PHP_EOL . ')';
+
+        $this->where($cond);
+    }
 }
