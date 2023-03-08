@@ -19,6 +19,8 @@ class SubJoinWith
 
     protected $select;
 
+    protected $nativeAlias;
+
     public function __construct(
         MapperRelationships $relationships,
         MapperSelect $select,
