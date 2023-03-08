@@ -2,6 +2,8 @@
 
 ## 1.4.0
 
+- Merged #23: Fix dynamically declared properties.
+
 - Merged #22: Add Relationship::getForeignMapperClass().
 
 ## 1.3.3
