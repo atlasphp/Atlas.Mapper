@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.4.0
+
+- Merged #22: Add Relationship::getForeignMapperClass().
+
 ## 1.3.3
 
 - Fixed #16: When persisting many-to-many relationship, call `setDelete()`
