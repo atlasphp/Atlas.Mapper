@@ -18,7 +18,7 @@ class ForeignSimple
 
     protected $nativeCol;
 
-    protected $foriegnCol;
+    protected $foreignCol;
 
     public function __construct(string $foreignTableName, array $on)
     {
