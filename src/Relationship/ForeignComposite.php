@@ -52,7 +52,7 @@ class ForeignComposite
             $row = $record->getRow();
             $vals = [];
             foreach ($this->on as $nativeCol => $foreignCol) {
-                $vals[$nativeCol] = $row->$nativeCol;
+                $vals[$foreignCol] = $row->$nativeCol;
             }
             // a pipe, and ASCII 31 ("unit separator").
             // identical composite values should have identical array keys,
