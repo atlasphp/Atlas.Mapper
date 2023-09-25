@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.4.1
+
+- Merged #24: Fix ForeignComposite not using correct column when building
+  where.
+
 ## 1.4.0
 
 - Merged #23: Fix dynamically declared properties.
